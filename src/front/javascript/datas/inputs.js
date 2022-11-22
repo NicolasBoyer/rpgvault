@@ -30,18 +30,6 @@ export const inputs = (pInput) => [
 		]
 	},
 	{
-		id: 'width',
-		type: 'number',
-		name: 'Largeur',
-		value: pInput.width
-	},
-	{
-		id: 'height',
-		type: 'number',
-		name: 'Hauteur',
-		value: pInput.height
-	},
-	{
 		id: 'fontFamily',
 		type: 'text',
 		name: 'Police',
@@ -52,6 +40,45 @@ export const inputs = (pInput) => [
 		type: 'number',
 		name: 'Taille de la police',
 		value: pInput.fontSize
+	},
+	{
+		id: 'color',
+		type: 'color',
+		name: 'Couleur de la police',
+		value: pInput.color
+	},
+	{
+		id: 'textAlign',
+		type: 'select',
+		name: 'Alignement',
+		value: pInput.textAlign,
+		options: [
+			{
+				name: 'Gauche',
+				value: 'left'
+			}, {
+				name: 'Centré',
+				value: 'center'
+			}, {
+				name: 'Droite',
+				value: 'right'
+			}, {
+				name: 'Justifié',
+				value: 'justify'
+			}
+		]
+	},
+	{
+		id: 'width',
+		type: 'number',
+		name: 'Largeur',
+		value: pInput.width
+	},
+	{
+		id: 'height',
+		type: 'number',
+		name: 'Hauteur',
+		value: pInput.height
 	},
 	{
 		id: 'x',
