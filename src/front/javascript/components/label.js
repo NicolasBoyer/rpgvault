@@ -1,6 +1,8 @@
 import { html, render } from '../thirdParty/litHtml.js'
 
 export default class Label extends HTMLElement {
+	static get observedAttributes () { return ['value'] }
+
 	get id () {
 		return this.getAttribute('id')
 	}
@@ -45,6 +47,13 @@ export default class Label extends HTMLElement {
 		this.#render()
 	}
 
+	attributeChangedCallback (name, oldValue, newValue) {
+		if (name === 'value' && oldValue !== newValue) {
+			this.value = newValue
+			this.#render()
+		}
+	}
+
 	#render () {
 		render(html`
 			<label for="${this.id}" @click="${(pEvent) => pEvent.stopPropagation()}">
@@ -52,12 +61,12 @@ export default class Label extends HTMLElement {
 				${this.type === 'select' ? html`
 					<select id="${this.id}" title="${this.name}">
 						<option value="" selected>Choisir un ${this.name}</option>
-						${this.options.map((pOption) => html`
+						${this.options?.map((pOption) => html`
 							<option ?selected="${this.value === pOption.value}" value="${pOption.value}">${pOption.name}</option>
 						`)}
 					</select>
 				` : html`
-					<input type="${this.type}" id="${this.id}" name="${this.id}" placeholder="${this.name}" value="${this.value}" title="${this.name}"/>
+					<input type="${this.type}" id="${this.id}" name="${this.id}" value="${this.value}" title="${this.name}"/>
 				`}
 			</label>
 		`, this)
