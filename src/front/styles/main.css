@@ -207,18 +207,39 @@ fs-sheet .editMode {
 	box-shadow: inset 0 0 0 5px #bf1919;
 }
 
+article.editBlock,
+article.selectBlock {
+	position: absolute;
+	margin: 0;
+	top: 5px;
+	padding: 2rem;
+	bottom: 5px;
+	border-radius: 0;
+	opacity: 0;
+	transition: opacity var(--transition);
+	z-index: 1000;
+}
+
 article.editBlock {
-    position: absolute;
-    margin: 0;
-    top: 1rem;
-    left: 1rem;
-    padding: 2rem;
+	left: 5px;
+	display: flex;
+	flex-direction: column;
+}
+
+article.selectBlock {
+	right: 5px;
+}
+
+article.editBlock:hover,
+article.selectBlock:hover {
+	opacity: 1;
+	transition: opacity var(--transition);
 }
 
 article.editBlock > div {
 	display: flex;
     gap: 1rem;
-    margin-top: 4rem;
+	margin-top: auto;
 }
 
 article.editBlock > div > button {
@@ -227,6 +248,28 @@ article.editBlock > div > button {
 
 article.editBlock button.save {
 	position: relative;
+}
+
+fs-sheet article label > span {
+	display: block;
+	font-size: 0.8rem;
+}
+
+fs-sheet article label[for='id'] > span {
+	display: none;
+}
+
+fs-sheet article label > input,
+fs-sheet article label > select {
+	margin-top: 0;
+	margin-bottom: 0 !important;
+	padding: 0.2em 0.5em;
+	max-height: 2em;
+}
+
+fs-sheet article fs-label {
+	margin-top: var(--spacing);
+	display: block;
 }
 
 .rectangle {
@@ -243,6 +286,10 @@ article a.deleteInput {
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+}
+
+article input[type=color] {
+	padding: 0;
 }
 
 /*** LOADER ***/
