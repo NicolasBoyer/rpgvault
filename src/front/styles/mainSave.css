@@ -1,0 +1,917 @@
+@import url('fonts.css');
+
+:root:not([data-theme=dark]), [data-theme=light] {
+	--color: #625941;
+	--h1-color: #322c1b;
+	--h2-color: #3e3724;
+	--h3-color: #493f2c;
+	--h4-color: #564a37;
+	--h5-color: #625841;
+	--h6-color: #6d624d;
+	--primary: #805d00;
+	--primary-hover: #ffc01a;
+	--form-element-border-color: #b9b2a2;
+	--primary-focus: rgb(193 147 16 / 13%);
+	--backgroud-secondary: #ffcf4f;
+	--modal-overlay-background-color: rgb(226 224 213 / 80%);
+	--secondary: #787159;
+	--secondary-hover: #625941;
+	--tooltip-background-color: #805d00;
+	--background-color-loader: rgb(237 240 243 / 60%);
+}
+
+/*** HTML TAG ***/
+a[role='button'],
+fs-link[role='button'] {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/*** LAYOUT ***/
+*,
+html {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+html,
+body {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	font-family: 'Nunito', sans-serif;
+	align-content: center;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+fs-header {
+	background: var(--backgroud-secondary);
+	height: 16rem;
+	display: flex;
+	padding: 0;
+}
+
+fs-header > div.image {
+	overflow: hidden;
+	display: flex;
+	width: 100%;
+}
+
+fs-header > div:first-child {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 5rem;
+	z-index: 2;
+}
+
+fs-header > div.titles {
+	background: rgb(255 255 255 / 70%);
+}
+
+fs-header img {
+	object-fit: cover;
+	object-position: 50% 50%;
+	width: 100%;
+}
+
+#main {
+	flex: 1;
+}
+
+footer {
+	background: var(--backgroud-secondary);
+	min-height: 6rem;
+	padding: 0;
+	text-align: center;
+}
+
+/*** LAYOUT ***/
+dialog footer > a[role='button'] {
+	display: inline-block;
+}
+
+/*** IMAGES ***/
+svg {
+	width: 1.5rem;
+	height: 1.5rem;
+	stroke: currentColor;
+	fill: currentColor;
+}
+
+/*** TITLES ***/
+h1 {
+	font-family: 'Rubik Glitch', cursive;
+	padding: 0 1rem;
+	font-size: 3rem;
+	font-weight: normal;
+	position: absolute;
+	top: -0.5rem;
+	right: 0;
+}
+
+h1 > a {
+	color: inherit;
+}
+
+h1 > a:hover {
+	text-decoration: none;
+}
+
+h2, h3, h4, h5, h6 {
+	font-family: 'Nunito', sans-serif;
+}
+
+h2 {
+	text-align: center;
+	font-size: 2rem;
+}
+
+.subtitle {
+	font-family: 'Rubik Glitch', cursive;
+	position: absolute;
+	font-size: 1.2rem;
+	top: 2rem;
+	padding: 1rem;
+	right: 0;
+	color: var(--h1-color);
+}
+
+/*** HOME ***/
+.home {
+	--grid-spacing-vertical: 1rem;
+}
+
+.home .title,
+.dishes .title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.home .title h2,
+.dishes .title h2 {
+	margin: 0;
+}
+
+.home .title button,
+.dishes .title button {
+	margin: 0 1rem;
+}
+
+.home .category {
+	background: var(--primary-focus);
+	font-weight: bold;
+	padding: 0.2rem 0.5rem;
+	border-radius: 0.3rem;
+	margin-top: 2rem;
+	font-size: 110%;
+	user-select: none;
+}
+
+.editListIngredient a {
+	cursor: pointer;
+	user-select: none;
+}
+
+@keyframes ordered {
+	0% {
+		width: 0;
+	}
+	100% {
+		width: 100%;
+	}
+}
+
+.ordered > span {
+	position: relative;
+}
+
+.ordered > span::after {
+	content: ' ';
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background: #ccc;
+	animation-name: ordered;
+	animation-duration: 0.1s;
+	animation-timing-function: linear;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+
+a.ordered {
+	color: #ccc;
+	font-style: italic;
+}
+
+/*** RECIPES / INGREDIENTS / HOME / CATEGORIES ***/
+.recipes ul,
+.ingredients ul,
+.home ul,
+.categories ul {
+	max-width: 35rem;
+	margin: auto !important;
+}
+
+.recipes li > div:first-child,
+.ingredients li > div:first-child,
+.categories li > div:first-child,
+.home li > div.editListIngredient {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: var(--grid-spacing-horizontal);
+}
+
+.recipes li > div:first-child > span,
+.ingredients li > div:first-child > span,
+.categories li > div:first-child > span,
+.ingredients li > div:first-child > input,
+.categories li > div:first-child > input,
+.home li > div.editListIngredient > a,
+.home li > div.editListIngredient > input.ingredient {
+	flex: 1;
+	font-size: 1.7rem;
+}
+
+.home li > div.grid.addListIngredient,
+.home li > div.grid.editListIngredient,
+.categories li > div.grid.addCategory {
+	align-items: center;
+	position: relative;
+	display: grid;
+}
+
+.categories li > div.grid.addCategory {
+	grid-template-columns: 1fr 6rem 2rem 2rem;
+}
+
+.home li > div.grid.addListIngredient,
+.home li > div.grid.editListIngredient {
+	grid-template-columns: 2fr 2fr 1fr 2rem 2rem;
+}
+
+.home li > div.grid.addListIngredient.ingredientFocused,
+.home li > div.grid.editListIngredient.ingredientFocused,
+.home li > div.grid.addListIngredient.sizeFocused,
+.home li > div.grid.editListIngredient.sizeFocused,
+.home li > div.grid.addListIngredient.unitFocused,
+.home li > div.grid.editListIngredient.unitFocused {
+	grid-template-columns: 1fr 2rem 2rem;
+}
+
+.home li > div.grid.addListIngredient.ingredientFocused input.size,
+.home li > div.grid.addListIngredient.ingredientFocused select.unit,
+.home li > div.grid.editListIngredient.ingredientFocused input.size,
+.home li > div.grid.editListIngredient.ingredientFocused select.unit,
+.home li > div.grid.addListIngredient.sizeFocused input.ingredient,
+.home li > div.grid.addListIngredient.sizeFocused select.unit,
+.home li > div.grid.editListIngredient.sizeFocused input.ingredient,
+.home li > div.grid.editListIngredient.sizeFocused select.unit,
+.home li > div.grid.addListIngredient.unitFocused input.ingredient,
+.home li > div.grid.addListIngredient.unitFocused input.size,
+.home li > div.grid.editListIngredient.unitFocused input.ingredient,
+.home li > div.grid.editListIngredient.unitFocused input.size {
+	display: none;
+}
+
+.home li > div.grid.addListIngredient > select,
+.home li > div.grid.editListIngredient > select {
+	min-width: max-content;
+}
+
+.categories li > div.grid.addCategory {
+	grid-template-columns: 1fr 2rem;
+}
+
+.recipes li > div.ingredients {
+	font-style: italic;
+	font-size: 85%;
+}
+
+.recipes ul button,
+.recipes ul a,
+.recipes aside ul fs-link,
+.ingredients ul button,
+.ingredients ul a,
+.home ul button,
+.home .title button,
+.dishes .title button,
+.categories ul button {
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.recipes ul button > span,
+.recipes aside ul fs-link > span,
+.recipes ul a > span,
+.ingredients ul button > span,
+.ingredients ul a > span,
+.home ul button > span,
+.home .title button > span,
+.categories ul button > span,
+.dishes button > span {
+	display: none;
+}
+
+.recipes svg,
+.ingredients svg,
+.home svg,
+.categories svg,
+.dishes svg {
+	width: 1rem;
+	height: 1rem;
+	stroke: currentColor;
+	fill: currentColor;
+}
+
+/*** RECIPE ***/
+.recipe {
+	display: none;
+}
+
+.ingredients > div {
+	grid-template-columns: 4fr 1fr 1fr 2rem;
+	align-items: center;
+}
+
+.ingredients > div.ingredientFocused,
+.ingredients > div.sizeFocused,
+.ingredients > div.unitFocused {
+ grid-template-columns: 1fr 2rem;
+}
+
+.ingredients > div.ingredientFocused input.size,
+.ingredients > div.ingredientFocused select.unit,
+.ingredients > div.sizeFocused label,
+.ingredients > div.sizeFocused select.unit,
+.ingredients > div.unitFocused input.size,
+.ingredients > div.unitFocused label {
+	display: none;
+}
+
+.ingredients > div.fiveCol {
+	grid-template-columns: 4fr 1fr 1fr 2rem 2rem;
+}
+
+.ingredients > div.fiveCol.ingredientFocused,
+.ingredients > div.fiveCol.sizeFocused,
+.ingredients > div.fiveCol.unitFocused {
+ grid-template-columns: 1fr 2rem 2rem;
+}
+
+.ingredients > .grid {
+	position: relative;
+}
+
+fieldset.ingredients button {
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+}
+
+.ingredients button > span {
+	display: none;
+}
+
+.propose {
+	box-shadow: 0 1px 3px hsl(0deg 0% 0% / 6%), 0 2px 6px hsl(0deg 0% 0% / 6%), 0 3px 8px hsl(0deg 0% 0% / 9%);
+	top: 3.8rem;
+	position: absolute;
+	background: var(--background-color);
+	border-radius: var(--border-radius);
+	border: var(--border-width) solid var(--form-element-border-color);
+	width: 100%;
+}
+
+.propose > a {
+	display: block;
+	padding: 0.3rem;
+	margin: 0;
+}
+
+.propose > a:hover,
+.propose > a:focus {
+	text-decoration: none;
+}
+
+/*** NOT FOUND ***/
+.notFound,
+.notFound #header,
+.notFound #footer {
+	background: #000;
+}
+
+.notFound #header {
+	height: 9rem;
+	flex-direction: column;
+	align-items: center;
+}
+
+.notFound #header img {
+	display: none;
+}
+
+.notFound h1 {
+	font-family: 'Press Start 2P', cursive;
+	color: #fff;
+	position: static;
+	margin: 0;
+	text-align: center;
+}
+
+.notFound .subtitle {
+	font-family: 'Press Start 2P', cursive;
+	color: var(--del-color);
+	position: static;
+	font-size: 85%;
+	padding: 0;
+	text-align: center;
+}
+
+.notFound #main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+/*** TOAST ***/
+.toast {
+	/*color: #414038;*/
+	/*background-color: #e5e4e2;*/
+	padding: 0.75rem 1.25rem;
+	border: 1px solid transparent;
+	border-radius: 0.25rem;
+	max-width: 25rem;
+	position: fixed;
+	top: -4rem;
+	left: 50%;
+	width: 35%;
+	margin-left: -17%;
+	box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 10%);
+	transition: top .225s ease-in-out;
+}
+
+.toast.visible {
+	top: 2rem;
+	transition: top .225s ease-out;
+}
+
+.toast.success {
+	color: #155724;
+	background-color: #d4edda;
+	border-color: #c3e6cb;
+}
+
+.toast.error {
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+}
+
+/*** DIALOG ***/
+dialog {
+	transition: top .225s ease-in-out;
+	top: -200rem;
+}
+
+dialog[open] {
+	top: 0;
+	transition: top .225s ease-out;
+}
+
+dialog:not([open]), dialog[open=false] {
+	display: flex;
+}
+
+dialog footer > a[role=button]:not([href]) {
+	cursor: pointer;
+	opacity: 1;
+	pointer-events: all;
+}
+
+/*** LOADER ***/
+fs-loader {
+	position: fixed;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background: var(--accordion-border-color);
+	width: 100%;
+}
+
+.recipe fs-loader {
+	background: var(--background-color-loader);
+}
+
+.spinner {
+	width: 64px;
+	height: 64px;
+	border: 8px solid;
+	border-color: var(--primary-hover) transparent var(--primary) transparent;
+	border-radius: 50%;
+	animation: spin-anim 1.2s linear infinite;
+}
+
+/*** ANIMATED SECTION ***/
+fs-animated-section > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+/*** PRESENTATIONS ***/
+.presentation #main {
+	max-width: unset;
+	padding: 0;
+}
+
+.presentation footer {
+	position: relative;
+}
+
+.presentation fs-animated-section {
+	margin: 0;
+	padding: 1rem;
+}
+
+.presentation img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	box-shadow: 0 13px 27px -5px hsl(240deg 30% 28% / 25%), 0 8px 16px -8px hsl(0deg 0% 0% / 30%), 0 -6px 16px -6px hsl(0deg 0% 0% / 3%);
+}
+
+.presentation fs-animated-section {
+	padding: 5rem 12rem;
+}
+
+.presentation .home {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+	flex-direction: column;
+}
+
+.presentation .home > div > div {
+	z-index: 2;
+	color: #333;
+	width: 31rem;
+	background: rgb(255 251 238 / 70%);
+	font-size: 1.1rem;
+	border-radius: 8px;
+	font-weight: 500;
+	text-align: center;
+	padding: 1rem;
+}
+
+.presentation .home > div > div > div {
+	padding: 0.5rem;
+}
+
+.presentation .home > div > a {
+	margin-top: 1rem;
+	box-shadow: 0 0 2px rgb(0 0 0 / 15%), 0 2px 16px rgb(0 0 0 / 15%);
+	z-index: 2;
+}
+
+.presentation .home::before {
+	content: "";
+	background: url("../../assets/home.jpg");
+	background-size: cover;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	filter: blur(3px);
+	right: 18px;
+	opacity: 0.6;
+}
+
+.presentation .home h1 {
+	/*font-size: 10rem;*/
+	font-size: 20px;
+	position: static;
+	color: #000;
+	z-index: 2;
+	flex-direction: column;
+	padding: 0;
+	margin: 0;
+}
+
+.presentation .infos {
+	padding: 2rem 0 3rem 0;
+	font-size: 1.1rem;
+	font-weight: 800;
+}
+
+.presentation fs-animated-section.first {
+	background: #000;
+	padding: 10rem 18rem;
+	position: relative;
+	margin-bottom: 0;
+}
+
+.presentation fs-animated-section.first .grid {
+	grid-template-columns: 2fr 1.5fr;
+}
+
+.presentation fs-animated-section.first .grid > div {
+	color: #ffcf4f;
+	font-size: 3.5rem;
+	padding-right: 3rem;
+	font-weight: 800;
+}
+
+.presentation fs-animated-section.first .grid > img {
+	margin-top: 10rem;
+}
+
+.presentation fs-animated-section.first .alt {
+	color: #d5c08a;
+	display: inline-block;
+}
+
+.presentation fs-animated-section.first > div > div {
+	width: 100%;
+}
+
+.presentation fs-animated-section.second {
+	background: #d5d1c6;
+	padding: 0;
+	position: relative;
+	margin-bottom: 0;
+}
+
+.presentation fs-animated-section.second div.grid {
+	gap: 0;
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+.presentation fs-animated-section.second > div > div:first-child {
+	font-size: 3.5rem;
+	padding: 8rem 40rem 0 18rem;
+	font-weight: 800;
+}
+
+.presentation fs-animated-section.second div.grid > div:first-child {
+	color: #fff;
+	font-size: 2rem;
+	padding: 5rem 1rem 0 18rem;
+}
+
+.presentation fs-animated-section.second div.grid.one > div:first-child {
+	background: var(--color);
+}
+
+.presentation fs-animated-section.second div.grid.two > div:first-child {
+	background: #b9a97f;
+}
+
+.presentation fs-animated-section.second div.grid.three > div:first-child {
+	background: #74726c;
+}
+
+.presentation fs-animated-section.second div.grid.one > div:last-child {
+	background: #e3e3e3;
+}
+
+.presentation fs-animated-section.second div.grid.two > div:last-child {
+	background: #d5d2cb;
+}
+
+.presentation fs-animated-section.second div.grid.three > div:last-child {
+	background: #fbf1d8;
+}
+
+.presentation fs-animated-section.second img {
+	box-shadow: none;
+	border-radius: 0;
+}
+
+.presentation fs-animated-section.second .infos {
+	padding-left: 18rem;
+}
+
+.presentation fs-animated-section.three {
+	position: relative;
+	padding: 0;
+}
+
+.presentation fs-animated-section.three > div {
+	justify-content: center;
+	align-items: unset;
+}
+
+.presentation fs-animated-section.three > div > div.grid:first-child > div:first-child {
+	padding: 0 2rem 5rem 7rem;
+	font-size: 3.5rem;
+	font-weight: 800;
+}
+
+.presentation fs-animated-section.three .infos {
+	padding-left: 1rem;
+	padding-top: 5rem;
+	text-shadow: 0 0 black;
+}
+
+.presentation .connectButtons {
+	width: 19rem;
+	margin: 0 auto;
+}
+
+@keyframes spin-anim {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/*** DISHES ***/
+@media (max-width: 992px) {
+	fs-dishes > .content {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+
+	fs-dishes > .content > .grid {
+		border: none !important;
+		padding: 0 !important;
+	}
+
+	fs-dishes > .content > .grid > div,
+	fs-dishes summary {
+		border-bottom: var(--border-width) solid var(--table-border-color) !important;
+		border-right: var(--border-width) solid var(--table-border-color) !important;
+		min-height: 4rem;
+	}
+
+	fs-dishes > .content > .grid:last-child > div,
+	fs-dishes > .content > .grid:last-child summary {
+		border-right: none !important;
+	}
+
+	fs-dishes > .content > .grid > div:first-child {
+		padding: calc(var(--spacing) / 2) 0;
+		border-bottom: calc(var(--border-width) * 3) solid var(--table-border-color) !important;
+	}
+}
+
+fs-dishes > .title {
+	margin-bottom: 2.625rem;
+}
+
+fs-dishes > .content > .grid {
+	border-bottom: var(--border-width) solid var(--table-border-color);
+	min-height: 6rem;
+}
+
+fs-dishes > .content > .grid:first-child {
+	padding: calc(var(--spacing) / 2) 0;
+	border-bottom: calc(var(--border-width) * 3) solid var(--table-border-color);
+	min-height: auto;
+}
+
+fs-dishes > .content > .grid > *,
+fs-dishes > .content > .grid summary {
+	font-size: 0.875em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	margin: 0;
+	border-radius: 0;
+	background: none;
+	color: unset;
+	border: none;
+}
+
+details[role=list] summary + ul {
+	font-size: 0.875em;
+}
+
+details[role=list] summary + ul > li {
+	padding: 0;
+}
+
+fs-dishes > .content > .grid summary {
+	width: 100%;
+	height: 100%;
+	user-select: none;
+}
+
+fs-dishes > .content > .grid summary::after {
+	display: none;
+}
+
+fs-dishes > .content > .grid summary:hover,
+details[open] summary {
+	background: var(--modal-overlay-background-color);
+}
+
+fs-dishes > .content > .grid summary[role=button]:focus,
+fs-dishes > .content > .grid details button:focus {
+	--box-shadow: none;
+}
+
+fs-dishes > .content > .grid details button {
+	background: none;
+	border: none;
+	color: unset;
+	font-size: 1em;
+	margin: 0;
+	padding: calc(var(--form-element-spacing-vertical) * .5) var(--form-element-spacing-horizontal);
+	border-radius: 0;
+}
+
+fs-dishes > .content > .grid details button:hover {
+	background-color: var(--dropdown-hover-background-color);
+}
+
+fs-dishes > .content > .grid:first-child > * {
+	font-size: 1em;
+}
+
+fs-dishes > .content > .grid > div:first-child {
+	font-size: 1em;
+}
+
+/*** fs-menu ***/
+fs-menu > div > ul {
+	display: flex;
+	justify-content: center;
+	max-width: none !important;
+}
+fs-menu > div > ul > li {
+	list-style: none;
+	margin: 0;
+	padding: var(--nav-element-spacing-vertical) var(--nav-element-spacing-horizontal);
+}
+
+fs-menu > div > ul > li[data-selected='true'] > * {
+	--background-color: var(--primary-hover);
+	--border-color: var(--primary-hover);
+	--box-shadow: var(--button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0));
+	--color: var(--primary-inverse);
+	pointer-events: none;
+}
+
+fs-menu[data-burger] > div {
+	background: var(--primary-inverse);
+	position: absolute;
+	z-index: 2;
+	inset: 0;
+}
+
+fs-menu[data-burger] > div > ul {
+	display: list-item;
+}
+
+fs-menu > div[data-hidden='true'] {
+	display: none;
+}
+
+fs-menu[data-burger] button.back,
+fs-menu[data-burger] button.burger {
+	background: transparent;
+	border: none;
+	color: var(--h1-color);
+	width: auto;
+}
+
+fs-menu[data-burger] button.burger {
+	position: absolute;
+	top: 0;
+	z-index: 2;
+}
+
+fs-menu[data-burger] button.back > span,
+fs-menu[data-burger] button.burger > span {
+	display: none;
+}
+
+fs-menu[data-burger] button.back > svg,
+fs-menu[data-burger] button.burger > svg {
+	width: 2rem;
+	height: 2rem;
+}
+

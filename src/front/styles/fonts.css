@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'Genjiro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(otf/Genjiro.otf) format('otf');
+}
+
+@font-face {
+  font-family: 'SamuraiWarrior';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(otf/SamuraiWarrior.otf) format('woff2');
+}
