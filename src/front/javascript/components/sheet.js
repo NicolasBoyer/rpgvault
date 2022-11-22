@@ -25,10 +25,13 @@ export default class Sheet extends HTMLElement {
 	// TODO Comment gérer les fonts ?
 	// TODO création des inputs par copier coller
 	// TODO revoir le resize avec la souris sur les bords ? Avec des fleches sur les bords ?
-	// TODO font family + color input + centrage ?
+	// TODO font family + default values
 	// TODO ctrl c ctrl v ctrl d ctrl s manage shortcut
-	// TODO gestion dépassement popup screen
 	// TODO manager de shortcuts ?
+	// TODO bouton et shortcut cacher l'interface
+	// TODO suppression police
+	// TODO fermer sans enregistrer (annuler)
+	// TODO Interface cacher avec un shortcut
 	async connectedCallback () {
 		const splitUrl = location.pathname.split('/')
 		this.#sheet = await Utils.request('/db', 'POST', { body: `{ "getCollections": { "slug": "${splitUrl[splitUrl.length - 1]}" } }` })
@@ -160,6 +163,32 @@ export default class Sheet extends HTMLElement {
 		})
 	}
 
+	// TODO en cours ici avec la balise style et le fontfamily ajouté plus bas
+	#addFont () {
+		let font
+		let fontFamily
+		Utils.confirm(html`
+			<label for="font">
+				<span>Ajouter une police (import google)</span>
+				<input type="text" id="font" name="font" @change="${async (pEvent) => {
+					font = pEvent.target.value
+				}}">
+			</label>
+			<label for="fontFamily">
+				<span>Nom de la police (font-family)</span>
+				<input type="text" id="fontFamily" name="fontFamily" @change="${async (pEvent) => {
+					fontFamily = pEvent.target.value
+				}}">
+			</label>
+		`, async () => {
+			// this.style.backgroundColor = color
+			/// / TODO à passer dans le save ?
+			// await Utils.request('/db', 'POST', { body: `{ "setBackgroundColor": { "id": "${this.#id}", "color": "${color}" } }` })
+			console.log(font)
+			console.log(fontFamily)
+		})
+	}
+
 	#addInput () {
 		this.#displayEditBlock(false)
 		InputDrawer.init(this.querySelector('.wrapper'), { x: this.#containerLeft, y: this.#containerTop }, async (pMousePosition, pEvent) => {
@@ -201,6 +230,9 @@ export default class Sheet extends HTMLElement {
 
 	#render () {
 		render(html`
+			<style>
+				@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
+			</style>
 			<div style="position: relative;width: ${this.#containerWidth};height: ${this.#containerHeight};" class="wrapper ${this.#editMode && 'editMode'}" @click="${(pEvent) => {
 				if (this.#editMode) this.#selectInput(pEvent)
 			}}">
@@ -209,7 +241,7 @@ export default class Sheet extends HTMLElement {
 						<button class="contrast" @click="${() => this.#editBackgroundImage()}">Image de fond</button>
 						<button class="contrast" @click="${() => this.#changeBackgroundColor()}">Couleur du fond</button>
 						<button class="contrast" @click="${() => this.#addInput()}">Ajouter un champ</button>
-						<button class="contrast" @click="${() => {}}">Ajouter une police</button>
+						<button class="contrast" @click="${() => this.#addFont()}">Ajouter une police</button>
 						<button class="contrast">Ajouter une image</button>
 						<div>
 							<button class="save" @click="${async () => {
@@ -232,7 +264,7 @@ export default class Sheet extends HTMLElement {
 									<textarea
 											id="${pInput.id}"
 											name="${pInput.name}"
-											style="font-size: ${pInput.fontSize * this.#ratio}px;width: ${pInput.width * this.#ratio}px;height: ${pInput.height * this.#ratio}px;color: ${pInput.color};"
+											style="font-size: ${pInput.fontSize * this.#ratio}px;width: ${pInput.width * this.#ratio}px;height: ${pInput.height * this.#ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: 'Sedgwick Ave Display', cursive;"
 											@change="${(pEvent) => this.#changeAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${this.#editMode}"
 											@click="${(pEvent) => this.#selectInput(pEvent, pInput)}"
@@ -249,7 +281,7 @@ export default class Sheet extends HTMLElement {
 											id="${pInput.id}"
 											name="${pInput.name}"
 											value="${pInput.value}"
-											style="font-size: ${pInput.fontSize * this.#ratio}px;width: ${pInput.width * this.#ratio}px;height: ${pInput.height * this.#ratio}px;color: ${pInput.color};"
+											style="font-size: ${pInput.fontSize * this.#ratio}px;width: ${pInput.width * this.#ratio}px;height: ${pInput.height * this.#ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: 'Sedgwick Ave Display', cursive;"
 											@change="${(pEvent) => this.#changeAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${this.#editMode}"
 											@click="${(pEvent) => this.#selectInput(pEvent, pInput)}"
@@ -261,31 +293,31 @@ export default class Sheet extends HTMLElement {
 											}}"
 									/>
 								`}
-								${this.#selectedInput === pInput.id ? html`
-									<article>
-										<a href="#" role="button" class="cloneInput" @click="${(pEvent) => this.#cloneInput(pEvent, pInput)}" title="Dupliquer">
-											<svg class="clone">
-												<use href="#clone"></use>
-											</svg>
-										</a>
-										<a href="#" role="button" class="deleteInput" @click="${(pEvent) => this.#deleteInput(pInput.id)}" title="Supprimer">
-											<svg class="remove">
-												<use href="#remove"></use>
-											</svg>
-										</a>
-										${inputs(pInput).map((pEntry) => html`
-											<fs-label
-													id="${pEntry.id}"
-													type="${pEntry.type}"
-													name="${pEntry.name}"
-													value="${pEntry.value}"
-													@change="${(pEvent) => this.#changeInputValues(pInput, pEntry.id, pEvent.target.value)}"
-													options="${JSON.stringify(pEntry.options)}"
-											></fs-label>
-										`)}
-									</article>
-								` : ''}
 							</label>
+							${this.#selectedInput === pInput.id ? html`
+								<article class="selectBlock">
+									<a href="#" role="button" class="cloneInput" @click="${(pEvent) => this.#cloneInput(pEvent, pInput)}" title="Dupliquer">
+										<svg class="clone">
+											<use href="#clone"></use>
+										</svg>
+									</a>
+									<a href="#" role="button" class="deleteInput" @click="${(pEvent) => this.#deleteInput(pInput.id)}" title="Supprimer">
+										<svg class="trash">
+											<use href="#trash"></use>
+										</svg>
+									</a>
+									${inputs(pInput).map((pEntry) => html`
+										<fs-label
+												id="${pEntry.id}"
+												type="${pEntry.type}"
+												name="${pEntry.name}"
+												value="${pEntry.value}"
+												@input="${(pEvent) => this.#changeInputValues(pInput, pEntry.id, pEvent.target.value)}"
+												options="${JSON.stringify(pEntry.options)}"
+										></fs-label>
+									`)}
+								</article>
+							` : ''}
 						`
 				)}
 			</div>
