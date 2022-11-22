@@ -64,8 +64,10 @@ export class ElementMover {
 		if (pEvent.code === 'ArrowDown') translateY += offset
 		if (pEvent.code === 'ArrowRight') translateX += offset
 		if (pEvent.code === 'ArrowLeft') translateX -= offset
+		setTimeout(() => {
+			ElementMover.#element.style.translate = `${translateX}px ${translateY}px`
+		})
 		ElementMover.#keysPress[pEvent.code] = false
-		ElementMover.#element.style.translate = `${translateX}px ${translateY}px`
 		ElementMover.#callBack({ x: translateX, y: translateY })
 	}
 }
