@@ -54,6 +54,16 @@ export default class Database {
 				return await resolvers.getCollections({ id: args.id })
 			},
 
+			async setFont (args) {
+				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
+				return await resolvers.getCollections({ id: args.id })
+			},
+
+			async deleteFont (args) {
+				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $pull: { fonts: { fontFamily: { $in: args.fonts } } } })
+				return await resolvers.getCollections({ id: args.id })
+			},
+
 			async setInput (args) {
 				const isInputExists = (await resolvers.getCollections({ id: args.id })).inputs.some((pInput) => pInput.id === args.inputId)
 				const update = isInputExists ? { $set: { 'inputs.$': args.input } } : { $push: { inputs: args.input } }

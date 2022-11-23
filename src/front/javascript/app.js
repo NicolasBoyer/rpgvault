@@ -1,8 +1,7 @@
 import { Utils } from './classes/utils.js'
 import Loader from './components/loader.js'
-import Sheet from './components/sheet.js'
+import Sheet from './components/sheet/sheet.js'
 import Confirm from './components/confirm.js'
-import Toast from './components/toast.js'
 import Login from './components/login.js'
 import Label from './components/label.js'
 
@@ -35,7 +34,7 @@ class App {
 new App()
 customElements.define('fs-loader', Loader)
 // customElements.define('fs-header', Header)
-customElements.define('fs-toast', Toast)
+// customElements.define('fs-toast', Toast)
 customElements.define('fs-confirm', Confirm)
 customElements.define('fs-sheet', Sheet)
 customElements.define('fs-label', Label)

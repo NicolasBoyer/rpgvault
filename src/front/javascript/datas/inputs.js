@@ -1,4 +1,4 @@
-export const inputs = (pInput) => [
+export const inputs = (pInput, pFonts) => [
 	{
 		id: 'id',
 		type: 'hidden',
@@ -31,9 +31,10 @@ export const inputs = (pInput) => [
 	},
 	{
 		id: 'fontFamily',
-		type: 'text',
+		type: 'select',
 		name: 'Police',
-		value: pInput.fontFamily
+		value: pInput.fontFamily,
+		options: pFonts
 	},
 	{
 		id: 'fontSize',

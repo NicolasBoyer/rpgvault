@@ -1,8 +1,8 @@
-import { html, render } from '../thirdParty/litHtml.js'
-import { Utils } from '../classes/utils.js'
-import { InputDrawer } from '../classes/InputDrawer.js'
-import { inputs } from '../datas/inputs.js'
-import { ElementMover } from '../classes/ElementMover.js'
+import { html, render } from '../../thirdParty/litHtml.js'
+import { Utils } from '../../classes/utils.js'
+import { InputDrawer } from '../../classes/InputDrawer.js'
+import { inputs } from '../../datas/inputs.js'
+import { ElementMover } from '../../classes/ElementMover.js'
 
 export default class Sheet extends HTMLElement {
 	#sheet
@@ -22,15 +22,12 @@ export default class Sheet extends HTMLElement {
 	#isSaving = false
 
 	// TODO voir si possible de casser un peu ce js en plusieurs peut etre avec une gestion du front et du save dans différents cichiers
-	// TODO Comment gérer les fonts ?
 	// TODO création des inputs par copier coller
 	// TODO revoir le resize avec la souris sur les bords ? Avec des fleches sur les bords ?
-	// TODO font family + default values
+	// TODO default values
 	// TODO ctrl c ctrl v ctrl d ctrl s manage shortcut
 	// TODO manager de shortcuts ?
 	// TODO bouton et shortcut cacher l'interface
-	// TODO suppression police
-	// TODO fermer sans enregistrer (annuler)
 	// TODO Interface cacher avec un shortcut
 	async connectedCallback () {
 		const splitUrl = location.pathname.split('/')
@@ -163,29 +160,48 @@ export default class Sheet extends HTMLElement {
 		})
 	}
 
-	// TODO en cours ici avec la balise style et le fontfamily ajouté plus bas
 	#addFont () {
-		let font
+		let fontUrl
 		let fontFamily
 		Utils.confirm(html`
-			<label for="font">
-				<span>Ajouter une police (import google)</span>
-				<input type="text" id="font" name="font" @change="${async (pEvent) => {
-					font = pEvent.target.value
+			<label for="fontUrl">
+				<span>Ajouter l'URL d'une police (import google)</span>
+				<input type="text" id="fontUrl" name="fontUrl" @change="${async (pEvent) => {
+					fontUrl = pEvent.target.value
 				}}">
 			</label>
 			<label for="fontFamily">
-				<span>Nom de la police (font-family)</span>
+				<span>Nom de la police (font family)</span>
 				<input type="text" id="fontFamily" name="fontFamily" @change="${async (pEvent) => {
 					fontFamily = pEvent.target.value
 				}}">
 			</label>
 		`, async () => {
-			// this.style.backgroundColor = color
-			/// / TODO à passer dans le save ?
-			// await Utils.request('/db', 'POST', { body: `{ "setBackgroundColor": { "id": "${this.#id}", "color": "${color}" } }` })
-			console.log(font)
-			console.log(fontFamily)
+			// TODO à passer dans le save ?
+			this.#sheet = await Utils.request('/db', 'POST', { body: `{ "setFont": { "id": "${this.#id}", "fontUrl": "${fontUrl}", "fontFamily": "${fontFamily}" } }` })
+			this.#render()
+		})
+	}
+
+	#deleteFont () {
+		let fonts = []
+		Utils.confirm(html`
+			<ul>
+				${this.#sheet.fonts.map((pFont) => html`
+					<li>
+						<label for="${pFont.fontFamily}">
+							<input type="checkbox" id="${pFont.fontFamily}" name="${pFont.fontFamily}" value="${pFont.fontFamily}" @change="${(pEvent) => {
+								const value = pFont.fontFamily
+								if (pEvent.target.checked) fonts.push(value)
+								else fonts = fonts.filter((pChoice) => pChoice !== value)
+							}}">${pFont.fontFamily}</label>
+					</li>
+				`)}
+			</ul>
+		`, async () => {
+			// TODO à passer dans le save ?
+			this.#sheet = await Utils.request('/db', 'POST', { body: `{ "deleteFont": { "id": "${this.#id}", "fonts": ${JSON.stringify(fonts)} } }` })
+			this.#render()
 		})
 	}
 
@@ -231,7 +247,9 @@ export default class Sheet extends HTMLElement {
 	#render () {
 		render(html`
 			<style>
-				@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap');
+				${this.#sheet.fonts.map((pFont) => html`
+					@import url(${pFont.fontUrl});
+				`)}
 			</style>
 			<div style="position: relative;width: ${this.#containerWidth};height: ${this.#containerHeight};" class="wrapper ${this.#editMode && 'editMode'}" @click="${(pEvent) => {
 				if (this.#editMode) this.#selectInput(pEvent)
@@ -242,8 +260,13 @@ export default class Sheet extends HTMLElement {
 						<button class="contrast" @click="${() => this.#changeBackgroundColor()}">Couleur du fond</button>
 						<button class="contrast" @click="${() => this.#addInput()}">Ajouter un champ</button>
 						<button class="contrast" @click="${() => this.#addFont()}">Ajouter une police</button>
+						<button class="contrast" @click="${() => this.#deleteFont()}">Supprimer une police</button>
 						<button class="contrast">Ajouter une image</button>
 						<div>
+							<button @click="${() => {
+								this.#displayEditMode(false)
+							}}">Annuler
+							</button>
 							<button class="save" @click="${async () => {
 								await this.#save()
 								this.#displayEditMode(false)
@@ -264,7 +287,7 @@ export default class Sheet extends HTMLElement {
 									<textarea
 											id="${pInput.id}"
 											name="${pInput.name}"
-											style="font-size: ${pInput.fontSize * this.#ratio}px;width: ${pInput.width * this.#ratio}px;height: ${pInput.height * this.#ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: 'Sedgwick Ave Display', cursive;"
+											style="font-size: ${pInput.fontSize * this.#ratio}px;width: ${pInput.width * this.#ratio}px;height: ${pInput.height * this.#ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
 											@change="${(pEvent) => this.#changeAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${this.#editMode}"
 											@click="${(pEvent) => this.#selectInput(pEvent, pInput)}"
@@ -281,7 +304,7 @@ export default class Sheet extends HTMLElement {
 											id="${pInput.id}"
 											name="${pInput.name}"
 											value="${pInput.value}"
-											style="font-size: ${pInput.fontSize * this.#ratio}px;width: ${pInput.width * this.#ratio}px;height: ${pInput.height * this.#ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: 'Sedgwick Ave Display', cursive;"
+											style="font-size: ${pInput.fontSize * this.#ratio}px;width: ${pInput.width * this.#ratio}px;height: ${pInput.height * this.#ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
 											@change="${(pEvent) => this.#changeAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${this.#editMode}"
 											@click="${(pEvent) => this.#selectInput(pEvent, pInput)}"
@@ -306,7 +329,7 @@ export default class Sheet extends HTMLElement {
 											<use href="#trash"></use>
 										</svg>
 									</a>
-									${inputs(pInput).map((pEntry) => html`
+									${inputs(pInput, this.#sheet.fonts.map((pFont) => ({ name: pFont.fontFamily, value: pFont.fontFamily }))).map((pEntry) => html`
 										<fs-label
 												id="${pEntry.id}"
 												type="${pEntry.type}"
