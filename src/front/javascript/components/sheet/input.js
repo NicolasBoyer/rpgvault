@@ -5,6 +5,7 @@ import Datas from './datas.js'
 import States from './states.js'
 import View from './view.js'
 import Sheet from './sheet.js'
+import { ElementResizer } from '../../classes/ElementResizer.js'
 
 /**
  * Contient toutes les fonctions relatives aux possibilités de l'input
@@ -42,6 +43,10 @@ export default class Input {
 			if (pEvent) pEvent.stopPropagation()
 			if (pInput) {
 				ElementMover.init(document.querySelector(`label[for='${pInput.id}']`), {
+					x: Sheet.containerLeft,
+					y: Sheet.containerTop
+				}, (pMousePosition) => Datas.addInputValues(pInput, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)))
+				ElementResizer.init(document.querySelector(`label[for='${pInput.id}']`), {
 					x: Sheet.containerLeft,
 					y: Sheet.containerTop
 				}, (pMousePosition) => Datas.addInputValues(pInput, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)))

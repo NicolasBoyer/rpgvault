@@ -297,6 +297,31 @@ article input[type=color] {
 	padding: 0;
 }
 
+/*** RESIZER ***/
+.resizeHandler {
+	background:#bf1919;
+}
+
+.leftTop,
+.rightBottom {
+    cursor: nw-resize;
+}
+
+.leftCenter,
+.rightCenter {
+    cursor: e-resize;
+}
+
+.centerTop,
+.centerBottom {
+    cursor: n-resize;
+}
+
+.rightTop,
+.leftBottom {
+    cursor: ne-resize;
+}
+
 /*** LOADER ***/
 fs-loader {
 	position: absolute;
