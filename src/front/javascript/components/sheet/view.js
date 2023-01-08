@@ -4,6 +4,7 @@ import Datas from './datas.js'
 import States from './states.js'
 import Input from './input.js'
 import Sheet from './sheet.js'
+import { ElementResizer } from '../../classes/ElementResizer.js'
 
 /**
  * Fonctions de rendu du composant
@@ -20,13 +21,13 @@ export default class View {
 				<button class="contrast">Ajouter une image</button>
 				<div>
 					<button @click="${() => {
-						States.displayEditMode(false)
-					}}">Annuler
+			States.displayEditMode(false)
+		}}">Annuler
 					</button>
 					<button class="save" @click="${async () => {
-						await Datas.save()
-						States.displayEditMode(false)
-					}}">Enregistrer et fermer
+			await Datas.save()
+			States.displayEditMode(false)
+		}}">Enregistrer et fermer
 						<fs-loader ?visible="${Datas.isSaving}"></fs-loader>
 					</button>
 				</div>
@@ -64,19 +65,19 @@ export default class View {
 	static render () {
 		render(html`
 			<style>
-				${Datas.sheet.fonts.map((pFont) => html`
+				${Datas.sheet.fonts.map(
+			(pFont) => html`
 					@import url(${pFont.fontUrl});
 				`)}
 			</style>
-			<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'}" @click="${(pEvent) => {
-				if (States.editMode) Input.select(pEvent)
-			}}">
+				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'}" @click="${(pEvent) => {
+			if (States.editMode) Input.select(pEvent)
+		}}">
 				${States.editMode ? this.#editBlock() : html`
 					<button class="edit contrast" @click="${() => States.displayEditMode(true)}">Éditer</button>
 					<button class="notepad contrast">Bloc notes</button>
 				`}
-				${Datas.sheet.inputs?.map(
-						(pInput) => html`
+				${Datas.sheet.inputs?.map((pInput) => html`
 							<label for="${pInput.id}" style="translate: ${pInput.x * Sheet.ratio}px ${pInput.y * Sheet.ratio}px;" class="${Input.selectedInput === pInput.id ? 'selected' : ''}">
 								<span>${pInput.name}</span>
 								${pInput.type === 'textarea' ? html`
@@ -88,11 +89,11 @@ export default class View {
 											?readonly="${States.editMode}"
 											@click="${(pEvent) => Input.select(pEvent, pInput)}"
 											@keyup="${(pEvent) => {
-												if (pEvent.key === 'Delete') {
-													pEvent.stopPropagation()
-													Input.delete(pInput.id)
-												}
-											}}"
+				if (pEvent.key === 'Delete') {
+					pEvent.stopPropagation()
+					Input.delete(pInput.id)
+				}
+			}}"
 									>${pInput.value}</textarea>
 								` : html`
 									<input
@@ -105,17 +106,18 @@ export default class View {
 											?readonly="${States.editMode}"
 											@click="${(pEvent) => Input.select(pEvent, pInput)}"
 											@keyup="${(pEvent) => {
-												if (pEvent.key === 'Delete') {
-													pEvent.stopPropagation()
-													Input.delete(pInput.id)
-												}
-											}}"
+				if (pEvent.key === 'Delete') {
+					pEvent.stopPropagation()
+					Input.delete(pInput.id)
+				}
+			}}"
 									/>
 								`}
+								${Input.selectedInput === pInput.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}
 							</label>
 							${Input.selectedInput === pInput.id ? this.#selectBlock(pInput) : ''}
 						`
-				)}
+		)}
 			</div>
 		`, Sheet.element)
 	}

@@ -6,29 +6,27 @@ export class ElementMover {
 	static #callBack
 	static #isPointerDown = false
 	static #keysPress = {}
+	static isMoving = false
 
 	static init (pElement, pOffset, pCallBack) {
 		this.#element = pElement
 		this.#selector = this.#element.querySelector('input, textarea')
 		this.#offsetPosition = pOffset
 		this.#callBack = pCallBack
-		this.#resetMousePosition()
+		this.#mouse = {
+			x: 0,
+			y: 0
+		}
 		this.#selector.addEventListener('pointerdown', this.#pointerDown)
+		this.#selector.addEventListener('pointerup', this.#pointerUp)
 		document.body.addEventListener('pointermove', this.#pointerMove)
 		this.#element.addEventListener('keydown', this.#keyDown)
 		this.#element.addEventListener('keyup', this.#keyUp)
 	}
 
-	static #resetMousePosition () {
-		this.#mouse = {
-			x: 0,
-			y: 0
-		}
-	}
-
-	static async #pointerDown (pEvent) {
-		ElementMover.#selector.addEventListener('pointerup', ElementMover.#pointerUp)
-		ElementMover.#isPointerDown = true
+	static async #pointerDown () {
+		ElementMover.#isPointerDown = ElementMover.isMoving = true
+		document.body.classList.add('isMoving')
 	}
 
 	static #pointerMove (pEvent) {
@@ -45,10 +43,8 @@ export class ElementMover {
 
 	static async #pointerUp () {
 		await ElementMover.#callBack(ElementMover.#mouse)
-		ElementMover.#resetMousePosition()
-		document.body.removeEventListener('pointermove', ElementMover.#pointerMove)
-		ElementMover.#selector.removeEventListener('pointerup', ElementMover.#pointerUp)
-		ElementMover.#isPointerDown = false
+		ElementMover.#isPointerDown = ElementMover.isMoving = false
+		document.body.classList.remove('isMoving')
 	}
 
 	static #keyDown (pEvent) {

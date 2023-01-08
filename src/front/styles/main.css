@@ -124,6 +124,7 @@ fs-sheet > div > label > textarea {
 	line-height: 1.1;
 	resize: none;
 	overflow: hidden;
+	display: block;
 }
 
 fs-sheet > div > label > textarea:hover {
@@ -240,6 +241,14 @@ article.selectBlock:hover {
 	transition: opacity var(--transition);
 }
 
+.isMoving article.editBlock:hover,
+.isMoving article.selectBlock:hover,
+.isResizing article.editBlock:hover,
+.isResizing article.selectBlock:hover {
+	opacity: 0;
+	transition: none;
+}
+
 article.editBlock > div {
 	display: flex;
 	gap: 1rem;
@@ -299,7 +308,9 @@ article input[type=color] {
 
 /*** RESIZER ***/
 .resizeHandler {
-	background:#bf1919;
+	border: 2px solid #bf1919;
+	background: #ddd2cfc7;
+	position: absolute;
 }
 
 .leftTop,

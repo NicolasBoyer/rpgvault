@@ -17,7 +17,6 @@ export default class Sheet extends HTMLElement {
 	static containerTop
 
 	// TODO création des inputs par copier coller
-	// TODO revoir le resize avec la souris sur les bords ? Avec des fleches sur les bords ?
 	// TODO default values
 	// TODO ctrl c ctrl v ctrl d ctrl s manage shortcut
 	// TODO manager de shortcuts ?
@@ -63,8 +62,8 @@ export default class Sheet extends HTMLElement {
 			<label for="color">
 				<span>Choisissez une couleur</span>
 				<input type="color" id="color" name="color" value="${Datas.sheet.backgroundColor}" @change="${async (pEvent) => {
-					color = pEvent.target.value
-				}}">
+			color = pEvent.target.value
+		}}">
 			</label>
 		`, () => {
 			this.element.style.backgroundColor = color
@@ -79,8 +78,8 @@ export default class Sheet extends HTMLElement {
 			<label for="file">
 				<span>Choisissez un fichier</span>
 				<input type="file" id="file" name="file" @change="${(pEvent) => {
-					file = pEvent.target.files[0]
-				}}">
+			file = pEvent.target.files[0]
+		}}">
 			</label>
 		`, () => {
 			const reader = new FileReader()
@@ -100,14 +99,14 @@ export default class Sheet extends HTMLElement {
 			<label for="fontUrl">
 				<span>Ajouter l'URL d'une police (import google)</span>
 				<input type="text" id="fontUrl" name="fontUrl" @change="${async (pEvent) => {
-					fontUrl = pEvent.target.value
-				}}">
+			fontUrl = pEvent.target.value
+		}}">
 			</label>
 			<label for="fontFamily">
 				<span>Nom de la police (font family)</span>
 				<input type="text" id="fontFamily" name="fontFamily" @change="${async (pEvent) => {
-					fontFamily = pEvent.target.value
-				}}">
+			fontFamily = pEvent.target.value
+		}}">
 			</label>
 		`, () => {
 			if (!Datas.sheet.fonts) Datas.sheet.fonts = []
@@ -126,10 +125,10 @@ export default class Sheet extends HTMLElement {
 					<li>
 						<label for="${pFont.fontFamily}">
 							<input type="checkbox" id="${pFont.fontFamily}" name="${pFont.fontFamily}" value="${pFont.fontFamily}" @change="${(pEvent) => {
-								const value = pFont.fontFamily
-								if (pEvent.target.checked) fonts.push(value)
-								else fonts = fonts.filter((pChoice) => pChoice !== value)
-							}}">${pFont.fontFamily}</label>
+			const value = pFont.fontFamily
+			if (pEvent.target.checked) fonts.push(value)
+			else fonts = fonts.filter((pChoice) => pChoice !== value)
+		}}">${pFont.fontFamily}</label>
 					</li>
 				`)}
 			</ul>

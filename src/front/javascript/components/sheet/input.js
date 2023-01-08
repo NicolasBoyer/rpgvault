@@ -41,24 +41,21 @@ export default class Input {
 	static select (pEvent, pInput) {
 		if (States.editMode) {
 			if (pEvent) pEvent.stopPropagation()
+			this.selectedInput = pInput?.id
+			View.render()
 			if (pInput) {
 				ElementMover.init(document.querySelector(`label[for='${pInput.id}']`), {
 					x: Sheet.containerLeft,
 					y: Sheet.containerTop
 				}, (pMousePosition) => Datas.addInputValues(pInput, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)))
-				// TODO il suffit de commenter ça pour que ça remarche bien
 				ElementResizer.init(document.querySelector(`label[for='${pInput.id}']`), {
 					x: Sheet.containerLeft,
 					y: Sheet.containerTop
 				}, (pMousePosition) => {
 					console.log(pMousePosition)
 					Datas.addInputValues(pInput, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio))
-					// document.querySelector(`label[for='${pInput.id}'] > input`).style.width = pMousePosition.width + 'px'
-					// document.querySelector(`label[for='${pInput.id}'] > input`).style.height = pMousePosition.height + 'px'
 				})
 			}
-			this.selectedInput = pInput?.id
-			View.render()
 		}
 	}
 }
