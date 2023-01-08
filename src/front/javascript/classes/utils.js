@@ -54,4 +54,15 @@ export class Utils {
 	static generateId () {
 		return new Date().getTime()
 	}
+
+	static getMousePosition () {
+		return { x: mouseX, y: mouseY }
+	}
 }
+
+let mouseX = 0
+let mouseY = 0
+document.body.addEventListener('pointermove', (pEvent) => {
+	mouseX = pEvent.pageX + window.scrollX
+	mouseY = pEvent.pageY + window.scrollY
+})

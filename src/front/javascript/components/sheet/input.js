@@ -7,6 +7,7 @@ import Sheet from './sheet.js'
 import { ElementResizer } from '../../classes/elementResizer.js'
 import { ElementMover } from '../../classes/elementMover.js'
 import { ShortcutManager } from '../../classes/shortcutManager.js'
+import { Caches } from '../../classes/caches.js'
 
 /**
  * Contient toutes les fonctions relatives aux possibilités de l'input
@@ -39,6 +40,17 @@ export default class Input {
 		this.select(pEvent, input)
 	}
 
+	static copy (pEvent, input) {
+		Caches.set('inputDatas', input)
+	}
+
+	static paste (pEvent) {
+		const mousePosition = Utils.getMousePosition()
+		const input = { ...Caches.get('inputDatas'), x: Math.round((mousePosition.x - Sheet.containerLeft) / Sheet.ratio), y: Math.round((mousePosition.y - Sheet.containerTop) / Sheet.ratio), id: Utils.generateId().toString() }
+		Datas.addInputValues(input)
+		this.select(pEvent, input)
+	}
+
 	static select (pEvent, pInput) {
 		if (States.editMode) {
 			if (pEvent) pEvent.stopPropagation()
@@ -57,6 +69,8 @@ export default class Input {
 					Datas.addInputValues(pInput, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio))
 				})
 				ShortcutManager.set(inputElement, ['Control', 'd'], (pEvent) => Input.clone(pEvent, pInput))
+				ShortcutManager.set(inputElement, ['Control', 'c'], (pEvent) => Input.copy(pEvent, pInput))
+				ShortcutManager.set(document.body, ['Control', 'v'], (pEvent) => Input.paste(pEvent))
 				ShortcutManager.set(inputElement, ['Delete'], () => Input.delete(this.selectedInput))
 			}
 		}

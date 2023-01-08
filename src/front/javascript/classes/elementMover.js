@@ -36,7 +36,7 @@ export class ElementMover {
 	}
 
 	static async #pointerDown () {
-		ElementMover.#isPointerDown = ElementMover.isMoving = true
+		ElementMover.#isPointerDown = true
 		document.body.classList.add('isMoving')
 	}
 
@@ -49,13 +49,18 @@ export class ElementMover {
 		}
 		ElementMover.#mouse.x = pEvent.pageX + window.scrollX - ElementMover.#offsetPosition.x
 		ElementMover.#mouse.y = pEvent.pageY + window.scrollY - ElementMover.#offsetPosition.y
-		if (pEvent.pressure !== 0 && ElementMover.#isPointerDown) ElementMover.#element.style.translate = `${ElementMover.#mouse.x}px ${ElementMover.#mouse.y}px`
+		if (pEvent.pressure !== 0 && ElementMover.#isPointerDown) {
+			ElementMover.isMoving = true
+			ElementMover.#element.style.translate = `${ElementMover.#mouse.x}px ${ElementMover.#mouse.y}px`
+		}
 	}
 
 	static async #pointerUp () {
-		await ElementMover.#callBack(ElementMover.#mouse)
-		ElementMover.#isPointerDown = ElementMover.isMoving = false
-		document.body.classList.remove('isMoving')
+		if (ElementMover.isMoving) {
+			await ElementMover.#callBack(ElementMover.#mouse)
+			ElementMover.#isPointerDown = ElementMover.isMoving = false
+			document.body.classList.remove('isMoving')
+		}
 	}
 
 	static #moveByKey (pOffsetX, pOffsetY = 0) {

@@ -16,9 +16,8 @@ export default class Sheet extends HTMLElement {
 	static containerLeft
 	static containerTop
 
-	// TODO création des inputs par copier coller
 	// TODO default values
-	// TODO ctrl c ctrl v ctrl d ctrl s manage shortcut
+	// TODO ctrl s
 	// TODO bouton et shortcut cacher l'interface
 	// TODO Interface cacher avec un shortcut
 	// TODO ajout image
