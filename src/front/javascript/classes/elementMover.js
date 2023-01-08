@@ -1,3 +1,5 @@
+import { ShortcutManager } from './shortcutManager.js'
+
 export class ElementMover {
 	static #mouse
 	static #element
@@ -5,7 +7,6 @@ export class ElementMover {
 	static #offsetPosition
 	static #callBack
 	static #isPointerDown = false
-	static #keysPress = {}
 	static isMoving = false
 
 	static init (pElement, pOffset, pCallBack) {
@@ -20,8 +21,18 @@ export class ElementMover {
 		this.#selector.addEventListener('pointerdown', this.#pointerDown)
 		this.#selector.addEventListener('pointerup', this.#pointerUp)
 		document.body.addEventListener('pointermove', this.#pointerMove)
-		this.#element.addEventListener('keydown', this.#keyDown)
-		this.#element.addEventListener('keyup', this.#keyUp)
+		ShortcutManager.set(this.#element, ['ArrowUp'], () => this.#moveByKey(0, -1))
+		ShortcutManager.set(this.#element, ['ArrowDown'], () => this.#moveByKey(0, 1))
+		ShortcutManager.set(this.#element, ['ArrowRight'], () => this.#moveByKey(1))
+		ShortcutManager.set(this.#element, ['ArrowLeft'], () => this.#moveByKey(-1))
+		ShortcutManager.set(this.#element, ['Shift', 'ArrowUp'], () => this.#moveByKey(0, -10))
+		ShortcutManager.set(this.#element, ['Shift', 'ArrowDown'], () => this.#moveByKey(0, 10))
+		ShortcutManager.set(this.#element, ['Shift', 'ArrowRight'], () => this.#moveByKey(10))
+		ShortcutManager.set(this.#element, ['Shift', 'ArrowLeft'], () => this.#moveByKey(-10))
+		ShortcutManager.set(this.#element, ['Control', 'ArrowUp'], () => this.#moveByKey(0, -50))
+		ShortcutManager.set(this.#element, ['Control', 'ArrowDown'], () => this.#moveByKey(0, 50))
+		ShortcutManager.set(this.#element, ['Control', 'ArrowRight'], () => this.#moveByKey(50))
+		ShortcutManager.set(this.#element, ['Control', 'ArrowLeft'], () => this.#moveByKey(-50))
 	}
 
 	static async #pointerDown () {
@@ -47,23 +58,13 @@ export class ElementMover {
 		document.body.classList.remove('isMoving')
 	}
 
-	static #keyDown (pEvent) {
-		ElementMover.#keysPress[pEvent.code] = true
-	}
-
-	static #keyUp (pEvent) {
+	static #moveByKey (pOffsetX, pOffsetY = 0) {
 		const translate = ElementMover.#element.style.translate.split(' ')
-		let translateX = parseInt(translate[0])
-		let translateY = parseInt(translate[1])
-		const offset = ElementMover.#keysPress.ShiftLeft ? 10 : ElementMover.#keysPress.ControlLeft ? 50 : 1
-		if (pEvent.code === 'ArrowUp') translateY -= offset
-		if (pEvent.code === 'ArrowDown') translateY += offset
-		if (pEvent.code === 'ArrowRight') translateX += offset
-		if (pEvent.code === 'ArrowLeft') translateX -= offset
+		const translateX = parseInt(translate[0]) + pOffsetX
+		const translateY = parseInt(translate[1]) + pOffsetY
 		setTimeout(() => {
 			ElementMover.#element.style.translate = `${translateX}px ${translateY}px`
 		})
-		ElementMover.#keysPress[pEvent.code] = false
 		ElementMover.#callBack({ x: translateX, y: translateY })
 	}
 }

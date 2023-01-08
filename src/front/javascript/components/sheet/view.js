@@ -43,7 +43,7 @@ export default class View {
 						<use href="#clone"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="deleteInput" @click="${(pEvent) => Input.delete(pInput.id)}" title="Supprimer">
+				<a href="#" role="button" class="deleteInput" @click="${() => Input.delete(pInput.id)}" title="Supprimer">
 					<svg class="trash">
 						<use href="#trash"></use>
 					</svg>
@@ -88,12 +88,6 @@ export default class View {
 											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${States.editMode}"
 											@click="${(pEvent) => Input.select(pEvent, pInput)}"
-											@keyup="${(pEvent) => {
-				if (pEvent.key === 'Delete') {
-					pEvent.stopPropagation()
-					Input.delete(pInput.id)
-				}
-			}}"
 									>${pInput.value}</textarea>
 								` : html`
 									<input
@@ -105,12 +99,6 @@ export default class View {
 											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${States.editMode}"
 											@click="${(pEvent) => Input.select(pEvent, pInput)}"
-											@keyup="${(pEvent) => {
-				if (pEvent.key === 'Delete') {
-					pEvent.stopPropagation()
-					Input.delete(pInput.id)
-				}
-			}}"
 									/>
 								`}
 								${Input.selectedInput === pInput.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}

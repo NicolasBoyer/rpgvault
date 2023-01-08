@@ -1,11 +1,12 @@
 import { Utils } from '../../classes/utils.js'
 import { InputDrawer } from '../../classes/InputDrawer.js'
-import { ElementMover } from '../../classes/elementMover.js'
 import Datas from './datas.js'
 import States from './states.js'
 import View from './view.js'
 import Sheet from './sheet.js'
 import { ElementResizer } from '../../classes/elementResizer.js'
+import { ElementMover } from '../../classes/elementMover.js'
+import { ShortcutManager } from '../../classes/shortcutManager.js'
 
 /**
  * Contient toutes les fonctions relatives aux possibilités de l'input
@@ -44,17 +45,19 @@ export default class Input {
 			this.selectedInput = pInput?.id
 			View.render()
 			if (pInput) {
-				ElementMover.init(document.querySelector(`label[for='${pInput.id}']`), {
+				const inputElement = document.querySelector(`label[for='${pInput.id}']`)
+				ElementMover.init(inputElement, {
 					x: Sheet.containerLeft,
 					y: Sheet.containerTop
 				}, (pMousePosition) => Datas.addInputValues(pInput, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)))
-				ElementResizer.init(document.querySelector(`label[for='${pInput.id}']`), {
+				ElementResizer.init(inputElement, {
 					x: Sheet.containerLeft,
 					y: Sheet.containerTop
 				}, (pMousePosition) => {
-					console.log(pMousePosition)
 					Datas.addInputValues(pInput, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio))
 				})
+				ShortcutManager.set(inputElement, ['Control', 'd'], (pEvent) => Input.clone(pEvent, pInput))
+				ShortcutManager.set(inputElement, ['Delete'], () => Input.delete(this.selectedInput))
 			}
 		}
 	}

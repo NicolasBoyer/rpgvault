@@ -33,7 +33,7 @@ export class ElementResizer {
 		window.addEventListener('resize', () => this.#resetHandler())
 		this.#resetHandler()
 		document.body.addEventListener('pointermove', this.#pointerMove)
-		document.body.addEventListener('pointerup', ElementResizer.#pointerUp)
+		document.body.addEventListener('pointerup', this.#pointerUp)
 	}
 
 	static #resetHandler () {
@@ -94,14 +94,16 @@ export class ElementResizer {
 		}
 	}
 
-	static async #pointerUp (pEvent) {
-		await ElementResizer.#callBack({
-			x: ElementResizer.#mouse.translateX,
-			y: ElementResizer.#mouse.translateY,
-			width: parseInt(ElementResizer.#textZone.style.width),
-			height: parseInt(ElementResizer.#textZone.style.height)
-		})
-		ElementResizer.#isPointerDown = ElementResizer.isResizing = false
-		document.body.classList.remove('isResizing')
+	static async #pointerUp () {
+		if (ElementResizer.isResizing) {
+			await ElementResizer.#callBack({
+				x: ElementResizer.#mouse.translateX,
+				y: ElementResizer.#mouse.translateY,
+				width: parseInt(ElementResizer.#textZone.style.width),
+				height: parseInt(ElementResizer.#textZone.style.height)
+			})
+			ElementResizer.#isPointerDown = ElementResizer.isResizing = false
+			document.body.classList.remove('isResizing')
+		}
 	}
 }
