@@ -19,7 +19,6 @@ export default class Sheet extends HTMLElement {
 	// TODO création des inputs par copier coller
 	// TODO default values
 	// TODO ctrl c ctrl v ctrl d ctrl s manage shortcut
-	// TODO manager de shortcuts ?
 	// TODO bouton et shortcut cacher l'interface
 	// TODO Interface cacher avec un shortcut
 	// TODO ajout image
