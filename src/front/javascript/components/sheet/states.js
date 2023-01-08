@@ -1,8 +1,8 @@
 import Datas from './datas.js'
 import Input from './input.js'
 import View from './view.js'
-import { ElementResizer } from '../../classes/ElementResizer.js'
-import { ElementMover } from '../../classes/ElementMover.js'
+import { ElementResizer } from '../../classes/elementResizer.js'
+import { ElementMover } from '../../classes/elementMover.js'
 
 /**
  * Fonctions relatives au statut du composant

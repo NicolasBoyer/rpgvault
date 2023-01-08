@@ -4,7 +4,7 @@ import Datas from './datas.js'
 import States from './states.js'
 import Input from './input.js'
 import Sheet from './sheet.js'
-import { ElementResizer } from '../../classes/ElementResizer.js'
+import { ElementResizer } from '../../classes/elementResizer.js'
 
 /**
  * Fonctions de rendu du composant

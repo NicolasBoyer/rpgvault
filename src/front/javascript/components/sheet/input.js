@@ -1,11 +1,11 @@
 import { Utils } from '../../classes/utils.js'
 import { InputDrawer } from '../../classes/InputDrawer.js'
-import { ElementMover } from '../../classes/ElementMover.js'
+import { ElementMover } from '../../classes/elementMover.js'
 import Datas from './datas.js'
 import States from './states.js'
 import View from './view.js'
 import Sheet from './sheet.js'
-import { ElementResizer } from '../../classes/ElementResizer.js'
+import { ElementResizer } from '../../classes/elementResizer.js'
 
 /**
  * Contient toutes les fonctions relatives aux possibilités de l'input
