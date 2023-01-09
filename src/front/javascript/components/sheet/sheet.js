@@ -26,7 +26,10 @@ export default class Sheet extends HTMLElement {
 		this.style.backgroundColor = Datas.sheet.backgroundColor
 		Sheet.setBackgroundImage(Datas.sheet.backgroundImage || '../../assets/default.jpg')
 		window.addEventListener('resize', () => Sheet.resize())
-		ShortcutManager.set(document.body, ['Control', 's'], () => Datas.save())
+		ShortcutManager.set(document.body, ['Control', 's'], async () => {
+			await Datas.save()
+			View.render()
+		})
 		ShortcutManager.set(document.body, ['Tab'], () => {
 			States.interface = States.interface === 'hover' ? 'visible' : States.interface === 'visible' ? 'hidden' : 'hover'
 			View.render()

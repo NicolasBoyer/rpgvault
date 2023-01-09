@@ -34,7 +34,10 @@ export default class View {
 						<use href="#eye-blocked"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" ?disabled="${States.isSaved}" class="saveButton" @click="${() => Datas.save()}" title="Sauvegarder">
+				<a href="#" role="button" ?disabled="${States.isSaved}" class="saveButton" @click="${async () => {
+			await Datas.save()
+			this.render()
+		}}" title="Sauvegarder">
 					<svg class="floppy">
 						<use href="#floppy"></use>
 					</svg>
