@@ -22,7 +22,6 @@ export default class Sheet extends HTMLElement {
 	// TODO ctrl s -> ICI -> loader nécessaire ? ou juste disquette
 	// TODO ajout image
 	// TODO En cours sur control s manque un loader
-	// TODO remettre en place les shortcuts quand pas surchargé
 	async connectedCallback () {
 		await Datas.init()
 		Sheet.element = this
