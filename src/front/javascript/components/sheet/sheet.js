@@ -19,9 +19,7 @@ export default class Sheet extends HTMLElement {
 	static containerTop
 
 	// TODO default values
-	// TODO ctrl s -> ICI -> loader nécessaire ? ou juste disquette
 	// TODO ajout image
-	// TODO En cours sur control s manque un loader
 	async connectedCallback () {
 		await Datas.init()
 		Sheet.element = this
@@ -73,6 +71,8 @@ export default class Sheet extends HTMLElement {
 			this.element.style.backgroundColor = color
 			Datas.sheet.backgroundColor = color
 			Datas.sheetProperties.push({ setBackgroundColor: { color } })
+			States.isSaved = false
+			View.render()
 		})
 	}
 
@@ -93,6 +93,8 @@ export default class Sheet extends HTMLElement {
 				Datas.sheetProperties.push({ setBackgroundImage: { image: reader.result } })
 			})
 			reader.readAsDataURL(file)
+			States.isSaved = false
+			View.render()
 		})
 	}
 
@@ -117,6 +119,7 @@ export default class Sheet extends HTMLElement {
 			const font = { fontUrl, fontFamily }
 			Datas.sheet.fonts.push(font)
 			Datas.sheetProperties.push({ setFont: font })
+			States.isSaved = false
 			View.render()
 		})
 	}
@@ -141,6 +144,7 @@ export default class Sheet extends HTMLElement {
 				Datas.sheet.fonts = Datas.sheet.fonts.filter((pFont) => pFont.fontFamily !== pFontFamily)
 			})
 			Datas.sheetProperties.push({ deleteFont: { fonts: fonts } })
+			States.isSaved = false
 			View.render()
 		})
 	}

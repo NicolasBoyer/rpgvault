@@ -32,6 +32,7 @@ export default class Input {
 	static delete (pInputId) {
 		Datas.sheet.inputs.splice(Datas.sheet.inputs.findIndex((input) => input.id === pInputId), 1)
 		Datas.deletedInputs.push(pInputId)
+		States.isSaved = false
 		View.render()
 	}
 

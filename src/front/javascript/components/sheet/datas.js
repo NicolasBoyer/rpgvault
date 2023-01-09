@@ -38,6 +38,7 @@ export default class Datas {
 		}
 		index = this.sheet.inputs.findIndex((input) => input.id === pInput.id)
 		this.sheet.inputs[index !== -1 ? index : this.sheet.inputs.length || 0] = pInput
+		States.isSaved = false
 		View.render()
 	}
 
@@ -70,5 +71,6 @@ export default class Datas {
 		}
 		await Utils.request('/db', 'POST', { body: JSON.stringify(body) })
 		this.isSaving = false
+		States.isSaved = true
 	}
 }

@@ -260,6 +260,8 @@ article.selectBlock {
 
 article.editBlock > div.viewBlock {
 	margin-bottom: var(--spacing);
+	display: flex;
+	gap: 0.3em;
 }
 
 .wrapper > div.viewBlock {
@@ -317,13 +319,18 @@ fs-sheet article fs-label {
 
 a.cloneInput,
 a.deleteInput,
-a.viewSelection {
+a.viewSelection,
+a.saveButton {
 	width: 2rem;
 	height: 2rem;
 	padding: 0;
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
+}
+
+a.saveButton {
+	margin-left: auto;
 }
 
 article input[type=color] {
