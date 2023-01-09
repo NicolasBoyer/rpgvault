@@ -9,8 +9,10 @@ export class ShortcutManager {
 	}
 
 	static #keyDown (pEvent) {
-		pEvent.preventDefault()
-		ShortcutManager.#keysPress[pEvent.key] = true
+		if (Object.keys(ShortcutManager.#shortCuts).includes(pEvent.key)) {
+			pEvent.preventDefault()
+			ShortcutManager.#keysPress[pEvent.key] = true
+		}
 	}
 
 	static #keyUp (pEvent) {
