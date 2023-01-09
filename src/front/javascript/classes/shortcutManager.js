@@ -11,7 +11,7 @@ export class ShortcutManager {
 	}
 
 	static #keyDown (pEvent) {
-		if (Object.keys(ShortcutManager.#shortCuts).includes(pEvent.key) && States.editMode) {
+		if (Object.keys(ShortcutManager.#shortCuts).some((pKey) => pKey.split(',').includes(pEvent.key)) && States.editMode) {
 			pEvent.preventDefault()
 			ShortcutManager.#keysPress[pEvent.key] = true
 		}
