@@ -2,6 +2,8 @@ import Datas from './datas.js'
 import View from './view.js'
 import { Utils } from '../../classes/utils.js'
 import { html } from '../../thirdParty/litHtml.js'
+import { ShortcutManager } from '../../classes/shortcutManager.js'
+import States from './states.js'
 
 /**
  * Fichier de lancement du composant et ensemble de fonctions des features du composant
@@ -17,16 +19,21 @@ export default class Sheet extends HTMLElement {
 	static containerTop
 
 	// TODO default values
-	// TODO ctrl s
-	// TODO bouton et shortcut cacher l'interface
-	// TODO Interface cacher avec un shortcut
+	// TODO ctrl s -> ICI -> loader nécessaire ? ou juste disquette
 	// TODO ajout image
+	// TODO En cours sur control s manque un loader
+	// TODO remettre en place les shortcuts quand pas surchargé
 	async connectedCallback () {
 		await Datas.init()
 		Sheet.element = this
 		this.style.backgroundColor = Datas.sheet.backgroundColor
 		Sheet.setBackgroundImage(Datas.sheet.backgroundImage || '../../assets/default.jpg')
 		window.addEventListener('resize', () => Sheet.resize())
+		ShortcutManager.set(document.body, ['Control', 's'], () => Datas.save())
+		ShortcutManager.set(document.body, ['Tab'], () => {
+			States.interface = States.interface === 'hover' ? 'visible' : States.interface === 'visible' ? 'hidden' : 'hover'
+			View.render()
+		})
 	}
 
 	static setBackgroundImage (pImageSrc) {

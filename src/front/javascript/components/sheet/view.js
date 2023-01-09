@@ -10,16 +10,45 @@ import { ElementResizer } from '../../classes/elementResizer.js'
  * Fonctions de rendu du composant
  */
 export default class View {
+	static #viewBlock () {
+		return html`
+			<div class="viewBlock">
+				<a href="#" role="button" class="viewSelection ${States.interface === 'hover' ? 'selected' : ''}" @click="${() => {
+			States.interface = 'hover'
+		}}" title="Interface sur demande">
+					<svg class="eye-plus">
+						<use href="#eye-plus"></use>
+					</svg>
+				</a>
+				<a href="#" role="button" class="viewSelection ${States.interface === 'visible' ? 'selected' : ''}" @click="${() => {
+			States.interface = 'visible'
+		}}" title="Interface toujours visible">
+					<svg class="eye">
+						<use href="#eye"></use>
+					</svg>
+				</a>
+				<a href="#" role="button" class="viewSelection ${States.interface === 'hidden' ? 'selected' : ''}" @click="${() => {
+			States.interface = 'hidden'
+		}}" title="Interface cachée">
+					<svg class="eye-blocked">
+						<use href="#eye-blocked"></use>
+					</svg>
+				</a>
+			</div>
+		`
+	}
+
 	static #editBlock () {
 		return html`
 			<article .hidden="${States.isEditBlockHidden}" class="editBlock">
+				${States.interface !== 'hidden' ? this.#viewBlock() : ''}
 				<button class="contrast" @click="${() => Sheet.editBackgroundImage()}">Image de fond</button>
 				<button class="contrast" @click="${() => Sheet.changeBackgroundColor()}">Couleur du fond</button>
 				<button class="contrast" @click="${() => Input.add()}">Ajouter un champ</button>
 				<button class="contrast" @click="${() => Sheet.addFont()}">Ajouter une police</button>
 				<button class="contrast" @click="${() => Sheet.deleteFont()}">Supprimer une police</button>
 				<button class="contrast">Ajouter une image</button>
-				<div>
+				<div class="validBlock">
 					<button @click="${() => {
 			States.displayEditMode(false)
 		}}">Annuler
@@ -38,12 +67,12 @@ export default class View {
 	static #selectBlock (pInput) {
 		return html`
 			<article class="selectBlock">
-				<a href="#" role="button" class="cloneInput" @click="${(pEvent) => Input.clone(pEvent, pInput)}" title="Dupliquer">
+				<a href="#" role="button" class="cloneInput" @click="${(pEvent) => Input.clone(pEvent, pInput)}" title="Dupliquer (ctrl D)">
 					<svg class="clone">
 						<use href="#clone"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="deleteInput" @click="${() => Input.delete(pInput.id)}" title="Supprimer">
+				<a href="#" role="button" class="deleteInput" @click="${() => Input.delete(pInput.id)}" title="Supprimer (ctrl C)">
 					<svg class="trash">
 						<use href="#trash"></use>
 					</svg>
@@ -70,9 +99,10 @@ export default class View {
 					@import url(${pFont.fontUrl});
 				`)}
 			</style>
-				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'}" @click="${(pEvent) => {
+				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
 			if (States.editMode) Input.select(pEvent)
 		}}">
+				${States.interface === 'hidden' ? this.#viewBlock() : ''}
 				${States.editMode ? this.#editBlock() : html`
 					<button class="edit contrast" @click="${() => States.displayEditMode(true)}">Éditer</button>
 					<button class="notepad contrast">Bloc notes</button>

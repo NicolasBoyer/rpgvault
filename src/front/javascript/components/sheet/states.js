@@ -10,6 +10,7 @@ import { ElementMover } from '../../classes/elementMover.js'
 export default class States {
 	static editMode
 	static isEditBlockHidden
+	static interface = 'hover'
 
 	static displayEditMode (pValue) {
 		Input.select()
