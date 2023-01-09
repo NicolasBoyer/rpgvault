@@ -1,3 +1,5 @@
+import States from '../components/sheet/states.js'
+
 export class ShortcutManager {
 	static #keysPress = {}
 	static #shortCuts = {}
@@ -9,7 +11,7 @@ export class ShortcutManager {
 	}
 
 	static #keyDown (pEvent) {
-		if (Object.keys(ShortcutManager.#shortCuts).includes(pEvent.key)) {
+		if (Object.keys(ShortcutManager.#shortCuts).includes(pEvent.key) && States.editMode) {
 			pEvent.preventDefault()
 			ShortcutManager.#keysPress[pEvent.key] = true
 		}
