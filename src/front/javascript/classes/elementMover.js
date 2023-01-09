@@ -6,8 +6,8 @@ export class ElementMover {
 	static #selector
 	static #offsetPosition
 	static #callBack
-	static #isPointerDown = false
-	static isMoving = false
+	static #isMoving = false
+	static isPointerDown = false
 
 	static init (pElement, pOffset, pCallBack) {
 		this.#element = pElement
@@ -36,7 +36,7 @@ export class ElementMover {
 	}
 
 	static async #pointerDown () {
-		ElementMover.#isPointerDown = true
+		ElementMover.isPointerDown = true
 		document.body.classList.add('isMoving')
 	}
 
@@ -49,16 +49,16 @@ export class ElementMover {
 		}
 		ElementMover.#mouse.x = pEvent.pageX + window.scrollX - ElementMover.#offsetPosition.x
 		ElementMover.#mouse.y = pEvent.pageY + window.scrollY - ElementMover.#offsetPosition.y
-		if (pEvent.pressure !== 0 && ElementMover.#isPointerDown) {
-			ElementMover.isMoving = true
+		if (pEvent.pressure !== 0 && ElementMover.isPointerDown) {
+			ElementMover.#isMoving = true
 			ElementMover.#element.style.translate = `${ElementMover.#mouse.x}px ${ElementMover.#mouse.y}px`
 		}
 	}
 
 	static async #pointerUp () {
-		if (ElementMover.isMoving) {
-			await ElementMover.#callBack(ElementMover.#mouse)
-			ElementMover.#isPointerDown = ElementMover.isMoving = false
+		if (ElementMover.#isMoving) await ElementMover.#callBack(ElementMover.#mouse)
+		if (ElementMover.isPointerDown) {
+			ElementMover.isPointerDown = ElementMover.#isMoving = false
 			document.body.classList.remove('isMoving')
 		}
 	}

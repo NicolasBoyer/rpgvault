@@ -4,8 +4,7 @@ export class ElementResizer {
 	static #textZone
 	static #offsetPosition
 	static #callBack
-	static #isPointerDown = false
-	static isResizing = false
+	static isPointerDown = false
 	static boxPositions = [
 		{ class: 'leftTop' },
 		{ class: 'leftCenter' },
@@ -67,7 +66,7 @@ export class ElementResizer {
 		ElementResizer.bottomVerticalMove = pEvent.target.className.includes('Bottom')
 		ElementResizer.width = ElementResizer.#element.getBoundingClientRect().width
 		ElementResizer.height = ElementResizer.#element.getBoundingClientRect().height
-		ElementResizer.#isPointerDown = ElementResizer.isResizing = true
+		ElementResizer.isPointerDown = true
 		document.body.classList.add('isResizing')
 	}
 
@@ -78,7 +77,7 @@ export class ElementResizer {
 		const translate = ElementResizer.#element.style.translate.split(' ')
 		ElementResizer.#mouse.translateX = parseInt(translate[0])
 		ElementResizer.#mouse.translateY = parseInt(translate[1])
-		if (pEvent.pressure !== 0 && ElementResizer.#isPointerDown) {
+		if (pEvent.pressure !== 0 && ElementResizer.isPointerDown) {
 			if (ElementResizer.leftHorizontalMove) {
 				ElementResizer.#mouse.translateX = pEvent.pageX + window.scrollX - ElementResizer.#offsetPosition.x
 				ElementResizer.#textZone.style.width = ElementResizer.width - ElementResizer.#mouse.x + 'px'
@@ -95,14 +94,14 @@ export class ElementResizer {
 	}
 
 	static async #pointerUp () {
-		if (ElementResizer.isResizing) {
+		if (ElementResizer.isPointerDown) {
 			await ElementResizer.#callBack({
 				x: ElementResizer.#mouse.translateX,
 				y: ElementResizer.#mouse.translateY,
 				width: parseInt(ElementResizer.#textZone.style.width),
 				height: parseInt(ElementResizer.#textZone.style.height)
 			})
-			ElementResizer.#isPointerDown = ElementResizer.isResizing = false
+			ElementResizer.isPointerDown = false
 			document.body.classList.remove('isResizing')
 		}
 	}

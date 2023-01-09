@@ -21,7 +21,7 @@ export default class States {
 	}
 
 	static displayEditBlock (pValue) {
-		if (ElementResizer.isResizing || ElementMover.isMoving) return
+		if (ElementResizer.isPointerDown || ElementMover.isPointerDown) return
 		this.isEditBlockHidden = !pValue
 		View.render()
 	}
