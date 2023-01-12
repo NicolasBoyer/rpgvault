@@ -101,6 +101,19 @@ fs-sheet {
 	justify-content: center;
 }
 
+fs-sheet .image {
+	inset: 0;
+	position: absolute;
+}
+
+fs-sheet .image > div {
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: inherit;
+	height: inherit;
+}
+
 fs-sheet form {
 	display: contents;
 }
@@ -113,7 +126,7 @@ fs-sheet > div > label > textarea {
     margin: 0 !important;
     text-align: center;
     line-height: 1;
-    font-family: 'Genjiro', sans-serif;
+    font-family: 'SamuraiWarrior', sans-serif;
 }
 
 fs-sheet > div > label > input[type=text],
@@ -177,12 +190,18 @@ fs-sheet > div > label > textarea[readonly] {
 }
 
 fs-sheet > div > label.selected input[readonly],
-fs-sheet > div > label.selected > textarea[readonly] {
+fs-sheet > div > label.selected > textarea[readonly],
+fs-sheet> div > div.selected {
 	border: 1px solid #bf1919 !important;
+}
+
+fs-sheet > div > label.selected input[readonly],
+fs-sheet > div > label.selected > textarea[readonly] {
 	background: #ab8c8c5e !important;
 }
 
-fs-sheet > div > label.selected {
+fs-sheet > div > label.selected,
+fs-sheet> div > div.selected {
 	z-index: 1000;
 }
 
