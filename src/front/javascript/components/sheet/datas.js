@@ -9,7 +9,9 @@ import View from './view.js'
 export default class Datas {
 	static sheet
 	static changedInputs
+	static changedImages
 	static deletedInputs
+	static deletedImages
 	static sheetProperties
 	static isSaving = false
 	static #id
@@ -38,6 +40,22 @@ export default class Datas {
 		}
 		index = this.sheet.inputs.findIndex((input) => input.id === pInput.id)
 		this.sheet.inputs[index !== -1 ? index : this.sheet.inputs.length || 0] = pInput
+		States.isSaved = false
+		View.render()
+	}
+
+	static addImageValues (pImage, ...args) {
+		for (let i = 0; i < args.length; i++) {
+			const value = args[i + 1]
+			if (i % 2 === 0) pImage[args[i]] = Number(value) || value
+		}
+		let index
+		if (States.editMode) {
+			index = this.changedImages.findIndex((image) => image.id === pImage.id)
+			this.changedImages[index !== -1 ? index : this.changedImages.length || 0] = pImage
+		}
+		index = this.sheet.images.findIndex((image) => image.id === pImage.id)
+		this.sheet.images[index !== -1 ? index : this.sheet.images.length || 0] = pImage
 		States.isSaved = false
 		View.render()
 	}

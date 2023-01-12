@@ -20,6 +20,9 @@ export default class Sheet extends HTMLElement {
 
 	// TODO default values
 	// TODO ajout image
+	// Todo ajouter des fonts autre que google
+	// TODO pb sur les shortcut encore
+	// TODO permettre de bouger quand on reste appuyé
 	async connectedCallback () {
 		await Datas.init()
 		Sheet.element = this
@@ -37,14 +40,11 @@ export default class Sheet extends HTMLElement {
 	}
 
 	static setBackgroundImage (pImageSrc) {
-		const image = new Image()
-		image.onload = () => {
-			this.#imageWidth = image.naturalWidth
-			this.#imageHeight = image.naturalHeight
+		Utils.setImageOnElement(this.element, pImageSrc, (pImage) => {
+			this.#imageWidth = pImage.naturalWidth
+			this.#imageHeight = pImage.naturalHeight
 			this.resize()
-		}
-		image.src = pImageSrc
-		this.element.style.backgroundImage = `url(${image.src})`
+		})
 	}
 
 	static resize () {
@@ -90,7 +90,7 @@ export default class Sheet extends HTMLElement {
 			</label>
 		`, () => {
 			const reader = new FileReader()
-			reader.addEventListener('load', async () => {
+			reader.addEventListener('load', () => {
 				this.setBackgroundImage(reader.result)
 				Datas.sheet.backgroundImage = reader.result
 				Datas.sheetProperties.push({ setBackgroundImage: { image: reader.result } })
@@ -100,6 +100,24 @@ export default class Sheet extends HTMLElement {
 			View.render()
 		})
 	}
+
+	// static addImage () {
+	//	let file
+	//	Utils.confirm(html`
+	//		<label for="file">
+	//			<span>Choisissez un fichier</span>
+	//			<input type="file" id="file" name="file" @change="${(pEvent) => {
+	//		file = pEvent.target.files[0]
+	//	}}">
+	//		</label>
+	//	`, () => {
+	//		const reader = new FileReader()
+	//		reader.addEventListener('load', () => Image.add(reader.result))
+	//		reader.readAsDataURL(file)
+	//		States.isSaved = false
+	//		View.render()
+	//	})
+	// }
 
 	static addFont () {
 		let fontUrl

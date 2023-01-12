@@ -17,6 +17,7 @@ export default class States {
 		Input.select()
 		this.editMode = pValue
 		Datas.changedInputs = []
+		Datas.changedImages = []
 		Datas.deletedInputs = []
 		Datas.sheetProperties = []
 		View.render()

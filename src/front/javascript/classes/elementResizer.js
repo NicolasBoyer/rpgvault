@@ -1,7 +1,7 @@
 export class ElementResizer {
 	static #mouse
 	static #element
-	static #textZone
+	static #selector
 	static #offsetPosition
 	static #callBack
 	static isPointerDown = false
@@ -18,7 +18,7 @@ export class ElementResizer {
 
 	static init (pElement, pOffset, pCallBack) {
 		this.#element = pElement
-		this.#textZone = this.#element.querySelector('input, textarea')
+		this.#selector = this.#element.querySelector('input, textarea') || this.#element
 		this.#offsetPosition = pOffset
 		this.#callBack = pCallBack
 		this.#mouse = {
@@ -80,14 +80,14 @@ export class ElementResizer {
 		if (pEvent.pressure !== 0 && ElementResizer.isPointerDown) {
 			if (ElementResizer.leftHorizontalMove) {
 				ElementResizer.#mouse.translateX = pEvent.pageX + window.scrollX - ElementResizer.#offsetPosition.x
-				ElementResizer.#textZone.style.width = ElementResizer.width - ElementResizer.#mouse.x + 'px'
+				ElementResizer.#selector.style.width = ElementResizer.width - ElementResizer.#mouse.x + 'px'
 			}
-			if (ElementResizer.rightHorizontalMove) ElementResizer.#textZone.style.width = ElementResizer.width + ElementResizer.#mouse.x + 'px'
+			if (ElementResizer.rightHorizontalMove) ElementResizer.#selector.style.width = ElementResizer.width + ElementResizer.#mouse.x + 'px'
 			if (ElementResizer.topVerticalMove) {
 				ElementResizer.#mouse.translateY = pEvent.pageY + window.scrollY - ElementResizer.#offsetPosition.y
-				ElementResizer.#textZone.style.height = ElementResizer.height - ElementResizer.#mouse.y + 'px'
+				ElementResizer.#selector.style.height = ElementResizer.height - ElementResizer.#mouse.y + 'px'
 			}
-			if (ElementResizer.bottomVerticalMove) ElementResizer.#textZone.style.height = ElementResizer.height + ElementResizer.#mouse.y + 'px'
+			if (ElementResizer.bottomVerticalMove) ElementResizer.#selector.style.height = ElementResizer.height + ElementResizer.#mouse.y + 'px'
 			ElementResizer.#element.style.translate = `${ElementResizer.#mouse.translateX}px ${ElementResizer.#mouse.translateY}px`
 			ElementResizer.#resetHandler()
 		}
@@ -98,8 +98,8 @@ export class ElementResizer {
 			await ElementResizer.#callBack({
 				x: ElementResizer.#mouse.translateX,
 				y: ElementResizer.#mouse.translateY,
-				width: parseInt(ElementResizer.#textZone.style.width),
-				height: parseInt(ElementResizer.#textZone.style.height)
+				width: parseInt(ElementResizer.#selector.style.width),
+				height: parseInt(ElementResizer.#selector.style.height)
 			})
 			ElementResizer.isPointerDown = false
 			document.body.classList.remove('isResizing')

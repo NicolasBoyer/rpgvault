@@ -1,4 +1,5 @@
 import { ShortcutManager } from './shortcutManager.js'
+import { ElementResizer } from './elementResizer.js'
 
 export class ElementMover {
 	static #mouse
@@ -11,7 +12,7 @@ export class ElementMover {
 
 	static init (pElement, pOffset, pCallBack) {
 		this.#element = pElement
-		this.#selector = this.#element.querySelector('input, textarea')
+		this.#selector = this.#element.querySelector('input, textarea') || this.#element
 		this.#offsetPosition = pOffset
 		this.#callBack = pCallBack
 		this.#mouse = {
@@ -49,7 +50,7 @@ export class ElementMover {
 		}
 		ElementMover.#mouse.x = pEvent.pageX + window.scrollX - ElementMover.#offsetPosition.x
 		ElementMover.#mouse.y = pEvent.pageY + window.scrollY - ElementMover.#offsetPosition.y
-		if (pEvent.pressure !== 0 && ElementMover.isPointerDown) {
+		if (pEvent.pressure !== 0 && ElementMover.isPointerDown && !ElementResizer.isPointerDown) {
 			ElementMover.#isMoving = true
 			ElementMover.#element.style.translate = `${ElementMover.#mouse.x}px ${ElementMover.#mouse.y}px`
 		}

@@ -5,6 +5,7 @@ import States from './states.js'
 import Input from './input.js'
 import Sheet from './sheet.js'
 import { ElementResizer } from '../../classes/elementResizer.js'
+import Image from './image.js'
 
 /**
  * Fonctions de rendu du composant
@@ -55,7 +56,7 @@ export default class View {
 				<button class="contrast" @click="${() => Input.add()}">Ajouter un champ</button>
 				<button class="contrast" @click="${() => Sheet.addFont()}">Ajouter une police</button>
 				<button class="contrast" @click="${() => Sheet.deleteFont()}">Supprimer une police</button>
-				<button class="contrast">Ajouter une image</button>
+				<button class="contrast" @click="${() => Image.add()}">Ajouter une image</button>
 				<div class="validBlock">
 					<button @click="${() => {
 			States.displayEditMode(false)
@@ -108,7 +109,10 @@ export default class View {
 				`)}
 			</style>
 				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
-			if (States.editMode) Input.select(pEvent)
+			if (States.editMode) {
+				Input.select(pEvent)
+				Image.select(pEvent)
+			}
 		}}">
 				${States.interface === 'hidden' ? this.#viewBlock() : ''}
 				${States.editMode ? this.#editBlock() : html`
@@ -142,6 +146,14 @@ export default class View {
 								${Input.selectedInput === pInput.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}
 							</label>
 							${Input.selectedInput === pInput.id ? this.#selectBlock(pInput) : ''}
+						`
+		)}
+				${Datas.sheet.images?.map((pImage) => html`
+							<div id="${pImage.id}" style="translate: ${pImage.x * Sheet.ratio}px ${pImage.y * Sheet.ratio}px;width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${Image.selectedImage === pImage.id ? 'selected' : ''}" @click="${(pEvent) => Image.select(pEvent, pImage)}">
+								<div style="background-image: url(${pImage.image})"></div>
+								${Image.selectedImage === pImage.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}
+							</div>
+							${Image.selectedImage === pImage.id ? this.#selectBlock(pImage) : ''}
 						`
 		)}
 			</div>

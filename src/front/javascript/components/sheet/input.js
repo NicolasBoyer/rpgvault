@@ -1,5 +1,5 @@
 import { Utils } from '../../classes/utils.js'
-import { InputDrawer } from '../../classes/InputDrawer.js'
+import { Drawer } from '../../classes/drawer.js'
 import Datas from './datas.js'
 import States from './states.js'
 import View from './view.js'
@@ -17,7 +17,7 @@ export default class Input {
 
 	static add () {
 		States.displayEditBlock(false)
-		InputDrawer.init(Sheet.element.querySelector('.wrapper'), { x: Sheet.containerLeft, y: Sheet.containerTop }, async (pMousePosition, pEvent) => {
+		Drawer.init(Sheet.element.querySelector('.wrapper'), { x: Sheet.containerLeft, y: Sheet.containerTop }, async (pMousePosition, pEvent) => {
 			States.displayEditBlock(true)
 			const inputId = Utils.generateId().toString()
 			const input = {
