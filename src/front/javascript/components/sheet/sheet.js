@@ -23,6 +23,7 @@ export default class Sheet extends HTMLElement {
 	// TODO pb sur les shortcut encore
 	// TODO permettre de bouger quand on reste appuyé
 	// TODO police normal à ajouter (stock sur ftp ?)
+	// TODO en cours retouche de la fenetre de propriété
 	async connectedCallback () {
 		await Datas.init()
 		Sheet.element = this

@@ -1,21 +1,21 @@
-export const inputs = (pInput, pFonts) => [
+export const elements = (pElement, pFonts) => [
 	{
 		id: 'id',
 		type: 'hidden',
 		name: 'id',
-		value: pInput.id
+		value: pElement.id
 	},
 	{
 		id: 'name',
 		type: 'text',
 		name: 'Nom',
-		value: pInput.name
+		value: pElement.name
 	},
 	{
 		id: 'type',
 		type: 'select',
 		name: 'Type',
-		value: pInput.type,
+		value: pElement.type,
 		options: [
 			{
 				name: 'Texte court',
@@ -33,26 +33,26 @@ export const inputs = (pInput, pFonts) => [
 		id: 'fontFamily',
 		type: 'select',
 		name: 'Police',
-		value: pInput.fontFamily,
+		value: pElement.fontFamily,
 		options: pFonts
 	},
 	{
 		id: 'fontSize',
 		type: 'number',
 		name: 'Taille de la police',
-		value: pInput.fontSize
+		value: pElement.fontSize
 	},
 	{
 		id: 'color',
 		type: 'color',
 		name: 'Couleur de la police',
-		value: pInput.color
+		value: pElement.color
 	},
 	{
 		id: 'textAlign',
 		type: 'select',
 		name: 'Alignement',
-		value: pInput.textAlign,
+		value: pElement.textAlign,
 		options: [
 			{
 				name: 'Gauche',
@@ -73,24 +73,24 @@ export const inputs = (pInput, pFonts) => [
 		id: 'width',
 		type: 'number',
 		name: 'Largeur',
-		value: pInput.width
+		value: pElement.width
 	},
 	{
 		id: 'height',
 		type: 'number',
 		name: 'Hauteur',
-		value: pInput.height
+		value: pElement.height
 	},
 	{
 		id: 'x',
 		type: 'number',
 		name: 'Abscisse',
-		value: pInput.x
+		value: pElement.x
 	},
 	{
 		id: 'y',
 		type: 'number',
 		name: 'Ordonnée',
-		value: pInput.y
+		value: pElement.y
 	}
 ]

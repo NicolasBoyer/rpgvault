@@ -1,5 +1,5 @@
 import { html, render } from '../../thirdParty/litHtml.js'
-import { inputs } from '../../datas/inputs.js'
+import { elements } from '../../datas/elements.js'
 import Datas from './datas.js'
 import States from './states.js'
 import Input from './input.js'
@@ -74,26 +74,27 @@ export default class View {
 		`
 	}
 
-	static #selectBlock (pInput) {
+	static #selectBlock (pElement) {
+		console.log(pElement)
 		return html`
 			<article class="selectBlock">
-				<a href="#" role="button" class="cloneInput" @click="${(pEvent) => Input.clone(pEvent, pInput)}" title="Dupliquer (ctrl D)">
+				<a href="#" role="button" class="cloneInput" @click="${(pEvent) => ElementManager.clone(pEvent, pElement)}" title="Dupliquer (ctrl D)">
 					<svg class="clone">
 						<use href="#clone"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="deleteInput" @click="${() => Input.delete(pInput.id)}" title="Supprimer (ctrl C)">
+				<a href="#" role="button" class="deleteInput" @click="${() => ElementManager.delete(pElement.id)}" title="Supprimer (ctrl C)">
 					<svg class="trash">
 						<use href="#trash"></use>
 					</svg>
 				</a>
-				${inputs(pInput, Datas.sheet.fonts.map((pFont) => ({ name: pFont.fontFamily, value: pFont.fontFamily }))).map((pEntry) => html`
+				${elements(pElement, Datas.sheet.fonts.map((pFont) => ({ name: pFont.fontFamily, value: pFont.fontFamily }))).filter((pEntry) => pElement.type || pElement.image && pElement[pEntry.id]).map((pEntry) => html`
 					<fs-label
 							id="${pEntry.id}"
 							type="${pEntry.type}"
 							name="${pEntry.name}"
 							value="${pEntry.value}"
-							@input="${(pEvent) => Datas.addInputValues(pInput, pEntry.id, pEvent.target.value)}"
+							@input="${(pEvent) => Datas.addInputValues(pElement, pEntry.id, pEvent.target.value)}"
 							options="${JSON.stringify(pEntry.options)}"
 					></fs-label>
 				`)}
