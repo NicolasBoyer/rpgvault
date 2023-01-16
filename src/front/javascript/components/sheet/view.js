@@ -75,7 +75,6 @@ export default class View {
 	}
 
 	static #selectBlock (pElement) {
-		console.log(pElement)
 		return html`
 			<article class="selectBlock">
 				<a href="#" role="button" class="cloneInput" @click="${(pEvent) => ElementManager.clone(pEvent, pElement)}" title="Dupliquer (ctrl D)">
