@@ -41,9 +41,9 @@ export default class Sheet extends HTMLElement {
 
 	static setBackgroundImage (pImageSrc) {
 		const image = new Image()
-		image.onload = () => (pImage) => {
-			this.#imageWidth = pImage.naturalWidth
-			this.#imageHeight = pImage.naturalHeight
+		image.onload = () => {
+			this.#imageWidth = image.naturalWidth
+			this.#imageHeight = image.naturalHeight
 			this.resize()
 		}
 		image.src = pImageSrc
