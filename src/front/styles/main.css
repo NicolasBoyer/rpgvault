@@ -104,6 +104,7 @@ fs-sheet {
 fs-sheet .image {
 	inset: 0;
 	position: absolute;
+	z-index: 1;
 }
 
 fs-sheet .image > div {
@@ -154,6 +155,7 @@ fs-sheet > div > label {
     position: absolute;
 	width: fit-content;
 	height: fit-content;
+	z-index: 2;
 }
 
 fs-sheet > div > label article {
@@ -192,7 +194,7 @@ fs-sheet > div > label > textarea[readonly] {
 fs-sheet > div > label.selected input[readonly],
 fs-sheet > div > label.selected > textarea[readonly],
 fs-sheet> div > div.selected {
-	border: 1px solid #bf1919 !important;
+	box-shadow: 0 0 0 1px #bf1919;
 }
 
 fs-sheet > div > label.selected input[readonly],
@@ -335,6 +337,10 @@ fs-sheet article fs-label {
     border: 2px solid #bf1919;
     position: absolute;
     border-radius: 0.3em;
+}
+
+fs-sheet > div.editMode > div.image {
+	border-radius: 0.3em;
 }
 
 a.cloneInput,

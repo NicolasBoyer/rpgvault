@@ -82,6 +82,23 @@ export default class Datas {
 					}
 				})
 			})
+			this.changedImages.forEach((pImage) => {
+				body.push({
+					setImage: {
+						id: this.#id,
+						imageId: pImage.id,
+						image: pImage
+					}
+				})
+			})
+			this.deletedImages.forEach((pImageId) => {
+				body.push({
+					deleteImage: {
+						id: this.#id,
+						imageId: pImageId
+					}
+				})
+			})
 			this.sheetProperties.forEach((pProperty) => {
 				Object.values(pProperty)[0].id = this.#id
 				body.push(pProperty)

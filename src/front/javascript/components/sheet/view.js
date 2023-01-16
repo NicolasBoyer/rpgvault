@@ -6,6 +6,7 @@ import Input from './input.js'
 import Sheet from './sheet.js'
 import { ElementResizer } from '../../classes/elementResizer.js'
 import Image from './image.js'
+import { ElementManager } from '../../classes/elementManager.js'
 
 /**
  * Fonctions de rendu du composant
@@ -109,10 +110,7 @@ export default class View {
 				`)}
 			</style>
 				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
-			if (States.editMode) {
-				Input.select(pEvent)
-				Image.select(pEvent)
-			}
+			if (States.editMode) ElementManager.select(pEvent)
 		}}">
 				${States.interface === 'hidden' ? this.#viewBlock() : ''}
 				${States.editMode ? this.#editBlock() : html`
@@ -120,7 +118,7 @@ export default class View {
 					<button class="notepad contrast">Bloc notes</button>
 				`}
 				${Datas.sheet.inputs?.map((pInput) => html`
-							<label for="${pInput.id}" style="translate: ${pInput.x * Sheet.ratio}px ${pInput.y * Sheet.ratio}px;" class="${Input.selectedInput === pInput.id ? 'selected' : ''}">
+							<label for="${pInput.id}" style="translate: ${pInput.x * Sheet.ratio}px ${pInput.y * Sheet.ratio}px;" class="${ElementManager.selectedElementId === pInput.id ? 'selected' : ''}">
 								<span>${pInput.name}</span>
 								${pInput.type === 'textarea' ? html`
 									<textarea
@@ -129,7 +127,7 @@ export default class View {
 											style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height * Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
 											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${States.editMode}"
-											@click="${(pEvent) => Input.select(pEvent, pInput)}"
+											@click="${(pEvent) => ElementManager.select(pEvent, pInput)}"
 									>${pInput.value}</textarea>
 								` : html`
 									<input
@@ -140,20 +138,20 @@ export default class View {
 											style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height * Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
 											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${States.editMode}"
-											@click="${(pEvent) => Input.select(pEvent, pInput)}"
+											@click="${(pEvent) => ElementManager.select(pEvent, pInput)}"
 									/>
 								`}
-								${Input.selectedInput === pInput.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}
+								${ElementManager.selectedElementId === pInput.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}
 							</label>
-							${Input.selectedInput === pInput.id ? this.#selectBlock(pInput) : ''}
+							${ElementManager.selectedElementId === pInput.id ? this.#selectBlock(pInput) : ''}
 						`
 		)}
 				${Datas.sheet.images?.map((pImage) => html`
-							<div id="${pImage.id}" style="translate: ${pImage.x * Sheet.ratio}px ${pImage.y * Sheet.ratio}px;width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${Image.selectedImage === pImage.id ? 'selected' : ''}" @click="${(pEvent) => Image.select(pEvent, pImage)}">
+							<div id="${pImage.id}" style="translate: ${pImage.x * Sheet.ratio}px ${pImage.y * Sheet.ratio}px;width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''}" @click="${(pEvent) => ElementManager.select(pEvent, pImage)}">
 								<div style="background-image: url(${pImage.image})"></div>
-								${Image.selectedImage === pImage.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}
+								${ElementManager.selectedElementId === pImage.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}
 							</div>
-							${Image.selectedImage === pImage.id ? this.#selectBlock(pImage) : ''}
+							${ElementManager.selectedElementId === pImage.id ? this.#selectBlock(pImage) : ''}
 						`
 		)}
 			</div>

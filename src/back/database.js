@@ -75,6 +75,19 @@ export default class Database {
 			async deleteInput (args) {
 				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $pull: { inputs: { id: args.inputId } } })
 				return await resolvers.getCollections({ id: args.id })
+			},
+
+			async setImage (args) {
+				const isImageExists = (await resolvers.getCollections({ id: args.id })).images.some((pImage) => pImage.id === args.imageId)
+				const update = isImageExists ? { $set: { 'images.$': args.image } } : { $push: { images: args.image } }
+				const filter = isImageExists ? { _id: new ObjectId(args.id), 'images.id': args.imageId } : { _id: new ObjectId(args.id) }
+				await Database.collection.updateOne(filter, update)
+				return await resolvers.getCollections({ id: args.id })
+			},
+
+			async deleteImage (args) {
+				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $pull: { images: { id: args.imageId } } })
+				return await resolvers.getCollections({ id: args.id })
 			}
 			// async getRecipes (args) {
 			//	let recipes = []

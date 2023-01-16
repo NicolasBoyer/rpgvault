@@ -19,10 +19,10 @@ export default class Sheet extends HTMLElement {
 	static containerTop
 
 	// TODO default values
-	// TODO ajout image
 	// Todo ajouter des fonts autre que google
 	// TODO pb sur les shortcut encore
 	// TODO permettre de bouger quand on reste appuyé
+	// TODO police normal à ajouter (stock sur ftp ?)
 	async connectedCallback () {
 		await Datas.init()
 		Sheet.element = this
@@ -40,11 +40,14 @@ export default class Sheet extends HTMLElement {
 	}
 
 	static setBackgroundImage (pImageSrc) {
-		Utils.setImageOnElement(this.element, pImageSrc, (pImage) => {
+		const image = new Image()
+		image.onload = () => (pImage) => {
 			this.#imageWidth = pImage.naturalWidth
 			this.#imageHeight = pImage.naturalHeight
 			this.resize()
-		})
+		}
+		image.src = pImageSrc
+		this.element.style.backgroundImage = `url(${image.src})`
 	}
 
 	static resize () {
@@ -100,24 +103,6 @@ export default class Sheet extends HTMLElement {
 			View.render()
 		})
 	}
-
-	// static addImage () {
-	//	let file
-	//	Utils.confirm(html`
-	//		<label for="file">
-	//			<span>Choisissez un fichier</span>
-	//			<input type="file" id="file" name="file" @change="${(pEvent) => {
-	//		file = pEvent.target.files[0]
-	//	}}">
-	//		</label>
-	//	`, () => {
-	//		const reader = new FileReader()
-	//		reader.addEventListener('load', () => Image.add(reader.result))
-	//		reader.readAsDataURL(file)
-	//		States.isSaved = false
-	//		View.render()
-	//	})
-	// }
 
 	static addFont () {
 		let fontUrl

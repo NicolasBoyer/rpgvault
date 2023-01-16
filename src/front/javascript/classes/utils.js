@@ -58,13 +58,6 @@ export class Utils {
 	static getMousePosition () {
 		return { x: mouseX, y: mouseY }
 	}
-
-	static setImageOnElement (pElement, pImageSrc, pCallback) {
-		const image = new Image()
-		image.onload = () => pCallback(image)
-		image.src = pImageSrc
-		pElement.style.backgroundImage = `url(${image.src})`
-	}
 }
 
 let mouseX = 0

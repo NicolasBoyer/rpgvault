@@ -1,8 +1,8 @@
 import Datas from './datas.js'
-import Input from './input.js'
 import View from './view.js'
 import { ElementResizer } from '../../classes/elementResizer.js'
 import { ElementMover } from '../../classes/elementMover.js'
+import { ElementManager } from '../../classes/elementManager.js'
 
 /**
  * Fonctions relatives au statut du composant
@@ -14,11 +14,12 @@ export default class States {
 	static isSaved = true
 
 	static displayEditMode (pValue) {
-		Input.select()
+		ElementManager.select()
 		this.editMode = pValue
 		Datas.changedInputs = []
 		Datas.changedImages = []
 		Datas.deletedInputs = []
+		Datas.deletedImages = []
 		Datas.sheetProperties = []
 		View.render()
 	}
