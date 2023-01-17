@@ -1,5 +1,3 @@
-@import url('fonts.css');
-
 :root:not([data-theme=dark]), [data-theme=light] {
 	--color: #625941;
 	--h1-color: #322c1b;
