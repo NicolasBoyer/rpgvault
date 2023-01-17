@@ -10,7 +10,6 @@ import { ElementManager } from '../../classes/elementManager.js'
  * Contient toutes les fonctions relatives aux possibilités de l'image
  */
 export default class Image {
-	// TODO zoom sur image pour voir en grand
 	static add () {
 		States.displayEditBlock(false)
 		Drawer.init(Sheet.element.querySelector('.wrapper'), { x: Sheet.containerLeft, y: Sheet.containerTop }, async (pMousePosition, pEvent) => {
