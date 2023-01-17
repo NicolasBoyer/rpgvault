@@ -12,6 +12,7 @@ export default class States {
 	static isEditBlockHidden
 	static interface = 'hover'
 	static isSaved = true
+	static isZoomed = false
 
 	static displayEditMode (pValue) {
 		ElementManager.select()

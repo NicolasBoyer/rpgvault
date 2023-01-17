@@ -341,6 +341,22 @@ fs-sheet article fs-label {
 
 fs-sheet > div.editMode > div.image {
 	border-radius: 0.3em;
+	transition: none;
+	cursor: default;
+}
+
+fs-sheet > div > div.image {
+	transition: all var(--transition);
+	cursor: pointer;
+}
+
+fs-sheet > div > div.image.isZoomed {
+	z-index: 1000;
+	translate: none !important;
+	width: 100% !important;
+	height: 100% !important;
+	background-color: #00000073;
+	transition: all var(--transition);
 }
 
 a.cloneInput,

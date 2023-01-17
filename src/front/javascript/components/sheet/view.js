@@ -147,7 +147,14 @@ export default class View {
 						`
 		)}
 				${Datas.sheet.images?.map((pImage) => html`
-							<div id="${pImage.id}" style="translate: ${pImage.x * Sheet.ratio}px ${pImage.y * Sheet.ratio}px;width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''}" @click="${(pEvent) => ElementManager.select(pEvent, pImage)}">
+							<div id="${pImage.id}" style="translate: ${pImage.x * Sheet.ratio}px ${pImage.y * Sheet.ratio}px;width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}" @click="${(pEvent) => {
+				if (States.editMode) ElementManager.select(pEvent, pImage)
+				else {
+					if (!States.isZoomed) States.isZoomed = pImage.id
+					else States.isZoomed = false
+					View.render()
+				}
+			}}">
 								<div style="background-image: url(${pImage.image})"></div>
 								${ElementManager.selectedElementId === pImage.id ? ElementResizer.boxPositions.map((pBoxPosition) => html`<div class="resizeHandler ${pBoxPosition.class}" />`) : ''}
 							</div>
