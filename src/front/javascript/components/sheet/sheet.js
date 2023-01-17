@@ -19,11 +19,8 @@ export default class Sheet extends HTMLElement {
 	static containerTop
 
 	// TODO default values
-	// Todo ajouter des fonts autre que google
 	// TODO pb sur les shortcut encore
 	// TODO permettre de bouger quand on reste appuyé
-	// TODO police normal à ajouter (stock sur ftp ?)
-	// TODO en cours retouche de la fenetre de propriété
 	async connectedCallback () {
 		await Datas.init()
 		Sheet.element = this
@@ -108,11 +105,17 @@ export default class Sheet extends HTMLElement {
 	static addFont () {
 		let fontUrl
 		let fontFamily
+		let file
 		Utils.confirm(html`
 			<label for="fontUrl">
 				<span>Ajouter l'URL d'une police (import google)</span>
 				<input type="text" id="fontUrl" name="fontUrl" @change="${async (pEvent) => {
 			fontUrl = pEvent.target.value
+		}}">
+			<label for="file">
+				<span>Ou</span>
+				<input type="file" id="file" name="file" @change="${(pEvent) => {
+			file = pEvent.target.files[0]
 		}}">
 			</label>
 			<label for="fontFamily">
@@ -123,7 +126,12 @@ export default class Sheet extends HTMLElement {
 			</label>
 		`, () => {
 			if (!Datas.sheet.fonts) Datas.sheet.fonts = []
-			const font = { fontUrl, fontFamily }
+			if (file) {
+				const reader = new FileReader()
+				reader.addEventListener('load', () => (fontUrl = reader.result))
+				reader.readAsDataURL(file)
+			}
+			const font = { fontUrl, fontFamily, type: file ? 'file' : 'google' }
 			Datas.sheet.fonts.push(font)
 			Datas.sheetProperties.push({ setFont: font })
 			States.isSaved = false

@@ -127,7 +127,7 @@ fs-sheet > div > label > textarea {
     margin: 0 !important;
     text-align: center;
     line-height: 1;
-    font-family: 'SamuraiWarrior', sans-serif;
+    font-family: sans-serif;
 }
 
 fs-sheet > div > label > input[type=text],

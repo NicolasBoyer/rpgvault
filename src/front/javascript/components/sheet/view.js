@@ -54,9 +54,9 @@ export default class View {
 				${States.interface !== 'hidden' ? this.#viewBlock() : ''}
 				<button class="contrast" @click="${() => Sheet.editBackgroundImage()}">Image de fond</button>
 				<button class="contrast" @click="${() => Sheet.changeBackgroundColor()}">Couleur du fond</button>
-				<button class="contrast" @click="${() => Input.add()}">Ajouter un champ</button>
 				<button class="contrast" @click="${() => Sheet.addFont()}">Ajouter une police</button>
 				<button class="contrast" @click="${() => Sheet.deleteFont()}">Supprimer une police</button>
+				<button class="contrast" @click="${() => Input.add()}">Ajouter un champ</button>
 				<button class="contrast" @click="${() => Image.add()}">Ajouter une image</button>
 				<div class="validBlock">
 					<button @click="${() => {
@@ -105,9 +105,16 @@ export default class View {
 		render(html`
 			<style>
 				${Datas.sheet.fonts.map(
-			(pFont) => html`
-					@import url(${pFont.fontUrl});
-				`)}
+			(pFont) => pFont.type === 'google' ? html`
+				@import url(${pFont.fontUrl})
+				` : html`
+					@font-face {
+					font-family: ${pFont.fontFamily}';
+					src: url(${pFont.fontUrl}) format('truetype');
+					font-weight: normal;
+					font-style: normal;
+					}
+			`)}
 			</style>
 				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
 			if (States.editMode) ElementManager.select(pEvent)
