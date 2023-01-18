@@ -126,7 +126,7 @@ export default class View {
 								${pInput.type === 'textarea' ? html`
 									<textarea
 											id="${pInput.id}"
-											name="${pInput.name}"
+											name="${pInput.id}"
 											style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height * Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
 											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${States.editMode}"
@@ -136,7 +136,7 @@ export default class View {
 									<input
 											type="${pInput.type}"
 											id="${pInput.id}"
-											name="${pInput.name}"
+											name="${pInput.id}"
 											value="${pInput.value}"
 											style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height * Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
 											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"

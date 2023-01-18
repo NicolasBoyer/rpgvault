@@ -18,7 +18,6 @@ export default class Sheet extends HTMLElement {
 	static containerLeft
 	static containerTop
 
-	// TODO default values
 	// TODO amélioration mobile et apple
 	async connectedCallback () {
 		await Datas.init()

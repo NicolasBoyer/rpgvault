@@ -6,12 +6,6 @@ export const elements = (pElement, pFonts) => [
 		value: pElement.id
 	},
 	{
-		id: 'name',
-		type: 'text',
-		name: 'Nom',
-		value: pElement.name
-	},
-	{
 		id: 'type',
 		type: 'select',
 		name: 'Type',
