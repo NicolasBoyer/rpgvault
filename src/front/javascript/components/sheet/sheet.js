@@ -114,7 +114,7 @@ export default class Sheet extends HTMLElement {
 		}}">
 			<label for="file">
 				<span>Ou</span>
-				<input type="file" id="file" name="file" @change="${(pEvent) => {
+				<input accept=".ttf,.woff,.woff2,.eot" type="file" id="file" name="file" @change="${(pEvent) => {
 			file = pEvent.target.files[0]
 		}}">
 			</label>
@@ -124,13 +124,9 @@ export default class Sheet extends HTMLElement {
 			fontFamily = pEvent.target.value
 		}}">
 			</label>
-		`, () => {
+		`, async () => {
 			if (!Datas.sheet.fonts) Datas.sheet.fonts = []
-			if (file) {
-				const reader = new FileReader()
-				reader.addEventListener('load', () => (fontUrl = reader.result))
-				reader.readAsDataURL(file)
-			}
+			if (file) fontUrl = await Utils.getFileFromFileReader(file)
 			const font = { fontUrl, fontFamily, type: file ? 'file' : 'google' }
 			Datas.sheet.fonts.push(font)
 			Datas.sheetProperties.push({ setFont: font })

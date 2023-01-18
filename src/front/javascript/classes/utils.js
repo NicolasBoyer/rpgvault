@@ -58,6 +58,15 @@ export class Utils {
 	static getMousePosition () {
 		return { x: mouseX, y: mouseY }
 	}
+
+	static async getFileFromFileReader (pFile) {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader()
+			reader.addEventListener('load', () => resolve(reader.result))
+			reader.addEventListener('error', () => reject)
+			reader.readAsDataURL(pFile)
+		})
+	}
 }
 
 let mouseX = 0

@@ -104,17 +104,13 @@ export default class View {
 	static render () {
 		render(html`
 			<style>
-				${Datas.sheet.fonts.map(
-			(pFont) => pFont.type === 'google' ? html`
-				@import url(${pFont.fontUrl})
-				` : html`
-					@font-face {
-					font-family: ${pFont.fontFamily}';
-					src: url(${pFont.fontUrl}) format('truetype');
-					font-weight: normal;
-					font-style: normal;
-					}
-			`)}
+				${Datas.sheet.fonts.filter((pFont) => pFont.type === 'google').map((pFont) => `@import url(${pFont.fontUrl});`)}
+				${Datas.sheet.fonts.filter((pFont) => pFont.type === 'file').map((pFont) => `
+				@font-face {
+				font-family: ${pFont.fontFamily};
+				src: url(${pFont.fontUrl});
+				}
+				`)}
 			</style>
 				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
 			if (States.editMode) ElementManager.select(pEvent)

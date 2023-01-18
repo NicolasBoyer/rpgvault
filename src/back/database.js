@@ -55,7 +55,7 @@ export default class Database {
 			},
 
 			async setFont (args) {
-				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
+				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl, type: args.type } } })
 				return await resolvers.getCollections({ id: args.id })
 			},
 
