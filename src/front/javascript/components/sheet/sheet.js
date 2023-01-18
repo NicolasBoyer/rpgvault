@@ -19,8 +19,7 @@ export default class Sheet extends HTMLElement {
 	static containerTop
 
 	// TODO default values
-	// TODO pb sur les shortcut encore
-	// TODO permettre de bouger quand on reste appuyé
+	// TODO amélioration mobile et apple
 	async connectedCallback () {
 		await Datas.init()
 		Sheet.element = this

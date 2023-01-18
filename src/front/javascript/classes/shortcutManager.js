@@ -14,13 +14,13 @@ export class ShortcutManager {
 		if (Object.keys(ShortcutManager.#shortCuts).some((pKey) => pKey.split(',').includes(pEvent.key)) && States.editMode) {
 			pEvent.preventDefault()
 			ShortcutManager.#keysPress[pEvent.key] = true
+			const shortcut = ShortcutManager.#shortCuts[Object.keys(ShortcutManager.#shortCuts).find((pKey) => pKey.split(',').sort().join() === Object.keys(ShortcutManager.#keysPress).filter((pKey) => ShortcutManager.#keysPress[pKey]).map((pKey) => pKey).sort().join())]
+			if (!shortcut) return
+			shortcut.action(pEvent)
 		}
 	}
 
 	static #keyUp (pEvent) {
-		const shortcut = ShortcutManager.#shortCuts[Object.keys(ShortcutManager.#keysPress).filter((pKey) => ShortcutManager.#keysPress[pKey]).map((pKey) => pKey).join()]
 		ShortcutManager.#keysPress[pEvent.key] = false
-		if (!shortcut) return
-		shortcut.action(pEvent)
 	}
 }
