@@ -104,8 +104,8 @@ export default class View {
 	static render () {
 		render(html`
 			<style>
-				${Datas.sheet.fonts.filter((pFont) => pFont.type === 'google').map((pFont) => `@import url(${pFont.fontUrl});`)}
-				${Datas.sheet.fonts.filter((pFont) => pFont.type === 'file').map((pFont) => `
+				${Datas.sheet.fonts?.filter((pFont) => pFont.type === 'google').map((pFont) => `@import url(${pFont.fontUrl});`)}
+				${Datas.sheet.fonts?.filter((pFont) => pFont.type === 'file').map((pFont) => `
 				@font-face {
 				font-family: ${pFont.fontFamily};
 				src: url(${pFont.fontUrl});

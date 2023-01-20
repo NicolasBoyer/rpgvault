@@ -18,7 +18,7 @@ export default class Datas {
 
 	static async init () {
 		const splitUrl = location.pathname.split('/')
-		this.sheet = await Utils.request('/db', 'POST', { body: `{ "getCollections": { "slug": "${splitUrl[splitUrl.length - 1]}" } }` })
+		this.sheet = await Utils.request('/db', 'POST', { body: `{ "getSheets": { "slug": "${splitUrl[splitUrl.length - 1]}" } }` })
 		// TODO si pas de sheet retourner une 404
 		this.#id = this.sheet._id
 	}
@@ -34,6 +34,7 @@ export default class Datas {
 			if (i % 2 === 0) pInput[args[i]] = Number(value) || value
 		}
 		let index
+		if (!this.sheet.inputs) this.sheet.inputs = []
 		if (States.editMode) {
 			index = this.changedInputs.findIndex((input) => input.id === pInput.id)
 			this.changedInputs[index !== -1 ? index : this.changedInputs.length || 0] = pInput
@@ -50,6 +51,7 @@ export default class Datas {
 			if (i % 2 === 0) pImage[args[i]] = Number(value) || value
 		}
 		let index
+		if (!this.sheet.images) this.sheet.images = []
 		if (States.editMode) {
 			index = this.changedImages.findIndex((image) => image.id === pImage.id)
 			this.changedImages[index !== -1 ? index : this.changedImages.length || 0] = pImage

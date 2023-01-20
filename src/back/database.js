@@ -1,4 +1,5 @@
 import { MongoClient, ObjectId } from 'mongodb'
+import { Utils } from './utils.js'
 
 /**
  * Permet la déclaration de la db (ici un fichier json) et de résoudre les requêtes passées dans la fonction request
@@ -16,7 +17,7 @@ export default class Database {
 
 	static init () {
 		const db = this.client.db('sheetrpg')
-		this.collection = db.collection('nicolasboyer')
+		this.sheets = db.collection('nicolasboyer')
 		// this.recipes = db.collection('recipes')
 		// this.lists = db.collection('lists')
 		// this.categories = db.collection('categories')
@@ -36,58 +37,69 @@ export default class Database {
 	 */
 	static async request (datas) {
 		const resolvers = {
-			async getCollections (args) {
+			async getSheets (args) {
 				let sheets = []
-				if (args?.slug) sheets.push(await Database.collection.findOne({ slug: args.slug }))
-				if (args?.id) sheets.push(await Database.collection.findOne({ _id: new ObjectId(args.id) }))
-				else sheets = await Database.collection.find().toArray()
+				if (args?.slug) sheets.push(await Database.sheets.findOne({ slug: args.slug }))
+				else if (args?.id) sheets.push(await Database.sheets.findOne({ _id: new ObjectId(args.id) }))
+				else sheets = await Database.sheets.find().toArray()
 				return sheets.length === 1 ? sheets[0] : sheets
 			},
 
+			async setSheet (args) {
+				const name = args.name
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { name, slug: Utils.slugify(name) } }, { upsert: true })
+				return await resolvers.getSheets()
+			},
+
+			async removeSheet (args) {
+				await Database.sheets.deleteOne({ _id: new ObjectId(args.id) })
+				return await resolvers.getSheets()
+			},
+
 			async setBackgroundColor (args) {
-				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundColor: args.color } }, { upsert: true })
-				return await resolvers.getCollections({ id: args.id })
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundColor: args.color } }, { upsert: true })
+				return await resolvers.getSheets({ id: args.id })
 			},
 
 			async setBackgroundImage (args) {
-				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundImage: args.image } }, { upsert: true })
-				return await resolvers.getCollections({ id: args.id })
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundImage: args.image } }, { upsert: true })
+				return await resolvers.getSheets({ id: args.id })
 			},
 
 			async setFont (args) {
-				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl, type: args.type } } })
-				return await resolvers.getCollections({ id: args.id })
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl, type: args.type } } })
+				return await resolvers.getSheets({ id: args.id })
 			},
 
 			async deleteFont (args) {
-				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $pull: { fonts: { fontFamily: { $in: args.fonts } } } })
-				return await resolvers.getCollections({ id: args.id })
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { fonts: { fontFamily: { $in: args.fonts } } } })
+				return await resolvers.getSheets({ id: args.id })
 			},
 
 			async setInput (args) {
-				const isInputExists = (await resolvers.getCollections({ id: args.id })).inputs.some((pInput) => pInput.id === args.inputId)
+				const isInputExists = (await resolvers.getSheets({ id: args.id })).inputs?.some((pInput) => pInput.id === args.inputId)
 				const update = isInputExists ? { $set: { 'inputs.$': args.input } } : { $push: { inputs: args.input } }
 				const filter = isInputExists ? { _id: new ObjectId(args.id), 'inputs.id': args.inputId } : { _id: new ObjectId(args.id) }
-				await Database.collection.updateOne(filter, update)
-				return await resolvers.getCollections({ id: args.id })
+				await Database.sheets.updateOne(filter, update)
+				return await resolvers.getSheets({ id: args.id })
 			},
 
 			async deleteInput (args) {
-				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $pull: { inputs: { id: args.inputId } } })
-				return await resolvers.getCollections({ id: args.id })
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { inputs: { id: args.inputId } } })
+				return await resolvers.getSheets({ id: args.id })
 			},
 
 			async setImage (args) {
-				const isImageExists = (await resolvers.getCollections({ id: args.id })).images.some((pImage) => pImage.id === args.imageId)
+				const isImageExists = (await resolvers.getSheets({ id: args.id })).images?.some((pImage) => pImage.id === args.imageId)
 				const update = isImageExists ? { $set: { 'images.$': args.image } } : { $push: { images: args.image } }
 				const filter = isImageExists ? { _id: new ObjectId(args.id), 'images.id': args.imageId } : { _id: new ObjectId(args.id) }
-				await Database.collection.updateOne(filter, update)
-				return await resolvers.getCollections({ id: args.id })
+				await Database.sheets.updateOne(filter, update)
+				return await resolvers.getSheets({ id: args.id })
 			},
 
 			async deleteImage (args) {
-				await Database.collection.updateOne({ _id: new ObjectId(args.id) }, { $pull: { images: { id: args.imageId } } })
-				return await resolvers.getCollections({ id: args.id })
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { images: { id: args.imageId } } })
+				return await resolvers.getSheets({ id: args.id })
 			}
 			// async getRecipes (args) {
 			//	let recipes = []

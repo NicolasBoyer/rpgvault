@@ -404,6 +404,87 @@ article input[type=color] {
     cursor: ne-resize;
 }
 
+/*** TITLES ***/
+h1 {
+	font-family: 'Rubik Glitch', cursive;
+	padding: 0 1rem;
+	font-size: 3rem;
+	font-weight: normal;
+	position: absolute;
+	top: -0.5rem;
+	right: 0;
+}
+
+h1 > a {
+	color: inherit;
+}
+
+h1 > a:hover {
+	text-decoration: none;
+}
+
+h2, h3, h4, h5, h6 {
+	font-family: 'Nunito', sans-serif;
+}
+
+h2 {
+	text-align: center;
+	font-size: 2rem;
+}
+
+/*** HOME ***/
+.home .title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.home .title h2 {
+	margin: 0;
+}
+
+.home .title button {
+	margin: 0 1rem;
+}
+
+.home .title button,
+.home ul button {
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.home .title button > span,
+.home ul button > span {
+	display: none;
+}
+
+.home ul {
+	max-width: 35rem;
+	margin: auto !important;
+}
+
+.home li > div.characterSheets {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: var(--grid-spacing-horizontal);
+}
+
+.home li > div.characterSheets > a {
+	flex: 1;
+	font-size: 1.7rem;
+}
+
+.home li > div.grid.characterSheets {
+	align-items: center;
+	position: relative;
+	display: grid;
+}
+
 /*** LOADER ***/
 fs-loader {
 	position: absolute;
