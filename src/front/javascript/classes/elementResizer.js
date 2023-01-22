@@ -74,9 +74,10 @@ export class ElementResizer {
 		pEvent.returnValue = false
 		ElementResizer.#mouse.x = pEvent.pageX - ElementResizer.#mouse.originalX
 		ElementResizer.#mouse.y = pEvent.pageY - ElementResizer.#mouse.originalY
-		const translate = ElementResizer.#element.style.translate.split(' ')
-		ElementResizer.#mouse.translateX = parseInt(translate[0])
-		ElementResizer.#mouse.translateY = parseInt(translate[1])
+		// eslint-disable-next-line no-undef
+		const translate = new WebKitCSSMatrix(getComputedStyle(ElementResizer.#element).transform)
+		ElementResizer.#mouse.translateX = translate.m41
+		ElementResizer.#mouse.translateY = translate.m42
 		if (pEvent.pressure !== 0 && ElementResizer.isPointerDown) {
 			if (ElementResizer.leftHorizontalMove) {
 				ElementResizer.#mouse.translateX = pEvent.pageX + window.scrollX - ElementResizer.#offsetPosition.x

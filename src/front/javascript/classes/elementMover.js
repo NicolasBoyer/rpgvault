@@ -43,10 +43,11 @@ export class ElementMover {
 
 	static #pointerMove (pEvent) {
 		pEvent.returnValue = false
-		const translate = ElementMover.#element.style.translate.split(' ')
+		// eslint-disable-next-line no-undef
+		const translate = new WebKitCSSMatrix(getComputedStyle(ElementMover.#element).transform)
 		ElementMover.#offsetPosition = {
-			x: ElementMover.#offsetPosition.x + (ElementMover.#mouse.x - parseInt(translate[0])),
-			y: ElementMover.#offsetPosition.y + (ElementMover.#mouse.y - parseInt(translate[1]))
+			x: ElementMover.#offsetPosition.x + (ElementMover.#mouse.x - translate.m41),
+			y: ElementMover.#offsetPosition.y + (ElementMover.#mouse.y - translate.m42)
 		}
 		ElementMover.#mouse.x = pEvent.pageX + window.scrollX - ElementMover.#offsetPosition.x
 		ElementMover.#mouse.y = pEvent.pageY + window.scrollY - ElementMover.#offsetPosition.y
@@ -65,9 +66,10 @@ export class ElementMover {
 	}
 
 	static #moveByKey (pOffsetX, pOffsetY = 0) {
-		const translate = ElementMover.#element.style.translate.split(' ')
-		const translateX = parseInt(translate[0]) + pOffsetX
-		const translateY = parseInt(translate[1]) + pOffsetY
+		// eslint-disable-next-line no-undef
+		const translate = new WebKitCSSMatrix(getComputedStyle(ElementMover.#element).transform)
+		const translateX = translate.m41 + pOffsetX
+		const translateY = translate.m42 + pOffsetY
 		setTimeout(() => {
 			ElementMover.#element.style.transform = `translate(${translateX}px, ${translateY}px)`
 		})

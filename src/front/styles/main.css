@@ -217,6 +217,11 @@ fs-sheet button.notepad {
 	opacity: 0.4;
 	transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition), opacity var(--transition);
 	display: inline-block;
+	position: absolute;
+}
+
+fs-sheet button.notepad {
+	left: 5em;
 }
 
 fs-sheet button.edit:hover,
@@ -350,7 +355,8 @@ fs-sheet > div > div.image {
 
 fs-sheet > div > div.image.isZoomed {
 	z-index: 1000;
-	translate: none !important;
+	transform: none !important;
+	-webkit-transform: none !important;
 	width: 100% !important;
 	height: 100% !important;
 	background-color: #00000073;
