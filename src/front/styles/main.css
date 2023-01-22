@@ -534,7 +534,7 @@ fs-loader {
 	}
 }
 
-@media (hover: none) {
+@media screen {
   .edit, .notepad {
     display: none;
   }
