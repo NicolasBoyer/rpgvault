@@ -550,5 +550,6 @@ fs-loader {
 
   input {
   	line-height: normal !important;
+  	display: block !important;
   }
 }
