@@ -121,7 +121,7 @@ export default class View {
 					<button class="notepad contrast">Bloc notes</button>
 				`}
 				${Datas.sheet.inputs?.map((pInput) => html`
-							<label for="${pInput.id}" style="translate: ${pInput.x * Sheet.ratio}px ${pInput.y * Sheet.ratio}px;" class="${ElementManager.selectedElementId === pInput.id ? 'selected' : ''}">
+							<label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${ElementManager.selectedElementId === pInput.id ? 'selected' : ''}">
 								<span>${pInput.name}</span>
 								${pInput.type === 'textarea' ? html`
 									<textarea
@@ -150,7 +150,7 @@ export default class View {
 						`
 		)}
 				${Datas.sheet.images?.map((pImage) => html`
-							<div id="${pImage.id}" style="translate: ${pImage.x * Sheet.ratio}px ${pImage.y * Sheet.ratio}px;width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}" @click="${(pEvent) => {
+							<div id="${pImage.id}" style="transform: translate(${pImage.x * Sheet.ratio}px, ${pImage.y * Sheet.ratio}px);width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}" @click="${(pEvent) => {
 				if (States.editMode) ElementManager.select(pEvent, pImage)
 				else {
 					if (!States.isZoomed) States.isZoomed = pImage.id

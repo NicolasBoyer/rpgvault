@@ -88,7 +88,7 @@ export class ElementResizer {
 				ElementResizer.#selector.style.height = ElementResizer.height - ElementResizer.#mouse.y + 'px'
 			}
 			if (ElementResizer.bottomVerticalMove) ElementResizer.#selector.style.height = ElementResizer.height + ElementResizer.#mouse.y + 'px'
-			ElementResizer.#element.style.translate = `${ElementResizer.#mouse.translateX}px ${ElementResizer.#mouse.translateY}px`
+			ElementResizer.#element.style.transform = `translate(${ElementResizer.#mouse.translateX}px, ${ElementResizer.#mouse.translateY}px)`
 			ElementResizer.#resetHandler()
 		}
 	}

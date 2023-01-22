@@ -52,7 +52,7 @@ export class ElementMover {
 		ElementMover.#mouse.y = pEvent.pageY + window.scrollY - ElementMover.#offsetPosition.y
 		if (pEvent.pressure !== 0 && ElementMover.isPointerDown && !ElementResizer.isPointerDown) {
 			ElementMover.#isMoving = true
-			ElementMover.#element.style.translate = `${ElementMover.#mouse.x}px ${ElementMover.#mouse.y}px`
+			ElementMover.#element.style.transform = `translate(${ElementMover.#mouse.x}px, ${ElementMover.#mouse.y}px)`
 		}
 	}
 
@@ -69,7 +69,7 @@ export class ElementMover {
 		const translateX = parseInt(translate[0]) + pOffsetX
 		const translateY = parseInt(translate[1]) + pOffsetY
 		setTimeout(() => {
-			ElementMover.#element.style.translate = `${translateX}px ${translateY}px`
+			ElementMover.#element.style.transform = `translate(${translateX}px, ${translateY}px)`
 		})
 		ElementMover.#callBack({ x: translateX, y: translateY })
 	}
