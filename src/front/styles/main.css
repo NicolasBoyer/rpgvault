@@ -121,10 +121,9 @@ fs-sheet form {
 fs-sheet > div > label > input[type=number],
 fs-sheet > div > label > input[type=text],
 fs-sheet > div > label > textarea {
-	all: unset;
-    padding: 0 !important;
+    padding: 0;
     border: 0;
-    margin: 0 !important;
+    margin: 0;
     text-align: center;
     line-height: 1;
     font-family: sans-serif;
@@ -151,7 +150,6 @@ fs-sheet label {
 }
 
 fs-sheet > div > label {
-	all: unset;
     top: 0;
     left: 0;
     position: absolute;
