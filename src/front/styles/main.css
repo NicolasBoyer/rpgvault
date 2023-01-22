@@ -121,11 +121,11 @@ fs-sheet form {
 fs-sheet > div > label > input[type=number],
 fs-sheet > div > label > input[type=text],
 fs-sheet > div > label > textarea {
-    padding: 0.02px 0 0 0;
+    padding: 0;
     border: 0;
     margin: 0;
     text-align: center;
-    line-height: 1;
+    line-height: normal;
     font-family: sans-serif;
 }
 
