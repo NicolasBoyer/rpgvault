@@ -36,7 +36,11 @@ export default class Home extends HTMLElement {
 
 	async #saveSheets (name, id) {
 		// Caches.set('listIngredients', this.#ingredients)
-		this.#sheets = await Utils.request('/db', 'POST', { body: `{ "setSheet": { "name": "${name}"${id ? `, "id": "${id}"` : ''} } }` })
+		// TODO importer style toast + revoir le test pour mieux réafficher et mieux tester le slugify
+		if (!this.#sheets.some((pSheet) => pSheet.name === name || pSheet.slug === Utils.slugify(name))) {
+			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "setSheet": { "name": "${name}"${id ? `, "id": "${id}"` : ''} } }` })
+			// TODO importer style toast
+		} else Utils.toast('error', 'Une feuille de personnage portant le même nom ou la même url existe')
 		this.#resetMode()
 		// try {
 		//	autoAnimate(document.querySelector('ul'))
@@ -67,7 +71,7 @@ export default class Home extends HTMLElement {
 			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "removeSheet": { "id": "${id}" } }` })
 			// Caches.set('listIngredients', this.#ingredients)
 			this.#resetMode()
-			Utils.toast('success', 'Ingrédient supprimé')
+			Utils.toast('success', 'Feuille de personnage supprimée')
 		})
 	}
 

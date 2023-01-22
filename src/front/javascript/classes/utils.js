@@ -67,6 +67,23 @@ export class Utils {
 			reader.readAsDataURL(pFile)
 		})
 	}
+
+	static slugify (pStr) {
+		const a = 'ãàáäâèéëêìíïîòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/-,:;'
+		const b = 'aaaaaeeeeiiiioooouuuuncsyoarsnpwgnmuxzh______'
+		const p = new RegExp(a.split('').join('|'), 'g')
+
+		return pStr.toString().toLowerCase()
+			.replace(/\s+/g, '_') // Replace spaces with _
+			.replace(p, (c) => b.charAt(a.indexOf(c))) // Replace special chars
+			.replace(/&/g, '_and_') // Replace & with 'and'
+			// eslint-disable-next-line no-useless-escape
+			.replace(/[^\w\-]+/g, '') // Remove all non-word chars
+			// eslint-disable-next-line no-useless-escape
+			.replace(/--+/g, '_') // Replace multiple - with single _
+			.replace(/^-+/, '') // Trim - from start of text
+			.replace(/-+$/, '') // Trim - from end of text
+	}
 }
 
 let mouseX = 0

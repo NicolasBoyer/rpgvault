@@ -5,11 +5,10 @@ export default {
 	input: 'src/front/javascript/app.js',
 	output: {
 		file: 'src/front/dist/app.min.js',
-		// plugins: [terser()],
+		plugins: [terser()],
 		format: 'es'
 	},
 	plugins: [babel({
-		// exclude: 'node_modules/**',
 		babelHelpers: 'bundled'
 	})]
 }

@@ -5,6 +5,7 @@ import Confirm from './components/confirm.js'
 import Login from './components/login.js'
 import Label from './components/label.js'
 import Home from './components/home.js'
+import Toast from './components/toast.js'
 
 class App {
 	constructor () {
@@ -35,7 +36,7 @@ class App {
 new App()
 customElements.define('fs-loader', Loader)
 // customElements.define('fs-header', Header)
-// customElements.define('fs-toast', Toast)
+customElements.define('fs-toast', Toast)
 customElements.define('fs-confirm', Confirm)
 customElements.define('fs-home', Home)
 customElements.define('fs-sheet', Sheet)
