@@ -137,7 +137,7 @@ export default class View {
 											id="${pInput.id}"
 											name="${pInput.id}"
 											value="${pInput.value}"
-											style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;line-height: ${pInput.height * Sheet.ratio}px;height: ${pInput.height * Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
+											style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height * Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
 											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
 											?readonly="${States.editMode}"
 											@click="${(pEvent) => ElementManager.select(pEvent, pInput)}"

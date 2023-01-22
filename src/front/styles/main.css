@@ -31,6 +31,12 @@ textarea:focus {
     --box-shadow: none;
 }
 
+button.contrast, [role=button].contrast {
+    --background-color: var(--contrast);
+    --border-color: var(--contrast);
+    --color: var(--contrast-inverse);
+}
+
 /*** IMAGES ***/
 svg {
 	width: 1rem;
@@ -540,5 +546,9 @@ fs-loader {
   and (-webkit-min-device-pixel-ratio: 1) {
   .edit {
     display: none !important;
+  }
+
+  input, textarea {
+  	line-height: unset !important;
   }
 }
