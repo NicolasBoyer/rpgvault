@@ -100,7 +100,8 @@ fs-sheet {
 }
 
 fs-sheet .image {
-	inset: 0;
+	top: 0;
+	left: 0;
 	position: absolute;
 	z-index: 1;
 }
@@ -124,7 +125,7 @@ fs-sheet > div > label > textarea {
     border: 0;
     margin: 0 !important;
     text-align: center;
-	line-height: 0;
+    line-height: 1;
     font-family: sans-serif;
 }
 
@@ -149,7 +150,8 @@ fs-sheet label {
 }
 
 fs-sheet > div > label {
-    inset: 0;
+    top: 0;
+    left: 0;
     position: absolute;
 	width: fit-content;
 	height: fit-content;
@@ -217,11 +219,6 @@ fs-sheet button.notepad {
 	opacity: 0.4;
 	transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition), opacity var(--transition);
 	display: inline-block;
-	position: absolute;
-}
-
-fs-sheet button.notepad {
-	left: 5em;
 }
 
 fs-sheet button.edit:hover,
