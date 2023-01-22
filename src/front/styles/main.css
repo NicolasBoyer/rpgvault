@@ -548,7 +548,7 @@ fs-loader {
     display: none !important;
   }
 
-  input, textarea {
-  	line-height: unset !important;
+  input {
+  	line-height: normal !important;
   }
 }
