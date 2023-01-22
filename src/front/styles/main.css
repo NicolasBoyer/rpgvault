@@ -121,6 +121,7 @@ fs-sheet form {
 fs-sheet > div > label > input[type=number],
 fs-sheet > div > label > input[type=text],
 fs-sheet > div > label > textarea {
+	all: unset;
     padding: 0 !important;
     border: 0;
     margin: 0 !important;
@@ -150,6 +151,7 @@ fs-sheet label {
 }
 
 fs-sheet > div > label {
+	all: unset;
     top: 0;
     left: 0;
     position: absolute;
@@ -205,10 +207,6 @@ fs-sheet > div > label.selected > textarea[readonly] {
 fs-sheet > div > label.selected,
 fs-sheet> div > div.selected {
 	z-index: 1000;
-}
-
-fs-sheet label > span {
-	display: none;
 }
 
 fs-sheet button.edit,
@@ -536,4 +534,10 @@ fs-loader {
 	100% {
 		transform: rotate(360deg);
 	}
+}
+
+@media (hover: none) {
+  .edit, .notepad {
+    display: none;
+  }
 }

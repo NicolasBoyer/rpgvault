@@ -122,7 +122,6 @@ export default class View {
 				`}
 				${Datas.sheet.inputs?.map((pInput) => html`
 							<label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${ElementManager.selectedElementId === pInput.id ? 'selected' : ''}">
-								<span>${pInput.name}</span>
 								${pInput.type === 'textarea' ? html`
 									<textarea
 											id="${pInput.id}"
