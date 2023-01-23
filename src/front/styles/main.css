@@ -550,7 +550,7 @@ fs-loader {
 
   input {
   	line-height: revert !important;
-	overflow: hidden;
-	padding-bottom: 5%;
+	overflow: hidden !important;
+	padding-bottom: 5% !important;
   }
 }
