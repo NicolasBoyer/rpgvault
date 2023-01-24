@@ -117,6 +117,14 @@ export default class View {
 		}}">
 				${States.interface === 'hidden' ? this.#viewBlock() : ''}
 				${States.editMode ? this.#editBlock() : html`
+					<button class="home contrast" @click="${() => {
+			location.href = '/'
+		}}">
+					<svg class="home">
+						<use href="#home"></use>
+					</svg>
+					<span>Accueil</span>
+					</button>
 					<button class="edit contrast" @click="${() => States.displayEditMode(true)}">Éditer</button>
 					<button class="notepad contrast">Bloc notes</button>
 				`}

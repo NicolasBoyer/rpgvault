@@ -47,7 +47,7 @@ export default class Database {
 
 			async setSheet (args) {
 				const name = args.name
-				const update = { name }
+				const update = args
 				if (!args.id) update.slug = Utils.slugify(name)
 				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: update }, { upsert: true })
 				return await resolvers.getSheets()

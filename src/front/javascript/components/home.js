@@ -2,8 +2,8 @@ import { Utils } from '../classes/utils.js'
 import { html, render } from '../thirdParty/litHtml.js'
 
 // TODO ne pas oublier le notepad
-// TODO faire en sorte que la création d'un même nom soit impossible
-// TODO Graphisme
+// TODO systeme de cache
+// TODO système de folder ?
 export default class Home extends HTMLElement {
 	#sheets
 	#editMode = null
@@ -30,16 +30,27 @@ export default class Home extends HTMLElement {
 		this.#sheets = await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
 		this.#sheets = Array.isArray(this.#sheets) ? this.#sheets : Object.keys(this.#sheets).length ? [this.#sheets] : []
 		this.#render()
+		window.addEventListener('resize', () => this.#initParchment())
+		this.#initParchment()
 		// const response = Caches.get('listIngredients', 'categories', 'ingredients') || await Utils.request('/db', 'POST', {body: '[{ "getListIngredients": "" }, { "getCategories": "" }, { "getIngredients": "" }]'})
 		// Caches.set('listIngredients', response[0], 'categories', response[1], 'ingredients', response[2])
 	}
 
-	async #saveSheets (name, id) {
+	#initParchment () {
+		const main = document.querySelector('#main')
+		const mainSize = main.getBoundingClientRect()
+		const parchment = document.querySelector('#parchment')
+		parchment.style.width = `${mainSize.width}px`
+		parchment.style.height = `${Math.max(mainSize.height, document.body.getBoundingClientRect().height - mainSize.top - parseInt(getComputedStyle(main).marginBottom))}px`
+		this.#render()
+	}
+
+	async #saveSheet (sheet) {
+		console.log(sheet)
 		// Caches.set('listIngredients', this.#ingredients)
-		// TODO importer style toast + revoir le test pour mieux réafficher et mieux tester le slugify
-		if (!this.#sheets.some((pSheet) => pSheet.name === name || pSheet.slug === Utils.slugify(name))) {
-			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "setSheet": { "name": "${name}"${id ? `, "id": "${id}"` : ''} } }` })
-			// TODO importer style toast
+		if (!this.#sheets.some((pSheet) => (pSheet.name.toLowerCase() === sheet.name.toLowerCase() || pSheet.slug === Utils.slugify(sheet.name)) && pSheet._id !== sheet.id)) {
+			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "setSheet": ${JSON.stringify(sheet)} }` })
+			// this.#sheets = await Utils.request('/db', 'POST', { body: `{ "setSheet": { "name": "${name}"${id ? `, "id": "${id}"` : ''} } }` })
 		} else Utils.toast('error', 'Une feuille de personnage portant le même nom ou la même url existe')
 		this.#resetMode()
 		// try {
@@ -50,8 +61,8 @@ export default class Home extends HTMLElement {
 	}
 
 	async #editSheets (event, id) {
-		const input = event.target.tagName === 'INPUT' ? event.target : event.target.previousElementSibling.querySelector('input')
-		await this.#saveSheets(input.value, id)
+		const input = event.target.tagName === 'INPUT' ? event.target : event.target.closest('div').querySelector('input')
+		await this.#saveSheet({ name: input.value, id })
 	}
 
 	#addSheet () {
@@ -61,9 +72,9 @@ export default class Home extends HTMLElement {
 				<span>Choisissez un nom</span>
 				<input type="text" id="name" name="name" @change="${async (pEvent) => {
 			name = pEvent.target.value
-		}}">
+		}}"> 
 			</label>
-		`, async () => this.#saveSheets(name))
+		`, async () => this.#saveSheet({ name }))
 	}
 
 	#removeSheet (id) {
@@ -72,6 +83,25 @@ export default class Home extends HTMLElement {
 			// Caches.set('listIngredients', this.#ingredients)
 			this.#resetMode()
 			Utils.toast('success', 'Feuille de personnage supprimée')
+		})
+	}
+
+	#clone (id) {
+		let name
+		Utils.confirm(html`
+			<label for="name">
+				<span>Dupliquer la feuille de personnage</span>
+				<input type="text" id="name" name="name" @change="${async (pEvent) => {
+			name = pEvent.target.value
+		}}"> 
+			</label>
+		`, async () => {
+			const sheet = await Utils.request('/db', 'POST', { body: `{ "getSheets": { "id": "${id}" } }` })
+			sheet.name = name
+			sheet.slug = Utils.slugify(name)
+			delete sheet._id
+			delete sheet.id
+			await this.#saveSheet(sheet)
 		})
 	}
 
@@ -86,9 +116,9 @@ export default class Home extends HTMLElement {
 				<h2>Vos feuilles de personnage</h2>
 				<button type="button" class="add" @click="${() => this.#addSheet()}">
 					<svg class="add">
-						<use href="#add"></use>
+						<use href="#document"></use>
 					</svg>
-					<span>Ajouter une feuille</span>
+					<span>Ajouter une feuille</span> 
 				</button>
 			</div>
 			<aside>
@@ -123,18 +153,24 @@ export default class Home extends HTMLElement {
 							<a href="/sheets/${pSheet.slug}">
 								<span>${name}</span>
 							</a>
+							<button type="button" class="clone" @click="${() => this.#clone(id)}">
+								<svg class="clone">
+									<use href="#documents"></use>
+								</svg>
+								<span>Dupliquer</span>
+							</button>
 							<button class="edit" @click="${() => {
 					this.#editMode = id
 					this.#render()
 				}}">
 								<svg class="edit">
-									<use href="#edit"></use>
+									<use href="#pencil"></use>
 								</svg>
 								<span>Modifier</span>
 							</button>
 							<button type="button" class="remove" @click="${() => this.#removeSheet(id)}">
 								<svg class="remove">
-									<use href="#remove"></use>
+									<use href="#bin"></use>
 								</svg>
 								<span>Supprimer</span>
 							</button>
