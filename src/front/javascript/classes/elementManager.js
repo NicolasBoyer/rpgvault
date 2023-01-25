@@ -14,12 +14,18 @@ export class ElementManager {
 
 	static delete (pElementId) {
 		if (this.#elementType === 'input') {
-			Datas.sheet.inputs.splice(Datas.sheet.inputs.findIndex((input) => input.id === pElementId), 1)
-			Datas.deletedInputs.push(pElementId)
+			const index = Datas.sheet.inputs.findIndex((input) => input.id === pElementId)
+			if (index !== -1) {
+				Datas.sheet.inputs.splice(index, 1)
+				Datas.deletedInputs.push(pElementId)
+			}
 		}
 		if (this.#elementType === 'image') {
-			Datas.sheet.images.splice(Datas.sheet.images.findIndex((input) => input.id === pElementId), 1)
-			Datas.deletedImages.push(pElementId)
+			const index = Datas.sheet.images.findIndex((image) => image.id === pElementId)
+			if (index !== -1) {
+				Datas.sheet.images.splice(index, 1)
+				Datas.deletedImages.push(pElementId)
+			}
 		}
 		States.isSaved = false
 		View.render()
