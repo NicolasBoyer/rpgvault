@@ -31,7 +31,8 @@ export default class Link extends HTMLElement {
 const REPLACEZONE = (pFragment) => {
 	document.querySelector('[data-replaced-zone]').replaceChildren(document.createRange().createContextualFragment(pFragment.text))
 	document.body.className = pFragment.class
-	document.querySelector('[data-replaced-title]').innerHTML = pFragment.title
+	const title = document.querySelector('[data-replaced-title]')
+	if (title) title.innerHTML = pFragment.title
 }
 
 window.addEventListener('popstate', async () => REPLACEZONE(await Utils.getFragmentHtml(location.pathname)))

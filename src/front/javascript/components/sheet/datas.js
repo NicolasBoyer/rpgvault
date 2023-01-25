@@ -1,6 +1,7 @@
 import { Utils } from '../../classes/utils.js'
 import States from './states.js'
 import View from './view.js'
+import { Caches } from '../../classes/caches.js'
 
 /**
  * Fonctions permettant de gérer les données.
@@ -18,7 +19,9 @@ export default class Datas {
 
 	static async init () {
 		const splitUrl = location.pathname.split('/')
-		this.sheet = await Utils.request('/db', 'POST', { body: `{ "getSheets": { "slug": "${splitUrl[splitUrl.length - 1]}" } }` })
+		const sheets = Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
+		Caches.set('sheets', sheets)
+		this.sheet = sheets.find((pSheet) => pSheet.slug === splitUrl[splitUrl.length - 1])
 		// TODO si pas de sheet retourner une 404
 		this.#id = this.sheet._id
 	}
@@ -106,7 +109,9 @@ export default class Datas {
 				body.push(pProperty)
 			})
 		}
-		await Utils.request('/db', 'POST', { body: JSON.stringify(body) })
+		// TODO gérer les fonts en cache aussi
+		const sheets = await Utils.request('/db', 'POST', { body: JSON.stringify(body) })
+		Caches.set('sheets', sheets.pop())
 		this.isSaving = false
 		States.isSaved = true
 	}

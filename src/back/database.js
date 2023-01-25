@@ -60,22 +60,22 @@ export default class Database {
 
 			async setBackgroundColor (args) {
 				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundColor: args.color } }, { upsert: true })
-				return await resolvers.getSheets({ id: args.id })
+				return await resolvers.getSheets()
 			},
 
 			async setBackgroundImage (args) {
 				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundImage: args.image } }, { upsert: true })
-				return await resolvers.getSheets({ id: args.id })
+				return await resolvers.getSheets()
 			},
 
 			async setFont (args) {
 				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl, type: args.type } } })
-				return await resolvers.getSheets({ id: args.id })
+				return await resolvers.getSheets()
 			},
 
 			async deleteFont (args) {
 				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { fonts: { fontFamily: { $in: args.fonts } } } })
-				return await resolvers.getSheets({ id: args.id })
+				return await resolvers.getSheets()
 			},
 
 			async setInput (args) {
@@ -83,12 +83,12 @@ export default class Database {
 				const update = isInputExists ? { $set: { 'inputs.$': args.input } } : { $push: { inputs: args.input } }
 				const filter = isInputExists ? { _id: new ObjectId(args.id), 'inputs.id': args.inputId } : { _id: new ObjectId(args.id) }
 				await Database.sheets.updateOne(filter, update)
-				return await resolvers.getSheets({ id: args.id })
+				return await resolvers.getSheets()
 			},
 
 			async deleteInput (args) {
 				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { inputs: { id: args.inputId } } })
-				return await resolvers.getSheets({ id: args.id })
+				return await resolvers.getSheets()
 			},
 
 			async setImage (args) {
@@ -96,12 +96,12 @@ export default class Database {
 				const update = isImageExists ? { $set: { 'images.$': args.image } } : { $push: { images: args.image } }
 				const filter = isImageExists ? { _id: new ObjectId(args.id), 'images.id': args.imageId } : { _id: new ObjectId(args.id) }
 				await Database.sheets.updateOne(filter, update)
-				return await resolvers.getSheets({ id: args.id })
+				return await resolvers.getSheets()
 			},
 
 			async deleteImage (args) {
 				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { images: { id: args.imageId } } })
-				return await resolvers.getSheets({ id: args.id })
+				return await resolvers.getSheets()
 			}
 			// async getRecipes (args) {
 			//	let recipes = []

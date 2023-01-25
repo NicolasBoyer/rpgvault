@@ -6,6 +6,7 @@ import Login from './components/login.js'
 import Label from './components/label.js'
 import Home from './components/home.js'
 import Toast from './components/toast.js'
+import Link from './components/link.js'
 
 class App {
 	constructor () {
@@ -51,5 +52,5 @@ customElements.define('fs-login', Login)
 // customElements.define('fs-loading-block', LoadingBlock)
 // customElements.define('fs-animated-section', AnimatedSection)
 // customElements.define('fs-dishes', Dishes)
-// customElements.define('fs-link', Link)
+customElements.define('fs-link', Link)
 // customElements.define('fs-menu', Menu)

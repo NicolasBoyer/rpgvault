@@ -1,39 +1,23 @@
 import { Utils } from '../classes/utils.js'
 import { html, render } from '../thirdParty/litHtml.js'
+import { Caches } from '../classes/caches.js'
 
 // TODO ne pas oublier le notepad
-// TODO systeme de cache
 // TODO système de folder ?
+// TODO revoir le code modifié pour etre sur que le cache est bon
 export default class Home extends HTMLElement {
 	#sheets
 	#editMode = null
 
 	async connectedCallback () {
-		// await Websocket.listen(
-		//	async (event) => {
-		//		this.#ingredients = JSON.parse(await event.data.text())
-		//		this.#displayIngredients()
-		//	},
-		//	async () => {
-		//		Commons.clearPropositionsOnBackgroundClick(() => this.#render())
-		//		const response = Caches.get('listIngredients', 'categories', 'ingredients') || await Utils.request('/db', 'POST', {body: '[{ "getListIngredients": "" }, { "getCategories": "" }, { "getIngredients": "" }]'})
-		//		Caches.set('listIngredients', response[0], 'categories', response[1], 'ingredients', response[2])
-		//		this.#ingredients = response[0]
-		//		this.#categories = response[1]
-		//		Commons.savedIngredients = response[2]
-		//		this.#recipeChoices = []
-		//		this.#sendMessage()
-		//		const cacheResponse = Caches.get('recipes', 'dishes') || await Utils.request('/db', 'POST', {body: '[{ "getRecipes": "" }, { "getDishes": "" }]'})
-		//		Caches.set('recipes', cacheResponse[0], 'dishes', cacheResponse[1])
-		//	}
-		// )
-		this.#sheets = await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
+		Utils.getFragmentHtml(location.pathname)
+		this.#sheets = Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
+		Caches.set('sheets', this.#sheets)
 		this.#sheets = Array.isArray(this.#sheets) ? this.#sheets : Object.keys(this.#sheets).length ? [this.#sheets] : []
 		this.#render()
 		window.addEventListener('resize', () => this.#initParchment())
-		this.#initParchment()
-		// const response = Caches.get('listIngredients', 'categories', 'ingredients') || await Utils.request('/db', 'POST', {body: '[{ "getListIngredients": "" }, { "getCategories": "" }, { "getIngredients": "" }]'})
-		// Caches.set('listIngredients', response[0], 'categories', response[1], 'ingredients', response[2])
+		// TODO loader ?
+		setTimeout(() => this.#initParchment())
 	}
 
 	#initParchment () {
@@ -46,11 +30,9 @@ export default class Home extends HTMLElement {
 	}
 
 	async #saveSheet (sheet) {
-		console.log(sheet)
-		// Caches.set('listIngredients', this.#ingredients)
 		if (!this.#sheets.some((pSheet) => (pSheet.name.toLowerCase() === sheet.name.toLowerCase() || pSheet.slug === Utils.slugify(sheet.name)) && pSheet._id !== sheet.id)) {
 			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "setSheet": ${JSON.stringify(sheet)} }` })
-			// this.#sheets = await Utils.request('/db', 'POST', { body: `{ "setSheet": { "name": "${name}"${id ? `, "id": "${id}"` : ''} } }` })
+			Caches.set('sheets', this.#sheets)
 		} else Utils.toast('error', 'Une feuille de personnage portant le même nom ou la même url existe')
 		this.#resetMode()
 		// try {
@@ -80,7 +62,7 @@ export default class Home extends HTMLElement {
 	#removeSheet (id) {
 		Utils.confirm(html`<h3>Voulez-vous vraiment supprimer ?</h3>`, async () => {
 			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "removeSheet": { "id": "${id}" } }` })
-			// Caches.set('listIngredients', this.#ingredients)
+			Caches.set('sheets', this.#sheets)
 			this.#resetMode()
 			Utils.toast('success', 'Feuille de personnage supprimée')
 		})
@@ -96,7 +78,7 @@ export default class Home extends HTMLElement {
 		}}"> 
 			</label>
 		`, async () => {
-			const sheet = await Utils.request('/db', 'POST', { body: `{ "getSheets": { "id": "${id}" } }` })
+			const sheet = this.#sheets.find((pSheet) => pSheet._id === id)
 			sheet.name = name
 			sheet.slug = Utils.slugify(name)
 			delete sheet._id
@@ -150,9 +132,9 @@ export default class Home extends HTMLElement {
 								<span>Annuler</span>
 							</button>
 						` : html`
-							<a href="/sheets/${pSheet.slug}">
+							<fs-link role="link" href="/sheets/${pSheet.slug}">
 								<span>${name}</span>
-							</a>
+							</fs-link>
 							<button type="button" class="clone" @click="${() => this.#clone(id)}">
 								<svg class="clone">
 									<use href="#documents"></use>

@@ -82,7 +82,7 @@ export default class View {
 						<use href="#clone"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="deleteInput" @click="${() => ElementManager.delete(pElement.id)}" title="Supprimer (ctrl C)">
+				<a href="#" role="button" class="deleteInput" @click="${() => ElementManager.delete(pElement.id)}" title="Supprimer (Suppr)">
 					<svg class="trash">
 						<use href="#trash"></use>
 					</svg>
@@ -117,14 +117,12 @@ export default class View {
 		}}">
 				${States.interface === 'hidden' ? this.#viewBlock() : ''}
 				${States.editMode ? this.#editBlock() : html`
-					<button class="home contrast" @click="${() => {
-			location.href = '/'
-		}}">
-					<svg class="home">
-						<use href="#home"></use>
-					</svg>
-					<span>Accueil</span>
-					</button>
+					<fs-link role="button" class="home contrast" href="/">
+						<svg class="home"> 
+							<use href="#home"></use>
+						</svg>
+						<span>Accueil</span>
+					</fs-link>
 					<button class="edit contrast" @click="${() => States.displayEditMode(true)}">Éditer</button>
 					<button class="notepad contrast">Bloc notes</button>
 				`}

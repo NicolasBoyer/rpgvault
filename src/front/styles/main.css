@@ -260,7 +260,7 @@ fs-sheet> div > div.selected {
 
 fs-sheet button.edit,
 fs-sheet button.notepad,
-fs-sheet button.home {
+fs-sheet fs-link.home {
 	width: fit-content;
 	margin: 0.5em 0 0.5em 0.5em;
 	padding: 0.3em 0.8em;
@@ -269,13 +269,13 @@ fs-sheet button.home {
 	display: inline-block;
 }
 
-fs-sheet button.home > span {
+fs-sheet fs-link.home > span {
 	display: none;
 }
 
 fs-sheet button.edit:hover,
 fs-sheet button.notepad:hover,
-fs-sheet button.home:hover {
+fs-sheet fs-link.home:hover {
 	opacity: 1;
 }
 
@@ -530,10 +530,6 @@ body.home label > span {
 	font-size: 175%;
 }
 
-body.home a {
-	font-size: 150%;
-}
-
 .home .title {
 	display: flex;
 	justify-content: center;
@@ -590,9 +586,10 @@ body.home .title button svg {
 	gap: var(--grid-spacing-horizontal);
 }
 
-.home li > div.characterSheets > a {
+.home li > div.characterSheets > fs-link {
 	flex: 1;
 	font-size: 2.3em;
+	cursor: pointer;
 }
 
 .home li > div.grid.characterSheets {
