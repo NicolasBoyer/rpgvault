@@ -4,7 +4,6 @@ import { Caches } from '../classes/caches.js'
 
 // TODO ne pas oublier le notepad
 // TODO système de folder ?
-// TODO revoir le code modifié pour etre sur que le cache est bon
 // TODO bug suppr clone par bouton
 export default class Home extends HTMLElement {
 	#sheets
@@ -12,13 +11,16 @@ export default class Home extends HTMLElement {
 
 	async connectedCallback () {
 		Utils.getFragmentHtml(location.pathname)
+		Utils.loader(true)
 		this.#sheets = Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
 		Caches.set('sheets', this.#sheets)
 		this.#sheets = Array.isArray(this.#sheets) ? this.#sheets : Object.keys(this.#sheets).length ? [this.#sheets] : []
 		this.#render()
 		window.addEventListener('resize', () => this.#initParchment())
-		// TODO loader ?
-		setTimeout(() => this.#initParchment())
+		setTimeout(() => {
+			this.#initParchment()
+			Utils.loader(false)
+		})
 	}
 
 	#initParchment () {
