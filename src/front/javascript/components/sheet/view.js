@@ -77,12 +77,18 @@ export default class View {
 	static #selectBlock (pElement) {
 		return html`
 			<article class="selectBlock">
-				<a href="#" role="button" class="cloneInput" @click="${(pEvent) => ElementManager.clone(pEvent, pElement)}" title="Dupliquer (ctrl D)">
+				<a href="#" role="button" class="cloneInput" @click="${(pEvent) => {
+			pEvent.preventDefault()
+			ElementManager.clone(pEvent, pElement)
+		}}" title="Dupliquer (ctrl D)">
 					<svg class="clone">
 						<use href="#clone"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="deleteInput" @click="${() => ElementManager.delete(pElement.id)}" title="Supprimer (Suppr)">
+				<a href="#" role="button" class="deleteInput" @click="${(pEvent) => {
+			pEvent.preventDefault()
+			ElementManager.delete(pElement.id)
+		}}" title="Supprimer (Suppr)">
 					<svg class="trash">
 						<use href="#trash"></use>
 					</svg>

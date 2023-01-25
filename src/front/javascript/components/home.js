@@ -4,7 +4,7 @@ import { Caches } from '../classes/caches.js'
 
 // TODO ne pas oublier le notepad
 // TODO système de folder ?
-// TODO bug suppr clone par bouton
+// TODO Suppr comment + pass sur ipad
 export default class Home extends HTMLElement {
 	#sheets
 	#editMode = null
