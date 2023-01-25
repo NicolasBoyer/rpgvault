@@ -5,6 +5,7 @@ import { Caches } from '../classes/caches.js'
 // TODO ne pas oublier le notepad
 // TODO système de folder ?
 // TODO revoir le code modifié pour etre sur que le cache est bon
+// TODO bug suppr clone par bouton
 export default class Home extends HTMLElement {
 	#sheets
 	#editMode = null

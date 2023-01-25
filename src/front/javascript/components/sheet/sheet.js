@@ -57,6 +57,7 @@ export default class Sheet extends HTMLElement {
 		this.containerLeft = (dims.width - parseInt(this.containerWidth)) / 2
 		this.containerTop = (dims.height - parseInt(this.containerHeight)) / 2
 		View.render()
+		setTimeout(() => Utils.loader(false))
 	}
 
 	static changeBackgroundColor () {

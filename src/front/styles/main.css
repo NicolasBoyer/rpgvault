@@ -610,6 +610,7 @@ fs-loader {
 	border-radius: var(--border-radius);
 	top: 0;
 	left: 0;
+	z-index: 1000;
 }
 
 .spinner {

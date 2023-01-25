@@ -18,6 +18,7 @@ export default class Datas {
 	static #id
 
 	static async init () {
+		Utils.loader(true)
 		const splitUrl = location.pathname.split('/')
 		const sheets = Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
 		Caches.set('sheets', sheets)
@@ -109,7 +110,6 @@ export default class Datas {
 				body.push(pProperty)
 			})
 		}
-		// TODO gérer les fonts en cache aussi
 		const sheets = await Utils.request('/db', 'POST', { body: JSON.stringify(body) })
 		Caches.set('sheets', sheets.pop())
 		this.isSaving = false
