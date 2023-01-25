@@ -9,6 +9,7 @@ import { ElementManager } from '../../classes/elementManager.js'
  */
 export default class States {
 	static editMode
+	static notepadMode
 	static isEditBlockHidden
 	static interface = 'hover'
 	static isSaved = true
@@ -17,11 +18,17 @@ export default class States {
 	static displayEditMode (pValue) {
 		ElementManager.select()
 		this.editMode = pValue
+		this.notepadMode = this.notepadMode && !pValue
 		Datas.changedInputs = []
 		Datas.changedImages = []
 		Datas.deletedInputs = []
 		Datas.deletedImages = []
 		Datas.sheetProperties = []
+		View.render()
+	}
+
+	static displayNotepadMode (pValue) {
+		this.notepadMode = pValue
 		View.render()
 	}
 

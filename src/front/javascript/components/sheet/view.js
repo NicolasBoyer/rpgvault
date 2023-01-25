@@ -121,8 +121,9 @@ export default class View {
 		`, document.head)
 		render(html`
 			
-				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
+				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.notepadMode && 'notepadMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
 			if (States.editMode) ElementManager.select(pEvent)
+			if (States.notepadMode) States.displayNotepadMode(false)
 		}}">
 				${States.interface === 'hidden' ? this.#viewBlock() : ''}
 				${States.editMode ? this.#editBlock() : html`
@@ -133,7 +134,15 @@ export default class View {
 						<span>Accueil</span>
 					</fs-link>
 					<button class="edit contrast" @click="${() => States.displayEditMode(true)}">Éditer</button>
-					<button class="notepad contrast">Bloc notes</button>
+					<button class="notepad contrast ${States.notepadMode && 'selected'}" @click="${(pEvent) => {
+			pEvent.stopPropagation()
+			States.displayNotepadMode(!States.notepadMode)
+		}}">Bloc notes</button>
+					${States.notepadMode ? html`
+					<article id="notepad" @click="${(pEvent) => pEvent.stopPropagation()}">
+						<textarea @change="${(pEvent) => Datas.saveNotepad(pEvent.target.value)}">${Datas.sheet.notepad}</textarea>
+					</article>
+					` : ''}
 				`}
 				${Datas.sheet.inputs?.map((pInput) => html`
 							<label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${ElementManager.selectedElementId === pInput.id ? 'selected' : ''}">

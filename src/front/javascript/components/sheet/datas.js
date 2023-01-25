@@ -32,6 +32,12 @@ export default class Datas {
 		await this.save(pInput)
 	}
 
+	static async saveNotepad (text) {
+		this.sheet.notepad = text
+		this.sheetProperties = [{ setNotepad: { text } }]
+		await this.save()
+	}
+
 	static addInputValues (pInput, ...args) {
 		for (let i = 0; i < args.length; i++) {
 			const value = args[i + 1]
@@ -70,7 +76,7 @@ export default class Datas {
 		this.isSaving = true
 		const body = []
 		const inputs = pInput ? [pInput] : this.changedInputs
-		inputs.forEach((pInput) => {
+		inputs?.forEach((pInput) => {
 			body.push({
 				setInput: {
 					id: this.#id,
@@ -80,7 +86,7 @@ export default class Datas {
 			})
 		})
 		if (!pInput) {
-			this.deletedInputs.forEach((pInputId) => {
+			this.deletedInputs?.forEach((pInputId) => {
 				body.push({
 					deleteInput: {
 						id: this.#id,
@@ -88,7 +94,7 @@ export default class Datas {
 					}
 				})
 			})
-			this.changedImages.forEach((pImage) => {
+			this.changedImages?.forEach((pImage) => {
 				body.push({
 					setImage: {
 						id: this.#id,
@@ -97,7 +103,7 @@ export default class Datas {
 					}
 				})
 			})
-			this.deletedImages.forEach((pImageId) => {
+			this.deletedImages?.forEach((pImageId) => {
 				body.push({
 					deleteImage: {
 						id: this.#id,
@@ -105,7 +111,7 @@ export default class Datas {
 					}
 				})
 			})
-			this.sheetProperties.forEach((pProperty) => {
+			this.sheetProperties?.forEach((pProperty) => {
 				Object.values(pProperty)[0].id = this.#id
 				body.push(pProperty)
 			})

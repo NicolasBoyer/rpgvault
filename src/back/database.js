@@ -58,6 +58,11 @@ export default class Database {
 				return await resolvers.getSheets()
 			},
 
+			async setNotepad (args) {
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { notepad: args.text } }, { upsert: true })
+				return await resolvers.getSheets()
+			},
+
 			async setBackgroundColor (args) {
 				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundColor: args.color } }, { upsert: true })
 				return await resolvers.getSheets()

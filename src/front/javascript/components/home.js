@@ -2,8 +2,7 @@ import { Utils } from '../classes/utils.js'
 import { html, render } from '../thirdParty/litHtml.js'
 import { Caches } from '../classes/caches.js'
 
-// TODO ne pas oublier le notepad
-// TODO système de folder ?
+// TODO système de folder ? A voir si besoin pas pour le moment
 // TODO Suppr comment + pass sur ipad
 export default class Home extends HTMLElement {
 	#sheets
@@ -27,6 +26,7 @@ export default class Home extends HTMLElement {
 		const main = document.querySelector('#main')
 		const mainSize = main.getBoundingClientRect()
 		const parchment = document.querySelector('#parchment')
+		if (!parchment) return
 		parchment.style.width = `${mainSize.width}px`
 		parchment.style.height = `${Math.max(mainSize.height, document.body.getBoundingClientRect().height - mainSize.top - parseInt(getComputedStyle(main).marginBottom))}px`
 		this.#render()
