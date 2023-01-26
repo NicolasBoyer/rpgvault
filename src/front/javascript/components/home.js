@@ -96,6 +96,11 @@ export default class Home extends HTMLElement {
 		this.#render()
 	}
 
+	#resetHeight () {
+		document.querySelector('#main').style.height = ''
+		document.body.style.height = ''
+	}
+
 	#render () {
 		render(html`
 			<div class="title">
@@ -136,10 +141,7 @@ export default class Home extends HTMLElement {
 								<span>Annuler</span>
 							</button>
 						` : html`
-							<fs-link role="link" href="/sheets/${pSheet.slug}" @click="${() => {
-					document.querySelector('#main').style.height = ''
-					document.body.style.height = ''
-				}}">
+							<fs-link role="link" href="/sheets/${pSheet.slug}" @click="${() => { this.#resetHeight() }}">
 								<span>${name}</span>
 							</fs-link>
 							<button type="button" class="clone" @click="${() => this.#clone(id)}">
