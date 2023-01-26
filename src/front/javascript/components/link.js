@@ -29,7 +29,7 @@ export default class Link extends HTMLElement {
 }
 
 const REPLACEZONE = (pFragment) => {
-	document.querySelector('[data-replaced-zone]').replaceChildren(document.createRange().createContextualFragment(pFragment.text))
+	Utils.replaceChildren(document.querySelector('[data-replaced-zone]'), document.createRange().createContextualFragment(pFragment.text))
 	document.body.className = pFragment.class
 	const title = document.querySelector('[data-replaced-title]')
 	if (title) title.innerHTML = pFragment.title

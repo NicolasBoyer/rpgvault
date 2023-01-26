@@ -84,6 +84,14 @@ export class Utils {
 			.replace(/^-+/, '') // Trim - from start of text
 			.replace(/-+$/, '') // Trim - from end of text
 	}
+
+	static replaceChildren (pElement, ...pChildren) {
+		if (pElement.replaceChildren) return pElement.replaceChildren(...pChildren)
+		pElement.textContent = ''
+		for (const child of pChildren) {
+			pElement.appendChild(child)
+		}
+	}
 }
 
 let mouseX = 0
