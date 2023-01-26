@@ -1,6 +1,7 @@
 import { Utils } from '../classes/utils.js'
 import { html, render } from '../thirdParty/litHtml.js'
 import { Caches } from '../classes/caches.js'
+import { Dom } from '../classes/dom.js'
 
 // TODO système de folder ? A voir si besoin pas pour le moment
 // TODO Suppr comment + pass sur ipad
@@ -25,7 +26,7 @@ export default class Home extends HTMLElement {
 	#initParchment () {
 		const main = document.querySelector('#main')
 		const mainSize = main.getBoundingClientRect()
-		const parchment = document.querySelector('#parchment')
+		const parchment = Dom.newDom(document.body).elt('div').att('id', 'parchment').current()
 		if (!parchment) return
 		parchment.style.width = `${mainSize.width}px`
 		parchment.style.height = `${Math.max(mainSize.height, document.body.getBoundingClientRect().height - mainSize.top - parseInt(getComputedStyle(main).marginBottom))}px`

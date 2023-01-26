@@ -109,7 +109,7 @@ export default class View {
 
 	static render () {
 		render(html`
-		<style>
+			<style>
 				${Datas.sheet.fonts?.filter((pFont) => pFont.type === 'google').map((pFont) => `@import url(${pFont.fontUrl});`)}
 				${Datas.sheet.fonts?.filter((pFont) => pFont.type === 'file').map((pFont) => `
 				@font-face {
@@ -119,8 +119,7 @@ export default class View {
 				`)}
 			</style>
 		`, document.head)
-		render(html`
-			
+		render(html`			
 				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.notepadMode && 'notepadMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
 			if (States.editMode) ElementManager.select(pEvent)
 			if (States.notepadMode) States.displayNotepadMode(false)
