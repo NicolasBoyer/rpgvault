@@ -506,6 +506,7 @@ body.home #main {
 	margin: 2em auto;
 	padding: 4em;
 	position: relative;
+	z-index: 1;
 }
 
 body.home #parchment {
@@ -515,12 +516,12 @@ body.home #parchment {
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 1;
+	z-index: 2;
 }
 
 body.home #main section {
 	position: relative;
-	z-index: 2;
+	z-index: 3;
 }
 
 body.home input {
