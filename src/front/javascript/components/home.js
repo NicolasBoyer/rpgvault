@@ -24,13 +24,12 @@ export default class Home extends HTMLElement {
 
 	#initParchment () {
 		const main = document.querySelector('#main')
-		const bodyHeight = document.body.getBoundingClientRect().height
-		main.style.height = `${bodyHeight}px`
+		document.body.style.height = `${Math.max(document.body.getBoundingClientRect().height, window.innerHeight)}px`
 		const mainSize = main.getBoundingClientRect()
 		const parchment = document.querySelector('#parchment')
 		if (!parchment) return
 		parchment.style.width = `${mainSize.width}px`
-		parchment.style.height = `${Math.max(mainSize.height, bodyHeight - mainSize.top - parseInt(getComputedStyle(main).marginBottom))}px`
+		parchment.style.height = main.style.height = `${Math.max(mainSize.height, document.body.getBoundingClientRect().height - mainSize.top - parseInt(getComputedStyle(main).marginBottom))}px`
 		// parchment.style.top = `${mainSize.top}px`
 		// parchment.style.left = `${mainSize.left}px`
 		this.#render()
