@@ -140,6 +140,10 @@ dialog footer > a[role=button]:not([href]) {
 }
 
 /*** SHEET ***/
+body.sheet {
+	height: 100vh;
+}
+
 fs-sheet {
 	display: flex;
 	background-size: contain;

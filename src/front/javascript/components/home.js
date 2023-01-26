@@ -24,7 +24,6 @@ export default class Home extends HTMLElement {
 
 	#initParchment () {
 		const main = document.querySelector('#main')
-		main.style.height = ''
 		document.body.style.height = `${Math.max(document.body.getBoundingClientRect().height, window.innerHeight)}px`
 		const mainSize = main.getBoundingClientRect()
 		const parchment = document.querySelector('#parchment')
@@ -137,7 +136,10 @@ export default class Home extends HTMLElement {
 								<span>Annuler</span>
 							</button>
 						` : html`
-							<fs-link role="link" href="/sheets/${pSheet.slug}">
+							<fs-link role="link" href="/sheets/${pSheet.slug}" @click="${() => {
+					document.querySelector('#main').style.height = ''
+					document.body.style.height = ''
+				}}">
 								<span>${name}</span>
 							</fs-link>
 							<button type="button" class="clone" @click="${() => this.#clone(id)}">
