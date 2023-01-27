@@ -23,10 +23,12 @@ export default class Home extends HTMLElement {
 	}
 
 	#initParchment () {
+		// TODO marche toujours pas sur ipad essayer un document.body.style.height = `${window.innerHeight}px` sur le body ou enlever le position abs sur le parchment ou ajouter height sur section ?
 		const parchment = document.querySelector('#parchment')
 		if (!parchment) return
 		const main = document.querySelector('#main')
 		main.style.height = ''
+		document.body.style.height = ''
 		const mainSize = main.getBoundingClientRect()
 		if (mainSize.height <= window.innerHeight) {
 			document.body.style.height = `${window.innerHeight}px`
