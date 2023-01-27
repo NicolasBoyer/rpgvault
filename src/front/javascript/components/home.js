@@ -23,15 +23,17 @@ export default class Home extends HTMLElement {
 	}
 
 	#initParchment () {
-		const main = document.querySelector('#main')
-		document.body.style.height = `${Math.max(document.body.getBoundingClientRect().height, window.innerHeight)}px`
-		const mainSize = main.getBoundingClientRect()
-		const height = `${Math.max(mainSize.height, document.body.getBoundingClientRect().height - mainSize.top - parseInt(getComputedStyle(main).marginBottom))}px`
-		main.style.height = height
 		const parchment = document.querySelector('#parchment')
 		if (!parchment) return
+		const main = document.querySelector('#main')
+		main.style.height = ''
+		const mainSize = main.getBoundingClientRect()
+		if (mainSize.height <= window.innerHeight) {
+			document.body.style.height = `${window.innerHeight}px`
+			main.style.height = `${document.body.getBoundingClientRect().height - mainSize.top - parseInt(getComputedStyle(main).marginBottom)}px`
+		}
 		parchment.style.width = `${mainSize.width}px`
-		parchment.style.height = height
+		parchment.style.height = `${main.getBoundingClientRect().height}px`
 		this.#render()
 	}
 
@@ -62,7 +64,10 @@ export default class Home extends HTMLElement {
 			name = pEvent.target.value
 		}}"> 
 			</label>
-		`, async () => this.#saveSheet({ name }))
+		`, async () => {
+			await this.#saveSheet({ name })
+			this.#initParchment()
+		})
 	}
 
 	#removeSheet (id) {
@@ -70,6 +75,7 @@ export default class Home extends HTMLElement {
 			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "removeSheet": { "id": "${id}" } }` })
 			Caches.set('sheets', this.#sheets)
 			this.#resetMode()
+			this.#initParchment()
 			Utils.toast('success', 'Feuille de personnage supprimée')
 		})
 	}
@@ -90,6 +96,7 @@ export default class Home extends HTMLElement {
 			delete sheet._id
 			delete sheet.id
 			await this.#saveSheet(sheet)
+			this.#initParchment()
 		})
 	}
 
