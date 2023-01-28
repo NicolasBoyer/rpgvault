@@ -36,7 +36,7 @@ export default class Label extends HTMLElement {
 	}
 
 	get options () {
-		return JSON.parse(this.getAttribute('options'))
+		return JSON.parse(this.getAttribute('options') || '[]')
 	}
 
 	set options (pValue) {

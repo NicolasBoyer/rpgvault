@@ -116,8 +116,10 @@ export default class Datas {
 				body.push(pProperty)
 			})
 		}
-		const sheets = await Utils.request('/db', 'POST', { body: JSON.stringify(body) })
-		Caches.set('sheets', sheets.pop())
+		let sheets = await Utils.request('/db', 'POST', { body: JSON.stringify(body) })
+		sheets = sheets.pop()
+		this.sheet = sheets.find((pSheet) => pSheet._id === this.#id)
+		Caches.set('sheets', sheets)
 		this.isSaving = false
 		States.isSaved = true
 	}

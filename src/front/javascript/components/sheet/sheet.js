@@ -65,7 +65,7 @@ export default class Sheet extends HTMLElement {
 		Utils.confirm(html`
 			<label for="color">
 				<span>Choisissez une couleur</span>
-				<input type="color" id="color" name="color" value="${Datas.sheet.backgroundColor}" @change="${async (pEvent) => {
+				<input type="color" id="color" name="color" value="${Datas.sheet.backgroundColor || '#ffffff'}" @change="${async (pEvent) => {
 			color = pEvent.target.value
 		}}">
 			</label>
