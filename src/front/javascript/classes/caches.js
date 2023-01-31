@@ -4,11 +4,11 @@ const indexedDBCaches = []
 
 export class Caches {
 	static async set (...args) {
-		if (!indexedDB) return
 		for (let i = 0; i < args.length; i++) {
 			const maxStorageSize = 1024 * 1024 * 5 - JSON.stringify(sessionStorage).length
 			const storage = JSON.stringify(args[i + 1])
 			if (storage && storage.length >= maxStorageSize) {
+				if (!indexedDB) break
 				const db = await openDB(args[i], 1, { upgrade: (db) => db.createObjectStore(args[i]) })
 				indexedDBCaches.push(args[i])
 				const transaction = db.transaction(args[i], 'readwrite')
@@ -23,7 +23,7 @@ export class Caches {
 
 	static async get (...args) {
 		let datas = []
-		const databases = await window.indexedDB.databases()
+		const databases = indexedDB ? await indexedDB.databases() : []
 		for (const arg of args) {
 			if (databases.map((db) => db.name).includes(arg)) {
 				const db = await openDB(arg, 1)
