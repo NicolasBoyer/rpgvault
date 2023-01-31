@@ -4,8 +4,8 @@ const indexedDBCaches = []
 
 export class Caches {
 	static async set (...args) {
-		window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB
-		if (!window.indexedDB) return
+		const isIndexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB
+		if (!isIndexedDB) return
 		for (let i = 0; i < args.length; i++) {
 			const maxStorageSize = 1024 * 1024 * 5 - JSON.stringify(sessionStorage).length
 			const storage = JSON.stringify(args[i + 1])
