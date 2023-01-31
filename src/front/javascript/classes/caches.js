@@ -1,4 +1,4 @@
-import { deleteDB, openDB } from '../thirdParty/idb.js'
+import { openDB } from '../thirdParty/idb.js'
 
 const indexedDBCaches = []
 
@@ -21,21 +21,17 @@ export class Caches {
 	}
 
 	static async get (...args) {
-		try {
-			let datas = []
-			for (const arg of args) {
-				if (indexedDBCaches.includes(arg)) {
-					const db = await openDB(arg, 1)
-					datas.push(await db.transaction(arg).objectStore(arg).get(arg))
-				} else datas.push(JSON.parse(sessionStorage.getItem(arg)))
-			}
-			datas = datas.filter((pEntry) => pEntry)
-			return datas.length === 1 && datas.length === args.length ? datas[0] : datas.length && datas.length === args.length ? datas : null
-		} catch (e) {
-			alert(e)
+		let datas = []
+		for (const arg of args) {
+			if (indexedDBCaches.includes(arg)) {
+				const db = await openDB(arg, 1)
+				datas.push(await db.transaction(arg).objectStore(arg).get(arg))
+			} else datas.push(JSON.parse(sessionStorage.getItem(arg)))
 		}
+		datas = datas.filter((pEntry) => pEntry)
+		return datas.length === 1 && datas.length === args.length ? datas[0] : datas.length && datas.length === args.length ? datas : null
 	}
 }
 
 // eslint-disable-next-line func-call-spacing
-window.addEventListener('beforeunload', () => indexedDBCaches.forEach((dbName) => deleteDB(dbName)))
+// window.addEventListener('beforeunload', () => indexedDBCaches.forEach((dbName) => deleteDB(dbName)))
