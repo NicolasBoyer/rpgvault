@@ -17,7 +17,7 @@ export default class Database {
 
 	static init () {
 		const db = this.client.db('sheetrpg')
-		this.sheets = db.collection('nicolasboyer')
+		this.sheets = db.collection('test')
 		// this.recipes = db.collection('recipes')
 		// this.lists = db.collection('lists')
 		// this.categories = db.collection('categories')
