@@ -1,4 +1,4 @@
-import { openDB } from '../thirdParty/idb.js'
+import { deleteDB, openDB } from '../thirdParty/idb.js'
 
 const indexedDBCaches = []
 
@@ -34,4 +34,4 @@ export class Caches {
 }
 
 // eslint-disable-next-line func-call-spacing
-// window.addEventListener('beforeunload', () => indexedDBCaches.forEach((dbName) => deleteDB(dbName)))
+window.addEventListener('beforeunload', () => indexedDBCaches.forEach((dbName) => deleteDB(dbName)))
