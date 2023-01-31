@@ -34,8 +34,8 @@ export default class Home extends HTMLElement {
 			document.body.style.height = `${window.innerHeight}px`
 			main.style.height = `${document.body.getBoundingClientRect().height - mainSize.top - parseInt(getComputedStyle(main).marginBottom)}px`
 		}
-		parchment.style.width = `${mainSize.width}px`
-		parchment.style.height = `${main.getBoundingClientRect().height}px`
+		// parchment.style.width = `${mainSize.width}px`
+		// parchment.style.height = `${main.getBoundingClientRect().height}px`
 		this.#render()
 	}
 
