@@ -4,6 +4,8 @@ const indexedDBCaches = []
 
 export class Caches {
 	static async set (...args) {
+		window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB
+		if (!window.indexedDB) return
 		for (let i = 0; i < args.length; i++) {
 			const maxStorageSize = 1024 * 1024 * 5 - JSON.stringify(sessionStorage).length
 			const storage = JSON.stringify(args[i + 1])
@@ -23,11 +25,11 @@ export class Caches {
 	static async get (...args) {
 		let datas = []
 		const databases = await window.indexedDB.databases()
-		for (const pArg of args) {
-			if (databases.map((db) => db.name).includes(pArg)) {
-				const db = await openDB(pArg, 1)
-				datas.push(await db.transaction(pArg).objectStore(pArg).get(pArg))
-			} else datas.push(JSON.parse(sessionStorage.getItem(pArg)))
+		for (const arg of args) {
+			if (databases.map((db) => db.name).includes(arg)) {
+				const db = await openDB(arg, 1)
+				datas.push(await db.transaction(arg).objectStore(arg).get(arg))
+			} else datas.push(JSON.parse(sessionStorage.getItem(arg)))
 		}
 		datas = datas.filter((pEntry) => pEntry)
 		return datas.length === 1 && datas.length === args.length ? datas[0] : datas.length && datas.length === args.length ? datas : null
