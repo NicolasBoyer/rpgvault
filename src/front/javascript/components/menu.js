@@ -13,7 +13,7 @@ export default class Menu extends HTMLElement {
 	}
 
 	async connectedCallback () {
-		this.#links = Caches.get('routes') || await Utils.request('/app/routes.json')
+		this.#links = await Caches.get('routes') || await Utils.request('/app/routes.json')
 		Caches.set('routes', this.#links)
 		this.removeAttribute('style')
 		this.#displayMenu()
@@ -33,9 +33,9 @@ export default class Menu extends HTMLElement {
 		render(html`
 			${this.#isBurger ? html`
 				<button class="burger" @click="${() => {
-					this.#isHidden = false
-					this.#render()
-				}}">
+			this.#isHidden = false
+			this.#render()
+		}}">
 					<svg class="burger">
 						<use href="#burger"></use>
 					</svg>
@@ -45,9 +45,9 @@ export default class Menu extends HTMLElement {
 			<div data-hidden="${this.#isHidden}">
 				${this.#isBurger ? html`
 					<button class="back" @click="${() => {
-						this.#isHidden = true
-						this.#render()
-					}}">
+			this.#isHidden = true
+			this.#render()
+		}}">
 						<svg class="back">
 							<use href="#back"></use>
 							<span>Retour</span>

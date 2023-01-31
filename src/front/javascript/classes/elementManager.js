@@ -45,9 +45,9 @@ export class ElementManager {
 		Caches.set('elementDatas', pElement)
 	}
 
-	static paste (pEvent) {
+	static async paste (pEvent) {
 		const mousePosition = Utils.getMousePosition()
-		const element = { ...Caches.get('elementDatas'), x: Math.round((mousePosition.x - Sheet.containerLeft) / Sheet.ratio), y: Math.round((mousePosition.y - Sheet.containerTop) / Sheet.ratio), id: Utils.generateId().toString() }
+		const element = { ...(await Caches.get('elementDatas')), x: Math.round((mousePosition.x - Sheet.containerLeft) / Sheet.ratio), y: Math.round((mousePosition.y - Sheet.containerTop) / Sheet.ratio), id: Utils.generateId().toString() }
 		if (this.#elementType === 'input') {
 			Datas.addInputValues(element)
 		}

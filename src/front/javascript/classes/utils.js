@@ -46,7 +46,7 @@ export class Utils {
 	}
 
 	static async getFragmentHtml (pUrl) {
-		const fragment = Caches.get(pUrl) || await Utils.request(pUrl, 'POST')
+		const fragment = await Caches.get(pUrl) || await Utils.request(pUrl, 'POST')
 		Caches.set(pUrl, fragment)
 		return fragment
 	}

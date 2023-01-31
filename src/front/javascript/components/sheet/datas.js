@@ -20,7 +20,7 @@ export default class Datas {
 	static async init () {
 		Utils.loader(true)
 		const splitUrl = location.pathname.split('/')
-		const sheets = Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
+		const sheets = await Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
 		Caches.set('sheets', sheets)
 		this.sheet = sheets.find((pSheet) => pSheet.slug === splitUrl[splitUrl.length - 1])
 		// TODO si pas de sheet retourner une 404

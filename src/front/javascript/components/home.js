@@ -11,7 +11,7 @@ export default class Home extends HTMLElement {
 	async connectedCallback () {
 		Utils.getFragmentHtml(location.pathname)
 		Utils.loader(true)
-		this.#sheets = Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
+		this.#sheets = await Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
 		Caches.set('sheets', this.#sheets)
 		this.#sheets = Array.isArray(this.#sheets) ? this.#sheets : Object.keys(this.#sheets).length ? [this.#sheets] : []
 		this.#render()
