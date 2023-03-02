@@ -17,7 +17,7 @@
 	--primary: #7F3300;
 	--primary-hover: #c79c82;
 	/*--form-element-border-color: #b9b2a2;*/
-	--primary-focus: rgba(201,105,37,0.13);
+	--primary-focus: none;
 	/*--background-secondary: #ffcf4f;*/
 	--modal-overlay-background-color: rgba(226,219,213,0.8);
 	--secondary: #786459;
