@@ -175,7 +175,7 @@ export default class View {
 							${ElementManager.selectedElementId === pInput.id ? this.#selectBlock(pInput) : ''}
 						`
 		)}
-				${Datas.sheet.images?.map((pImage) => html`
+				${Datas.images[Datas.sheet._id].images?.map((pImage) => html`
 							<div id="${pImage.id}" style="transform: translate(${pImage.x * Sheet.ratio}px, ${pImage.y * Sheet.ratio}px);width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}" @click="${(pEvent) => {
 				if (States.editMode) ElementManager.select(pEvent, pImage)
 				else {
