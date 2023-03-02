@@ -5,6 +5,7 @@ import { Caches } from '../classes/caches.js'
 // TODO système de folder ? A voir si besoin pas pour le moment
 // TODO Suppr comment + pass sur ipad
 // TODO pb avec la taille sur mongodb ... sans doute revoir le stockage ...
+// TODO image comme un lien en choix si pas de place
 export default class Home extends HTMLElement {
 	#sheets
 	#editMode = null
