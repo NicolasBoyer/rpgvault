@@ -92,6 +92,22 @@ export class Utils {
 			pElement.appendChild(child)
 		}
 	}
+
+	static urlToBase64 (pUrl) {
+		// eslint-disable-next-line no-async-promise-executor
+		return new Promise(async (resolve, reject) => {
+			const reader = new FileReader()
+			reader.onload = () => resolve(reader.result)
+			reader.readAsDataURL(await this.request(pUrl, 'GET', null, 'blob'))
+		})
+	}
+
+	static async uploadImageAndGetUrl (pImage) {
+		const formData = new FormData()
+		formData.append('file', pImage)
+		formData.append('upload_preset', 'sheetrpg')
+		return (await Utils.request('https://api.cloudinary.com/v1_1/elendil/upload', 'POST', { body: formData })).url
+	}
 }
 
 let mouseX = 0
