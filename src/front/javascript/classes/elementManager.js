@@ -23,7 +23,7 @@ export class ElementManager {
 		if (this.#elementType === 'image') {
 			const index = Datas.sheet.images.findIndex((image) => image.id === pElementId)
 			if (index !== -1) {
-				Datas.sheet.images.splice(index, 1)
+				Datas.images[Datas.sheet._id].images.splice(index, 1)
 				Datas.deletedImages.push(pElementId)
 			}
 		}
