@@ -1,13 +1,14 @@
 import { deleteDB, openDB } from '../thirdParty/idb.js'
+import { Utils } from './utils.js'
 
 const indexedDBCaches = []
 
 export class Caches {
-	static async set (...args) {
+	static async set (forceIndexedDb, ...args) {
 		for (let i = 0; i < args.length; i++) {
 			const maxStorageSize = 1024 * 1024 * 5 - JSON.stringify(sessionStorage).length
 			const storage = JSON.stringify(args[i + 1])
-			if (storage && storage.length >= maxStorageSize) {
+			if (storage && storage.length >= maxStorageSize || forceIndexedDb) {
 				const db = await openDB(args[i], 1, { upgrade: (db) => db.createObjectStore(args[i]) })
 				indexedDBCaches.push(args[i])
 				const transaction = db.transaction(args[i], 'readwrite')
@@ -30,6 +31,18 @@ export class Caches {
 		}
 		datas = datas.filter((pEntry) => pEntry)
 		return datas.length === 1 && datas.length === args.length ? datas[0] : datas.length && datas.length === args.length ? datas : null
+	}
+
+	static async cacheResources (cacheId, cacheEntry, ...args) {
+		for (let i = 0; i < args.length; i++) {
+			if (i % 2 === 0) {
+				for (let j = 0; j < args[i]?.length; j++) {
+					const resource = args[i][j]
+					if (Utils.isValidHttpUrl(resource[args[i + 1]])) resource[args[i + 1]] = await Utils.urlToBase64(resource[args[i + 1]])
+				}
+			}
+		}
+		Caches.set(true, cacheId, cacheEntry)
 	}
 }
 

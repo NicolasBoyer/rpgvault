@@ -22,7 +22,7 @@ export default class Sheet extends HTMLElement {
 		await Datas.init()
 		Sheet.element = this
 		this.style.backgroundColor = Datas.sheet.backgroundColor
-		Sheet.setBackgroundImage(Datas.images[Datas.sheet._id]?.backgroundImage || '../../assets/default.jpg')
+		Sheet.setBackgroundImage(Datas.sheet.backgroundImage || '../../assets/default.jpg')
 		window.addEventListener('resize', () => Sheet.resize())
 		ShortcutManager.set(document.body, ['Control', 's'], async () => {
 			await Datas.save()
@@ -61,6 +61,7 @@ export default class Sheet extends HTMLElement {
 	}
 
 	static changeBackgroundColor () {
+		States.displayEditBlock(false)
 		let color
 		Utils.confirm(html`
 			<label for="color">
@@ -74,11 +75,13 @@ export default class Sheet extends HTMLElement {
 			Datas.sheet.backgroundColor = color
 			Datas.sheetProperties.push({ setBackgroundColor: { color } })
 			States.isSaved = false
+			States.displayEditBlock(true)
 			View.render()
 		})
 	}
 
 	static editBackgroundImage () {
+		States.displayEditBlock(false)
 		let file
 		Utils.confirm(html`
 			<label for="file">
@@ -87,30 +90,22 @@ export default class Sheet extends HTMLElement {
 			file = pEvent.target.files[0]
 		}}">
 			</label>
-		`, () => {
-			const reader = new FileReader()
-			reader.addEventListener('load', () => {
-				this.setBackgroundImage(reader.result)
-				Datas.sheetProperties.push({ setBackgroundImage: { image: file } })
-			})
-			reader.readAsDataURL(file)
+		`, async () => {
+			this.setBackgroundImage(await Utils.getBase64FromFileReader(file))
+			Datas.sheetProperties.push({ setBackgroundImage: { image: file } })
 			States.isSaved = false
+			States.displayEditBlock(true)
 			View.render()
 		})
 	}
 
 	static addFont () {
+		States.displayEditBlock(false)
 		let fontUrl
 		let fontFamily
 		let file
 		Utils.confirm(html`
-			<label for="fontUrl">
-				<span>Ajouter l'URL d'une police (import google)</span>
-				<input type="text" id="fontUrl" name="fontUrl" @change="${async (pEvent) => {
-			fontUrl = pEvent.target.value
-		}}">
 			<label for="file">
-				<span>Ou</span>
 				<input accept=".ttf,.woff,.woff2,.eot" type="file" id="file" name="file" @change="${(pEvent) => {
 			file = pEvent.target.files[0]
 		}}">
@@ -123,16 +118,19 @@ export default class Sheet extends HTMLElement {
 			</label>
 		`, async () => {
 			if (!Datas.sheet.fonts) Datas.sheet.fonts = []
-			if (file) fontUrl = await Utils.getFileFromFileReader(file)
-			const font = { fontUrl, fontFamily, type: file ? 'file' : 'google' }
+			fontUrl = await Utils.getBase64FromFileReader(file)
+			const font = { name: file.name, fontUrl, fontFamily }
 			Datas.sheet.fonts.push(font)
+			fontUrl = file
 			Datas.sheetProperties.push({ setFont: font })
 			States.isSaved = false
+			States.displayEditBlock(true)
 			View.render()
 		})
 	}
 
 	static deleteFont () {
+		States.displayEditBlock(false)
 		let fonts = []
 		Utils.confirm(html`
 			<ul>
@@ -153,6 +151,7 @@ export default class Sheet extends HTMLElement {
 			})
 			Datas.sheetProperties.push({ deleteFont: { fonts: fonts } })
 			States.isSaved = false
+			States.displayEditBlock(true)
 			View.render()
 		})
 	}

@@ -21,6 +21,10 @@ const includeFiles = [
 		mimetype: { 'Content-Type': 'image/jpg' }
 	},
 	{
+		regexp: '.avifs$',
+		mimetype: { 'Content-Type': 'image/avifs' }
+	},
+	{
 		regexp: '.otf$',
 		mimetype: { 'Content-Type': 'font/otf' }
 	},

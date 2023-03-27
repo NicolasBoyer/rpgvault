@@ -14,7 +14,7 @@ export default class Menu extends HTMLElement {
 
 	async connectedCallback () {
 		this.#links = await Caches.get('routes') || await Utils.request('/app/routes.json')
-		Caches.set('routes', this.#links)
+		Caches.set(false, 'routes', this.#links)
 		this.removeAttribute('style')
 		this.#displayMenu()
 		window.addEventListener('resize', (pEvent) => this.#displayMenu())

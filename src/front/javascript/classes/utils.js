@@ -47,7 +47,7 @@ export class Utils {
 
 	static async getFragmentHtml (pUrl) {
 		const fragment = await Caches.get(pUrl) || await Utils.request(pUrl, 'POST')
-		Caches.set(pUrl, fragment)
+		Caches.set(false, pUrl, fragment)
 		return fragment
 	}
 
@@ -59,7 +59,7 @@ export class Utils {
 		return { x: mouseX, y: mouseY }
 	}
 
-	static async getFileFromFileReader (pFile) {
+	static async getBase64FromFileReader (pFile) {
 		return new Promise((resolve, reject) => {
 			const reader = new FileReader()
 			reader.addEventListener('load', () => resolve(reader.result))
@@ -102,11 +102,25 @@ export class Utils {
 		})
 	}
 
-	static async uploadImageAndGetUrl (pImage) {
+	static async uploadFileAndGetUrl (pFile, pName) {
 		const formData = new FormData()
-		formData.append('file', pImage)
+		formData.append('file', pFile)
+		if (pName) formData.append('public_id', pName)
 		formData.append('upload_preset', 'sheetrpg')
 		return (await Utils.request('https://api.cloudinary.com/v1_1/elendil/upload', 'POST', { body: formData })).url
+	}
+
+	static isValidHttpUrl (pStr) {
+		const pattern = new RegExp(
+			'^(https?:\\/\\/)?' + // protocol
+			'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+			'((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+			'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+			'(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+			'(\\#[-a-z\\d_]*)?$', // fragment locator
+			'i'
+		)
+		return pattern.test(pStr)
 	}
 }
 

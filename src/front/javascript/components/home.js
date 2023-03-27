@@ -4,8 +4,10 @@ import { Caches } from '../classes/caches.js'
 
 // TODO système de folder ? A voir si besoin pas pour le moment
 // TODO Suppr comment + pass sur ipad
-// TODO pb avec la taille sur mongodb ... sans doute revoir le stockage ...
 // TODO image comme un lien en choix si pas de place
+// TODO Permettre l'impression ?
+// TODO permettre le déplacement des zones d'édition
+// TODO chargement des police quand note enregistré pas normal
 export default class Home extends HTMLElement {
 	#sheets
 	#editMode = null
@@ -14,7 +16,7 @@ export default class Home extends HTMLElement {
 		Utils.getFragmentHtml(location.pathname)
 		Utils.loader(true)
 		this.#sheets = await Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
-		Caches.set('sheets', this.#sheets)
+		Caches.set(true, 'sheets', this.#sheets)
 		this.#sheets = Array.isArray(this.#sheets) ? this.#sheets : Object.keys(this.#sheets).length ? [this.#sheets] : []
 		this.#render()
 		window.addEventListener('resize', () => this.#initParchment())
@@ -41,7 +43,7 @@ export default class Home extends HTMLElement {
 	async #saveSheet (sheet) {
 		if (!this.#sheets.some((pSheet) => (pSheet.name.toLowerCase() === sheet.name.toLowerCase() || pSheet.slug === Utils.slugify(sheet.name)) && pSheet._id !== sheet.id)) {
 			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "setSheet": ${JSON.stringify(sheet)} }` })
-			Caches.set('sheets', this.#sheets)
+			Caches.set(true, 'sheets', this.#sheets)
 		} else Utils.toast('error', 'Une feuille de personnage portant le même nom ou la même url existe')
 		this.#resetMode()
 		// try {
@@ -74,7 +76,7 @@ export default class Home extends HTMLElement {
 	#removeSheet (id) {
 		Utils.confirm(html`<h3>Voulez-vous vraiment supprimer ?</h3>`, async () => {
 			this.#sheets = await Utils.request('/db', 'POST', { body: `{ "removeSheet": { "id": "${id}" } }` })
-			Caches.set('sheets', this.#sheets)
+			Caches.set(true, 'sheets', this.#sheets)
 			this.#resetMode()
 			this.#initParchment()
 			Utils.toast('success', 'Feuille de personnage supprimée')

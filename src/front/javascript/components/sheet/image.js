@@ -13,7 +13,6 @@ export default class Image {
 	static add () {
 		States.displayEditBlock(false)
 		Drawer.init(Sheet.element.querySelector('.wrapper'), { x: Sheet.containerLeft, y: Sheet.containerTop }, async (pMousePosition, pEvent) => {
-			States.displayEditBlock(true)
 			const image = { id: Utils.generateId().toString() }
 			let file
 			Utils.confirm(html`
@@ -23,14 +22,11 @@ export default class Image {
 				file = pEvent.target.files[0]
 			}}">
 					</label>
-				`, () => {
-				const reader = new FileReader()
-				reader.addEventListener('load', () => {
-					Datas.addImageValues(image, 'x', Math.round(pMousePosition.startX / Sheet.ratio), 'y', Math.round(pMousePosition.startY / Sheet.ratio), 'width', Math.round(pMousePosition.x / Sheet.ratio - pMousePosition.startX / Sheet.ratio), 'height', Math.round(pMousePosition.y / Sheet.ratio - pMousePosition.startY / Sheet.ratio), 'image', reader.result, 'file', file)
-					ElementManager.select(pEvent, image)
-					States.isSaved = false
-				})
-				reader.readAsDataURL(file)
+				`, async () => {
+				await Datas.addImageValues(image, 'x', Math.round(pMousePosition.startX / Sheet.ratio), 'y', Math.round(pMousePosition.startY / Sheet.ratio), 'width', Math.round(pMousePosition.x / Sheet.ratio - pMousePosition.startX / Sheet.ratio), 'height', Math.round(pMousePosition.y / Sheet.ratio - pMousePosition.startY / Sheet.ratio), 'file', file)
+				ElementManager.select(pEvent, image)
+				States.displayEditBlock(true)
+				States.isSaved = false
 			})
 		})
 	}

@@ -23,7 +23,7 @@ export class ElementManager {
 		if (this.#elementType === 'image') {
 			const index = Datas.sheet.images.findIndex((image) => image.id === pElementId)
 			if (index !== -1) {
-				Datas.images[Datas.sheet._id].images.splice(index, 1)
+				Datas.sheet.images.splice(index, 1)
 				Datas.deletedImages.push(pElementId)
 			}
 		}
@@ -31,18 +31,18 @@ export class ElementManager {
 		View.render()
 	}
 
-	static clone (pEvent, pElement) {
+	static async clone (pEvent, pElement) {
 		if (this.#elementType === 'input') {
 			Datas.addInputValues({ ...pElement, id: Utils.generateId().toString() })
 		}
 		if (this.#elementType === 'image') {
-			Datas.addImageValues({ ...pElement, id: Utils.generateId().toString() })
+			await Datas.addImageValues({ ...pElement, id: Utils.generateId().toString() })
 		}
 		this.select(pEvent, pElement)
 	}
 
 	static copy (pEvent, pElement) {
-		Caches.set('elementDatas', pElement)
+		Caches.set(false, 'elementDatas', pElement)
 	}
 
 	static async paste (pEvent) {
@@ -52,7 +52,7 @@ export class ElementManager {
 			Datas.addInputValues(element)
 		}
 		if (this.#elementType === 'image') {
-			Datas.addImageValues(element)
+			await Datas.addImageValues(element)
 		}
 		this.select(pEvent, element)
 	}

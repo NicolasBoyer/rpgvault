@@ -74,7 +74,7 @@ export default class Database {
 			},
 
 			async setFont (args) {
-				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl, type: args.type } } })
+				await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
 				return await resolvers.getSheets()
 			},
 

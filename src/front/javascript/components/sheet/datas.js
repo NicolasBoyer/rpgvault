@@ -14,7 +14,6 @@ export default class Datas {
 	static deletedInputs
 	static deletedImages
 	static sheetProperties
-	static images
 	static isSaving = false
 	static #id
 
@@ -22,12 +21,12 @@ export default class Datas {
 		Utils.loader(true)
 		const splitUrl = location.pathname.split('/')
 		const sheets = await Caches.get('sheets') || await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })
-		Caches.set('sheets', sheets)
+		Caches.set(true, 'sheets', sheets)
 		this.sheet = sheets.find((pSheet) => pSheet.slug === splitUrl[splitUrl.length - 1])
 		// TODO si pas de sheet retourner une 404
 		this.#id = this.sheet._id
-		this.images = await Caches.get('images') || {}
-		await this.cacheImages()
+		this.sheet = await Caches.get(this.#id) || this.sheet
+		await this.#cacheResources()
 	}
 
 	static async addAndSaveInput (pInput, ...args) {
@@ -58,38 +57,26 @@ export default class Datas {
 		View.render()
 	}
 
-	static addImageValues (pImage, ...args) {
+	static async addImageValues (pImage, ...args) {
 		for (let i = 0; i < args.length; i++) {
 			const value = args[i + 1]
 			if (i % 2 === 0) pImage[args[i]] = Number(value) || value
 		}
 		let index
-		if (!this.images[this.#id].images) this.images[this.#id].images = []
 		if (States.editMode) {
 			index = this.changedImages.findIndex((image) => image.id === pImage.id)
 			this.changedImages[index !== -1 ? index : this.changedImages.length || 0] = pImage
 		}
-		index = this.images[this.#id].images.findIndex((image) => image.id === pImage.id)
-		this.images[this.#id].images[index !== -1 ? index : this.images[this.#id].images.length || 0] = pImage
+		if (!Datas.sheet.images) Datas.sheet.images = []
+		index = this.sheet.images.findIndex((image) => image.id === pImage.id)
+		pImage.image = await Utils.getBase64FromFileReader(pImage.file)
+		this.sheet.images[index !== -1 ? index : this.sheet.images.length || 0] = pImage
 		States.isSaved = false
 		View.render()
 	}
 
-	static async cacheImages () {
-		if (!this.images[this.#id]) this.images[this.#id] = {}
-		if (this.sheet.backgroundImage && (!this.images[this.#id].backgroundImage || this.images[this.#id].backgroundImageUrl !== this.sheet.backgroundImage)) {
-			this.images[this.#id].backgroundImageUrl = this.sheet.backgroundImage
-			this.images[this.#id].backgroundImage = await Utils.urlToBase64(this.sheet.backgroundImage)
-		}
-		if (!this.images[this.#id].images) this.images[this.#id].images = []
-		for (const image of this.sheet.images) {
-			image.imageUrl = image.image
-			image.image = await Utils.urlToBase64(image.image)
-			const index = this.images[this.#id].images.findIndex((pImage) => pImage.id === image.id)
-			if (index === -1) this.images[this.#id].images.push(image)
-			else this.images[this.#id].images[index] = image
-		}
-		Caches.set('images', this.images)
+	static async #cacheResources () {
+		await Caches.cacheResources(this.#id, this.sheet, [this.sheet], 'backgroundImage', this.sheet.images, 'image', this.sheet.fonts, 'fontUrl')
 	}
 
 	static async save (pInput) {
@@ -114,17 +101,18 @@ export default class Datas {
 					}
 				})
 			})
-			for (const image of this.changedImages) {
-				image.image = image.imageUrl || await Utils.uploadImageAndGetUrl(image.file)
-				delete image.file
-				delete image.imageUrl
-				body.push({
-					setImage: {
-						id: this.#id,
-						imageId: image.id,
-						image: image
-					}
-				})
+			if (this.changedImages) {
+				for (const image of this.changedImages) {
+					image.image = await Utils.uploadFileAndGetUrl(image.file)
+					delete image.file
+					body.push({
+						setImage: {
+							id: this.#id,
+							imageId: image.id,
+							image: image
+						}
+					})
+				}
 			}
 			this.deletedImages?.forEach((pImageId) => {
 				body.push({
@@ -136,7 +124,8 @@ export default class Datas {
 			})
 			for (const property of this.sheetProperties) {
 				const value = Object.values(property)[0]
-				if (Object.keys(property)[0] === 'setBackgroundImage') value.image = await Utils.uploadImageAndGetUrl(value.image)
+				if (Object.keys(property)[0] === 'setBackgroundImage') value.image = await Utils.uploadFileAndGetUrl(value.image)
+				if (Object.keys(property)[0] === 'setFont') value.fontUrl = await Utils.uploadFileAndGetUrl(value.fontUrl, value.name)
 				value.id = this.#id
 				body.push(property)
 			}
@@ -144,8 +133,8 @@ export default class Datas {
 		let sheets = await Utils.request('/db', 'POST', { body: JSON.stringify(body) })
 		sheets = sheets.pop()
 		this.sheet = sheets.find((pSheet) => pSheet._id === this.#id)
-		await Caches.set('sheets', sheets)
-		await this.cacheImages()
+		await Caches.set(true, 'sheets', sheets)
+		await this.#cacheResources()
 		this.isSaving = false
 		States.isSaved = true
 	}
