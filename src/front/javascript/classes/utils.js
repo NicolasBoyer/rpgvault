@@ -107,7 +107,7 @@ export class Utils {
 		formData.append('file', pFile)
 		if (pName) formData.append('public_id', pName)
 		formData.append('upload_preset', 'sheetrpg')
-		return (await Utils.request('https://api.cloudinary.com/v1_1/elendil/upload', 'POST', { body: formData })).url
+		return (await Utils.request('https://api.cloudinary.com/v1_1/elendil/upload', 'POST', { body: formData })).secure_url
 	}
 
 	static isValidHttpUrl (pStr) {
