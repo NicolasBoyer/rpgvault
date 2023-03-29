@@ -263,22 +263,31 @@ fs-sheet> div > div.selected {
 
 fs-sheet button.edit,
 fs-sheet button.notepad,
-fs-sheet fs-link.home {
+fs-sheet fs-link.home,
+fs-sheet button.print {
 	width: fit-content;
 	margin: 0.5em 0 0.5em 0.5em;
 	padding: 0.3em 0.8em;
 	opacity: 0.4;
 	transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition), opacity var(--transition);
 	display: inline-block;
+	height: fit-content;
 }
 
-fs-sheet fs-link.home > span {
+fs-sheet button.print {
+	margin-left: auto;
+	margin-right: 0.5em;
+}
+
+fs-sheet fs-link.home > span,
+fs-sheet button.print > span {
 	display: none;
 }
 
 fs-sheet button.edit:hover,
 fs-sheet button.notepad:hover,
 fs-sheet fs-link.home:hover,
+fs-sheet button.print:hover,
 fs-sheet button.notepad.selected {
 	opacity: 1;
 }
@@ -341,6 +350,10 @@ article.editBlock > div.viewBlock {
 	margin-bottom: var(--spacing);
 	display: flex;
 	gap: 0.3em;
+}
+
+.wrapper {
+	display: flex;
 }
 
 .wrapper > div.viewBlock {

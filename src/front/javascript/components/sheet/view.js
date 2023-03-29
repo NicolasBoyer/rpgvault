@@ -140,6 +140,12 @@ export default class View {
 			pEvent.stopPropagation()
 			States.displayNotepadMode(!States.notepadMode)
 		}}">Bloc notes</button>
+					<button class="print contrast" @click="${() => Sheet.printScreen()}">
+						<svg class="print"> 
+							<use href="#print"></use>
+						</svg>
+						<span>Imprimer</span>
+					</button>
 					${States.notepadMode ? html`
 					<article id="notepad" @click="${(pEvent) => pEvent.stopPropagation()}">
 						<textarea @change="${(pEvent) => Datas.saveNotepad(pEvent.target.value)}">${Datas.sheet.notepad}</textarea>

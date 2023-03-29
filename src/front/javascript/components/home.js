@@ -4,8 +4,8 @@ import { Caches } from '../classes/caches.js'
 
 // TODO système de folder ? A voir si besoin pas pour le moment
 // TODO Suppr comment + pass sur ipad
+// TODO permettre plusieurs utilisateurs
 // TODO image comme un lien en choix si pas de place
-// TODO Permettre l'impression ?
 // TODO permettre le déplacement des zones d'édition
 // TODO chargement des police quand note enregistré pas normal
 export default class Home extends HTMLElement {

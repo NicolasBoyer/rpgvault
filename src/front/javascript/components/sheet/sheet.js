@@ -155,4 +155,56 @@ export default class Sheet extends HTMLElement {
 			View.render()
 		})
 	}
+
+	static async printScreen () {
+		const canvasSize = document.querySelector('fs-sheet > div').getBoundingClientRect()
+		// eslint-disable-next-line no-undef
+		html2canvas(document.querySelector('fs-sheet'), {
+			width: canvasSize.width,
+			height: canvasSize.height,
+			x: canvasSize.x,
+			y: canvasSize.y,
+			ignoreElements: (element) => element.tagName === 'BUTTON' || element.tagName === 'FS-LINK',
+			onclone: (clonedDocument) => {
+				Array.from(clonedDocument.querySelectorAll('textarea')).forEach((textArea) => {
+					const div = clonedDocument.createElement('div')
+					div.innerText = textArea.value
+					div.setAttribute('style', textArea.getAttribute('style'))
+					textArea.style.display = 'none'
+					textArea.parentElement.append(div)
+				})
+				Array.from(clonedDocument.querySelectorAll('input')).forEach((input) => {
+					const div = clonedDocument.createElement('div')
+					const span = clonedDocument.createElement('span')
+					div.appendChild(span)
+					span.innerText = input.value
+					div.setAttribute('style', input.getAttribute('style'))
+					div.style.display = 'flex'
+					div.style.alignItems = 'center'
+					div.style.justifyContent = div.style.textAlign
+					input.style.display = 'none'
+					input.parentElement.append(div)
+				})
+				Array.from(clonedDocument.querySelectorAll('div.image')).forEach((div) => {
+					const divClone = clonedDocument.createElement('div')
+					// eslint-disable-next-line no-undef
+					const translate = new WebKitCSSMatrix(getComputedStyle(div).transform)
+					divClone.appendChild(div.querySelector('div'))
+					divClone.setAttribute('style', div.getAttribute('style'))
+					divClone.style.transform = 'none'
+					divClone.style.top = translate.m42 + 'px'
+					divClone.style.left = translate.m41 + 'px'
+					div.style.display = 'none'
+					div.parentElement.append(divClone)
+				})
+			}
+		}).then((canvas) => {
+			const link = document.createElement('a')
+			link.href = canvas.toDataURL()
+			link.download = `${Utils.slugify(Datas.sheet.name)}.png`
+			document.body.appendChild(link)
+			link.click()
+			document.body.removeChild(link)
+		})
+	}
 }
