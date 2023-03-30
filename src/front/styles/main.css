@@ -620,13 +620,13 @@ body.home .title button svg {
 /*** NOTEPAD ***/
 fs-sheet .notepadMode article#notepad {
 	padding: 0;
-    position: absolute;
-    left: 9em;
-    top: 3em;
-    margin: 0;
-    width: 80%;
-    z-index: 1000;
-    height: 90%;
+	position: absolute;
+	left: 1em;
+	top: 3em;
+	margin: 0;
+	z-index: 1000;
+	height: 90%;
+	right: 1em;
 }
 
 fs-sheet .notepadMode article#notepad > textarea {
