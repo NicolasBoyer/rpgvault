@@ -69,7 +69,7 @@ export default class Datas {
 		}
 		if (!Datas.sheet.images) Datas.sheet.images = []
 		index = this.sheet.images.findIndex((image) => image.id === pImage.id)
-		pImage.image = await Utils.getBase64FromFileReader(pImage.file)
+		if (pImage.file) pImage.image = await Utils.getBase64FromFileReader(pImage.file)
 		this.sheet.images[index !== -1 ? index : this.sheet.images.length || 0] = pImage
 		States.isSaved = false
 		View.render()
@@ -103,8 +103,13 @@ export default class Datas {
 			})
 			if (this.changedImages) {
 				for (const image of this.changedImages) {
-					image.image = await Utils.uploadFileAndGetUrl(image.file)
-					delete image.file
+					if (image.file) {
+						image.image = await Utils.uploadFileAndGetUrl(image.file)
+						delete image.file
+					} else {
+						image.image = image.image_url
+						delete image.image_url
+					}
 					body.push({
 						setImage: {
 							id: this.#id,
