@@ -33,44 +33,6 @@ export class Caches {
 		return datas.length === 1 && datas.length === args.length ? datas[0] : datas.length && datas.length === args.length ? datas : null
 	}
 
-	// static async cacheResources (cacheId, cacheEntry, ...args) {
-	//	const test = await Caches.get(cacheId)
-	//	console.log(test)
-	//	const b64toBlob = (base64Image) => {
-	//		// Split into two parts
-	//		const parts = base64Image.split(';base64,')
-	//
-	//		// Hold the content type
-	//		const imageType = parts[0].split(':')[1]
-	//
-	//		// Decode Base64 string
-	//		const decodedData = window.atob(parts[1])
-	//
-	//		// Create UNIT8ARRAY of size same as row data length
-	//		const uInt8Array = new Uint8Array(decodedData.length)
-	//
-	//		// Insert all character code into uInt8Array
-	//		for (let i = 0; i < decodedData.length; ++i) {
-	//			uInt8Array[i] = decodedData.charCodeAt(i)
-	//		}
-	//
-	//		// Return BLOB image after conversion
-	//		return new Blob([uInt8Array], { type: imageType })
-	//	}
-	//	for (let i = 0; i < args.length; i++) {
-	//		if (i % 2 === 0) {
-	//			for (let j = 0; j < args[i]?.length; j++) {
-	//				const resource = args[i][j]
-	//				console.log(resource)
-	//				console.log(args[i + 1])
-	//				console.log(resource[args[i + 1]])
-	//				// console.log(test && b64toBlob(test[args[i + 1]]))
-	//				if (Utils.isValidHttpUrl(resource[args[i + 1]])) resource[args[i + 1]] = await Utils.urlToBase64(resource[args[i + 1]])
-	//			}
-	//		}
-	//	}
-	//	Caches.set(true, cacheId, cacheEntry)
-	// }
 	static async cacheResources (cacheId, cacheEntry, ...args) {
 		for (let i = 0; i < args.length; i++) {
 			if (i % 2 === 0) {
