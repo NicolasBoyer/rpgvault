@@ -1,5 +1,4 @@
 import { deleteDB, openDB } from '../thirdParty/idb.js'
-import { Utils } from './utils.js'
 
 const indexedDBCaches = []
 
@@ -31,21 +30,6 @@ export class Caches {
 		}
 		datas = datas.filter((pEntry) => pEntry)
 		return datas.length === 1 && datas.length === args.length ? datas[0] : datas.length && datas.length === args.length ? datas : null
-	}
-
-	static async cacheResources (cacheId, cacheEntry, ...args) {
-		for (let i = 0; i < args.length; i++) {
-			if (i % 2 === 0) {
-				for (let j = 0; j < args[i]?.length; j++) {
-					const resource = args[i][j]
-					if (Utils.isValidHttpUrl(resource[args[i + 1]])) {
-						resource[args[i + 1] + '_url'] = resource[args[i + 1]]
-						resource[args[i + 1]] = await Utils.urlToBase64(resource[args[i + 1]])
-					}
-				}
-			}
-		}
-		Caches.set(true, cacheId, cacheEntry)
 	}
 }
 

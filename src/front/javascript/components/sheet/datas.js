@@ -76,7 +76,26 @@ export default class Datas {
 	}
 
 	static async #cacheResources () {
-		await Caches.cacheResources(this.#id, this.sheet, [this.sheet], 'backgroundImage', this.sheet.images, 'image', this.sheet.fonts, 'fontUrl')
+		const cache = await Caches.get(this.#id)
+		if (Utils.isValidHttpUrl(this.sheet.backgroundImage)) {
+			this.sheet.backgroundImage_url = this.sheet.backgroundImage
+			if (cache && cache.backgroundImage_url !== this.sheet.backgroundImage || !cache) this.sheet.backgroundImage = await Utils.urlToBase64(this.sheet.backgroundImage)
+		}
+		for (let i = 0; i < this.sheet.images.length; i++) {
+			const image = this.sheet.images[i]
+			if (Utils.isValidHttpUrl(image.image)) {
+				image.image_url = image.image
+				if (cache && cache.images[i].image_url !== image.image || !cache) image.image = await Utils.urlToBase64(image.image)
+			}
+		}
+		for (let i = 0; i < this.sheet.fonts.length; i++) {
+			const font = this.sheet.fonts[i]
+			if (Utils.isValidHttpUrl(font.fontUrl)) {
+				font.fontUrl_url = font.fontUrl
+				if (cache && cache.fonts[i].fontUrl_url !== font.fontUrl || !cache) font.fontUrl = await Utils.urlToBase64(font.fontUrl)
+			}
+		}
+		Caches.set(true, this.#id, this.sheet)
 	}
 
 	static async save (pInput) {
