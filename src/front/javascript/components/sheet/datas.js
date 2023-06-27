@@ -81,14 +81,14 @@ export default class Datas {
 			this.sheet.backgroundImage_url = this.sheet.backgroundImage
 			if (cache && cache.backgroundImage_url !== this.sheet.backgroundImage || !cache) this.sheet.backgroundImage = await Utils.urlToBase64(this.sheet.backgroundImage)
 		}
-		for (let i = 0; i < this.sheet.images.length; i++) {
+		for (let i = 0; i < this.sheet.images?.length; i++) {
 			const image = this.sheet.images[i]
 			if (Utils.isValidHttpUrl(image.image)) {
 				image.image_url = image.image
 				if (cache && cache.images[i].image_url !== image.image || !cache) image.image = await Utils.urlToBase64(image.image)
 			}
 		}
-		for (let i = 0; i < this.sheet.fonts.length; i++) {
+		for (let i = 0; i < this.sheet.fonts?.length; i++) {
 			const font = this.sheet.fonts[i]
 			if (Utils.isValidHttpUrl(font.fontUrl)) {
 				font.fontUrl_url = font.fontUrl

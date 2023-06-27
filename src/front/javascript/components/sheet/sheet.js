@@ -28,6 +28,7 @@ export default class Sheet extends HTMLElement {
 			await Datas.save()
 			View.render()
 		})
+		// TODO a voir si on déplace ça
 		ShortcutManager.set(document.body, ['Tab'], () => {
 			States.interface = States.interface === 'hover' ? 'visible' : States.interface === 'visible' ? 'hidden' : 'hover'
 			View.render()

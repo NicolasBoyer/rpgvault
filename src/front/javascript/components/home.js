@@ -7,9 +7,9 @@ import { Caches } from '../classes/caches.js'
 // TODO permettre plusieurs utilisateurs
 // TODO image comme un lien en choix si pas de place
 // TODO permettre le déplacement des zones d'édition
-// TODO chargement des police quand note enregistré pas normal
 // TODO parametre pour gérer zoom ou pas zoom
 // TODO dupliquer avec aucun ékément avec aucun texte ?
+// TODO améliorer notepade avec des onglets
 export default class Home extends HTMLElement {
 	#sheets
 	#editMode = null
