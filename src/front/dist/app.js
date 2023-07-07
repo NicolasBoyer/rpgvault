@@ -721,9 +721,9 @@ class ElementMover {
             }
         }
     }
-    static async pointerUp() {
+    static pointerUp() {
         if (ElementMover.isMoving)
-            await ElementMover.elements[ElementMover.selectedSelectorId].callback(ElementMover.mouse);
+            ElementMover.elements[ElementMover.selectedSelectorId].callback(ElementMover.mouse);
         if (ElementMover.isPointerDown) {
             ElementMover.isPointerDown = ElementMover.isMoving = false;
             document.body.classList.remove('isMoving');

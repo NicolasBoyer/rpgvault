@@ -66,8 +66,8 @@ export class ElementMover {
         }
     }
 
-    private static async pointerUp(): Promise<void> {
-        if (ElementMover.isMoving) await ElementMover.elements[ElementMover.selectedSelectorId].callback(ElementMover.mouse)
+    private static pointerUp(): void {
+        if (ElementMover.isMoving) ElementMover.elements[ElementMover.selectedSelectorId].callback(ElementMover.mouse)
         if (ElementMover.isPointerDown) {
             ElementMover.isPointerDown = ElementMover.isMoving = false
             document.body.classList.remove('isMoving')
