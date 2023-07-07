@@ -1,4 +1,4 @@
-import { Utils } from './classes/utils.js'
+import {Utils} from './classes/utils.js'
 import Loader from './components/loader.js'
 import Sheet from './components/sheet/sheet.js'
 import Confirm from './components/confirm.js'
@@ -9,29 +9,31 @@ import Toast from './components/toast.js'
 import Link from './components/link.js'
 
 class App {
-	constructor () {
-		Utils.helpers()
-		this.wakeLock()
-		// Websocket.init()
-		if (location.href.charAt(location.href.length - 1) === '/') history.replaceState({}, '', location.href.replace(/\/$/, ''))
-	}
+    constructor() {
+        Utils.helpers()
+        this.wakeLock()
+        // Websocket.init()
+        if (location.href.charAt(location.href.length - 1) === '/') history.replaceState({}, '', location.href.replace(/\/$/, ''))
+    }
 
-	async wakeLock () {
-		let wakeLock = null
-		const requestWakeLock = async () => {
-			try {
-				wakeLock = await navigator.wakeLock.request()
-			} catch (err) {
-				console.error(`${err.name}, ${err.message}`)
-			}
-		}
-		document.addEventListener('visibilitychange', async () => {
-			if (wakeLock !== null && document.visibilityState === 'visible') {
-				await requestWakeLock()
-			}
-		})
-		await requestWakeLock()
-	}
+    private async wakeLock(): Promise<void> {
+        let wakeLock: WakeLockSentinel | null = null
+        const requestWakeLock = async (): Promise<void> => {
+            try {
+                wakeLock = await navigator.wakeLock.request()
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    console.error(`${err.name}, ${err.message}`)
+                }
+            }
+        }
+        document.addEventListener('visibilitychange', async (): Promise<void> => {
+            if (wakeLock !== null && document.visibilityState === 'visible') {
+                await requestWakeLock()
+            }
+        })
+        await requestWakeLock()
+    }
 }
 
 new App()

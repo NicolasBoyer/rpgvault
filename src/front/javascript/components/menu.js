@@ -1,41 +1,41 @@
-import { html, render } from '../thirdParty/litHtml.js'
-import { Utils } from '../classes/utils.js'
-import { Caches } from '../classes/caches.js'
+import {html, render} from '../thirdParty/litHtml.js'
+import {Utils} from '../classes/utils.ts'
+import {Caches} from '../classes/caches.ts'
 
 export default class Menu extends HTMLElement {
-	#links
-	#isBurger
-	#isHidden
+    #links
+    #isBurger
+    #isHidden
 
-	constructor () {
-		super()
-		this.style.display = 'none'
-	}
+    constructor() {
+        super()
+        this.style.display = 'none'
+    }
 
-	async connectedCallback () {
-		this.#links = await Caches.get('routes') || await Utils.request('/app/routes.json')
-		Caches.set(false, 'routes', this.#links)
-		this.removeAttribute('style')
-		this.#displayMenu()
-		window.addEventListener('resize', (pEvent) => this.#displayMenu())
-		window.addEventListener('popstate', () => this.#render())
-	}
+    async connectedCallback() {
+        this.#links = await Caches.get('routes') || await Utils.request('/app/routes.json')
+        Caches.set(false, 'routes', this.#links)
+        this.removeAttribute('style')
+        this.#displayMenu()
+        window.addEventListener('resize', (pEvent) => this.#displayMenu())
+        window.addEventListener('popstate', () => this.#render())
+    }
 
-	#displayMenu () {
-		this.#isBurger = window.innerWidth <= 1100
-		this.#isHidden = window.innerWidth <= 1100
-		if (this.#isBurger) this.setAttribute('data-burger', '')
-		else this.removeAttribute('data-burger')
-		this.#render()
-	}
-
-	#render () {
-		render(html`
+    #displayMenu() {
+        this.#isBurger = window.innerWidth <= 1100
+        this.#isHidden = window.innerWidth <= 1100
+        if (this.#isBurger) this.setAttribute('data-burger', '')
+        else this.removeAttribute('data-burger')
+        this.#render()
+    }
+ 
+    #render() {
+        render(html`
 			${this.#isBurger ? html`
 				<button class="burger" @click="${() => {
-			this.#isHidden = false
-			this.#render()
-		}}">
+        this.#isHidden = false
+        this.#render()
+    }}">
 					<svg class="burger">
 						<use href="#burger"></use>
 					</svg>
@@ -45,9 +45,9 @@ export default class Menu extends HTMLElement {
 			<div data-hidden="${this.#isHidden}">
 				${this.#isBurger ? html`
 					<button class="back" @click="${() => {
-			this.#isHidden = true
-			this.#render()
-		}}">
+        this.#isHidden = true
+        this.#render()
+    }}">
 						<svg class="back">
 							<use href="#back"></use>
 							<span>Retour</span>
@@ -65,5 +65,5 @@ export default class Menu extends HTMLElement {
 				</ul>
 			</div>
 		`, this)
-	}
+    }
 }
