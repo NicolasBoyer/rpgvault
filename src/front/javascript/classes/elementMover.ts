@@ -12,8 +12,6 @@ export class ElementMover {
 
     static init(pElement: SHEETRPGElement, pOffset: TPosition, pCallback: (position: TPosition) => void, pSelector: HTMLElement | null = null): void {
         const selector = pSelector || pElement.querySelector('input, textarea') || pElement
-        // TODO Sans doute à supprimer cette partie - le selectorid doit etre avant et les listener sont perdu pour les menu
-        // if (this.#elements[selector.id]) return
         this.elements[selector.id] = pElement
         this.offsetPosition = pOffset
         pElement.moverCallback = pCallback

@@ -538,9 +538,8 @@ class Loader extends HTMLElement {
 
 class ElementResizer {
     static init(pElement, pOffset, pCallback) {
+        console.log('init');
         pElement.selector = pElement.querySelector('input, textarea') || pElement;
-        if (this.elements[pElement.selector.id])
-            return;
         this.elements[pElement.selector.id] = pElement;
         this.offsetPosition = pOffset;
         pElement.resizerCallback = pCallback;

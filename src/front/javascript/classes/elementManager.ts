@@ -108,7 +108,6 @@ export class ElementManager {
             if (pEvent) pEvent.stopPropagation()
             // TODO à revoir au niveau des types
             // TODO aussi revue du code pour etre sur que les choix de type soit les bons
-            // TODO bug lors du déplacement et du resize sur une image -> ICI
             this.selectedElementId = pElement?.id || null
             View.render()
             if (pElement) {
