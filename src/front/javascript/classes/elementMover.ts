@@ -14,10 +14,9 @@ export class ElementMover {
         const selector = pSelector || pElement.querySelector('input, textarea') || pElement
         // TODO Sans doute à supprimer cette partie - le selectorid doit etre avant et les listener sont perdu pour les menu
         // if (this.#elements[selector.id]) return
-        console.log(this.elements)
         this.elements[selector.id] = pElement
         this.offsetPosition = pOffset
-        pElement.callback = pCallback
+        pElement.moverCallback = pCallback
         this.mouse = {
             x: 0,
             y: 0
@@ -67,7 +66,7 @@ export class ElementMover {
     }
 
     private static pointerUp(): void {
-        if (ElementMover.isMoving) ElementMover.elements[ElementMover.selectedSelectorId].callback(ElementMover.mouse)
+        if (ElementMover.isMoving) ElementMover.elements[ElementMover.selectedSelectorId].moverCallback(ElementMover.mouse)
         if (ElementMover.isPointerDown) {
             ElementMover.isPointerDown = ElementMover.isMoving = false
             document.body.classList.remove('isMoving')
@@ -76,14 +75,12 @@ export class ElementMover {
 
     private static moveByKey(pOffsetX: number, pOffsetY = 0): void {
         const selectedElement = ElementMover.elements[ElementMover.selectedSelectorId]
-        console.log(selectedElement)
-        // eslint-disable-next-line no-undef
         const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform)
         const translateX = translate.m41 + pOffsetX
         const translateY = translate.m42 + pOffsetY
         setTimeout((): void => {
             selectedElement.style.transform = `translate(${translateX}px, ${translateY}px)`
         })
-        selectedElement.callback({x: translateX, y: translateY})
+        selectedElement.moverCallback({x: translateX, y: translateY})
     }
 }

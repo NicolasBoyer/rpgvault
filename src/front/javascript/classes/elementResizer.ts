@@ -1,12 +1,12 @@
 import {SHEETRPGElement, TPosition} from '../types.js'
 
 type Mouse = {
-	x: number
-	y: number
-	translateX: number
-	translateY: number
-	originalX: number
-	originalY: number
+    x: number
+    y: number
+    translateX: number
+    translateY: number
+    originalX: number
+    originalY: number
 }
 
 export class ElementResizer {
@@ -33,11 +33,11 @@ export class ElementResizer {
     ]
 
     static init(pElement: SHEETRPGElement, pOffset: TPosition, pCallback: (position: TPosition) => void): void {
-        const selector = pElement.querySelector('input, textarea') || pElement
-        if (this.elements[selector.id]) return
-        this.elements[selector.id] = pElement
+        pElement.selector = pElement.querySelector('input, textarea') || pElement
+        if (this.elements[pElement.selector.id]) return
+        this.elements[pElement.selector.id] = pElement
         this.offsetPosition = pOffset
-        pElement.callback = pCallback
+        pElement.resizerCallback = pCallback
         this.mouse = {
             x: 0,
             y: 0,
@@ -46,7 +46,7 @@ export class ElementResizer {
             originalX: 0,
             originalY: 0
         }
-        this.selectedSelectorId = selector.id
+        this.selectedSelectorId = pElement.selector.id
         window.addEventListener('resize', (): void => this.resetHandler(pElement))
         this.resetHandler(pElement)
         document.body.addEventListener('pointermove', this.pointerMove)
@@ -83,7 +83,7 @@ export class ElementResizer {
         ElementResizer.rightHorizontalMove = element.className.includes('right')
         ElementResizer.topVerticalMove = element.className.includes('Top')
         ElementResizer.bottomVerticalMove = element.className.includes('Bottom')
-        ElementResizer.selectedSelectorId = (<HTMLElement>element.parentElement?.firstElementChild).id
+        ElementResizer.selectedSelectorId = (<HTMLElement>element.parentElement?.firstElementChild).id || (<HTMLElement>element.parentElement).id
         ElementResizer.width = ElementResizer.elements[ElementResizer.selectedSelectorId].getBoundingClientRect().width
         ElementResizer.height = ElementResizer.elements[ElementResizer.selectedSelectorId].getBoundingClientRect().height
         ElementResizer.isPointerDown = true
@@ -95,22 +95,20 @@ export class ElementResizer {
         ElementResizer.mouse.x = pEvent.pageX - ElementResizer.mouse.originalX
         ElementResizer.mouse.y = pEvent.pageY - ElementResizer.mouse.originalY
         const element = ElementResizer.elements[ElementResizer.selectedSelectorId]
-        // eslint-disable-next-line no-undef
         const translate = new WebKitCSSMatrix(getComputedStyle(element).transform)
         ElementResizer.mouse.translateX = translate.m41
         ElementResizer.mouse.translateY = translate.m42
         if (pEvent.pressure !== 0 && ElementResizer.isPointerDown) {
-            const firstChild = <HTMLElement>element.firstElementChild
             if (ElementResizer.leftHorizontalMove) {
                 ElementResizer.mouse.translateX = pEvent.pageX + window.scrollX - ElementResizer.offsetPosition.x
-                firstChild.style.width = ElementResizer.width - ElementResizer.mouse.x + 'px'
+                element.selector.style.width = ElementResizer.width - ElementResizer.mouse.x + 'px'
             }
-            if (ElementResizer.rightHorizontalMove) firstChild.style.width = ElementResizer.width + ElementResizer.mouse.x + 'px'
+            if (ElementResizer.rightHorizontalMove) element.selector.style.width = ElementResizer.width + ElementResizer.mouse.x + 'px'
             if (ElementResizer.topVerticalMove) {
                 ElementResizer.mouse.translateY = pEvent.pageY + window.scrollY - ElementResizer.offsetPosition.y
-                firstChild.style.height = ElementResizer.height - ElementResizer.mouse.y + 'px'
+                element.selector.style.height = ElementResizer.height - ElementResizer.mouse.y + 'px'
             }
-            if (ElementResizer.bottomVerticalMove) firstChild.style.height = ElementResizer.height + ElementResizer.mouse.y + 'px'
+            if (ElementResizer.bottomVerticalMove) element.selector.style.height = ElementResizer.height + ElementResizer.mouse.y + 'px'
             element.style.transform = `translate(${ElementResizer.mouse.translateX}px, ${ElementResizer.mouse.translateY}px)`
             ElementResizer.resetHandler(element)
         }
@@ -119,12 +117,11 @@ export class ElementResizer {
     private static async pointerUp(): Promise<void> {
         if (ElementResizer.isPointerDown) {
             const element = ElementResizer.elements[ElementResizer.selectedSelectorId]
-            const firstChild = <HTMLElement>element.firstElementChild
-            await element.callback({
+            await element.resizerCallback({
                 x: ElementResizer.mouse.translateX,
                 y: ElementResizer.mouse.translateY,
-                width: parseInt(firstChild.style.width),
-                height: parseInt(firstChild.style.height)
+                width: parseInt(element.selector.style.width),
+                height: parseInt(element.selector.style.height)
             })
             ElementResizer.isPointerDown = false
             document.body.classList.remove('isResizing')

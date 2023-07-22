@@ -27,7 +27,7 @@ export class ElementManager {
                     if (selectedElement.tagName === 'LABEL') {
                         Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
                     }
-                    if (selectedElement.tagName === 'div') {
+                    if (selectedElement.tagName === 'DIV') {
                         Datas.addImageValues(<TImage>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
                     }
                 })
@@ -38,10 +38,10 @@ export class ElementManager {
                     x: Sheet.containerLeft,
                     y: Sheet.containerTop
                 }, (pMousePosition: TPosition): void => {
-                    if (selectedElement.tagName === 'input') {
+                    if (selectedElement.tagName === 'LABEL') {
                         Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
                     }
-                    if (selectedElement.tagName === 'image') {
+                    if (selectedElement.tagName === 'DIV') {
                         Datas.addImageValues(<TImage>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
                     }
                 })
@@ -108,7 +108,7 @@ export class ElementManager {
             if (pEvent) pEvent.stopPropagation()
             // TODO à revoir au niveau des types
             // TODO aussi revue du code pour etre sur que les choix de type soit les bons
-            // TODO bug lors du déplacement et du resize ne semble pas passer dans le addinput ou le addimage
+            // TODO bug lors du déplacement et du resize sur une image -> ICI
             this.selectedElementId = pElement?.id || null
             View.render()
             if (pElement) {

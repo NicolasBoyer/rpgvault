@@ -29,10 +29,10 @@ const config = [
             }
         ],
         plugins: [
+            resolve(),
             typescript({
                 tsconfig: './tsconfig.json'
-            }),
-            resolve()
+            })
         ]
     }
     //{

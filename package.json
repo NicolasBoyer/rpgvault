@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "update": "npx npm-check-updates -u & npm i",
-    "dev": "nodemon --exec \"npx rollup -c & node src/back/dev.js\" --ignore src/front/dist",
+    "dev": "nodemon -e ts --exec \"npx rollup -c & node src/back/dev.js\"",
     "start": "rollup -c & node src/back/prod.js"
   },
   "author": "Nicolas Boyer",
@@ -15,14 +15,14 @@
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-terser": "0.4.3",
     "@rollup/plugin-typescript": "^11.1.2",
-    "@types/node": "20.4.0",
-    "@typescript-eslint/eslint-plugin": "5.61.0",
-    "@typescript-eslint/parser": "5.61.0",
-    "eslint": "8.44.0",
+    "@types/node": "20.4.4",
+    "@typescript-eslint/eslint-plugin": "6.1.0",
+    "@typescript-eslint/parser": "6.1.0",
+    "eslint": "8.45.0",
     "eslint-plugin-import": "^2.27.5",
-    "mongodb": "5.6.0",
-    "nodemon": "2.0.22",
-    "rollup": "3.26.1",
+    "mongodb": "5.7.0",
+    "nodemon": "3.0.1",
+    "rollup": "3.26.3",
     "typescript": "5.1.6"
   },
   "dependencies": {

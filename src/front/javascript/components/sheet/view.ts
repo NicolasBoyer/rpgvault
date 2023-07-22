@@ -89,7 +89,7 @@ export default class View {
         View.render()
     }
 }}">
-								<div style="background-image: url(${pImage.image})"></div>
+								<div style="background-image: url(${pImage.image});"></div>
 								${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedElementId !== pImage.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
 							</div>
 							${ElementManager.selectedElementId === pImage.id ? Interface.selectBlock(pImage) : ''}

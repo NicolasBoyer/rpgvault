@@ -538,12 +538,12 @@ class Loader extends HTMLElement {
 
 class ElementResizer {
     static init(pElement, pOffset, pCallback) {
-        const selector = pElement.querySelector('input, textarea') || pElement;
-        if (this.elements[selector.id])
+        pElement.selector = pElement.querySelector('input, textarea') || pElement;
+        if (this.elements[pElement.selector.id])
             return;
-        this.elements[selector.id] = pElement;
+        this.elements[pElement.selector.id] = pElement;
         this.offsetPosition = pOffset;
-        pElement.callback = pCallback;
+        pElement.resizerCallback = pCallback;
         this.mouse = {
             x: 0,
             y: 0,
@@ -552,7 +552,7 @@ class ElementResizer {
             originalX: 0,
             originalY: 0
         };
-        this.selectedSelectorId = selector.id;
+        this.selectedSelectorId = pElement.selector.id;
         window.addEventListener('resize', () => this.resetHandler(pElement));
         this.resetHandler(pElement);
         document.body.addEventListener('pointermove', this.pointerMove);
@@ -587,7 +587,7 @@ class ElementResizer {
         ElementResizer.rightHorizontalMove = element.className.includes('right');
         ElementResizer.topVerticalMove = element.className.includes('Top');
         ElementResizer.bottomVerticalMove = element.className.includes('Bottom');
-        ElementResizer.selectedSelectorId = (element.parentElement?.firstElementChild).id;
+        ElementResizer.selectedSelectorId = (element.parentElement?.firstElementChild).id || element.parentElement.id;
         ElementResizer.width = ElementResizer.elements[ElementResizer.selectedSelectorId].getBoundingClientRect().width;
         ElementResizer.height = ElementResizer.elements[ElementResizer.selectedSelectorId].getBoundingClientRect().height;
         ElementResizer.isPointerDown = true;
@@ -602,19 +602,18 @@ class ElementResizer {
         ElementResizer.mouse.translateX = translate.m41;
         ElementResizer.mouse.translateY = translate.m42;
         if (pEvent.pressure !== 0 && ElementResizer.isPointerDown) {
-            const firstChild = element.firstElementChild;
             if (ElementResizer.leftHorizontalMove) {
                 ElementResizer.mouse.translateX = pEvent.pageX + window.scrollX - ElementResizer.offsetPosition.x;
-                firstChild.style.width = ElementResizer.width - ElementResizer.mouse.x + 'px';
+                element.selector.style.width = ElementResizer.width - ElementResizer.mouse.x + 'px';
             }
             if (ElementResizer.rightHorizontalMove)
-                firstChild.style.width = ElementResizer.width + ElementResizer.mouse.x + 'px';
+                element.selector.style.width = ElementResizer.width + ElementResizer.mouse.x + 'px';
             if (ElementResizer.topVerticalMove) {
                 ElementResizer.mouse.translateY = pEvent.pageY + window.scrollY - ElementResizer.offsetPosition.y;
-                firstChild.style.height = ElementResizer.height - ElementResizer.mouse.y + 'px';
+                element.selector.style.height = ElementResizer.height - ElementResizer.mouse.y + 'px';
             }
             if (ElementResizer.bottomVerticalMove)
-                firstChild.style.height = ElementResizer.height + ElementResizer.mouse.y + 'px';
+                element.selector.style.height = ElementResizer.height + ElementResizer.mouse.y + 'px';
             element.style.transform = `translate(${ElementResizer.mouse.translateX}px, ${ElementResizer.mouse.translateY}px)`;
             ElementResizer.resetHandler(element);
         }
@@ -622,12 +621,11 @@ class ElementResizer {
     static async pointerUp() {
         if (ElementResizer.isPointerDown) {
             const element = ElementResizer.elements[ElementResizer.selectedSelectorId];
-            const firstChild = element.firstElementChild;
-            await element.callback({
+            await element.resizerCallback({
                 x: ElementResizer.mouse.translateX,
                 y: ElementResizer.mouse.translateY,
-                width: parseInt(firstChild.style.width),
-                height: parseInt(firstChild.style.height)
+                width: parseInt(element.selector.style.width),
+                height: parseInt(element.selector.style.height)
             });
             ElementResizer.isPointerDown = false;
             document.body.classList.remove('isResizing');
@@ -673,10 +671,9 @@ ShortcutManager.shortCuts = {};
 class ElementMover {
     static init(pElement, pOffset, pCallback, pSelector = null) {
         const selector = pSelector || pElement.querySelector('input, textarea') || pElement;
-        console.log(this.elements);
         this.elements[selector.id] = pElement;
         this.offsetPosition = pOffset;
-        pElement.callback = pCallback;
+        pElement.moverCallback = pCallback;
         this.mouse = {
             x: 0,
             y: 0
@@ -723,7 +720,7 @@ class ElementMover {
     }
     static pointerUp() {
         if (ElementMover.isMoving)
-            ElementMover.elements[ElementMover.selectedSelectorId].callback(ElementMover.mouse);
+            ElementMover.elements[ElementMover.selectedSelectorId].moverCallback(ElementMover.mouse);
         if (ElementMover.isPointerDown) {
             ElementMover.isPointerDown = ElementMover.isMoving = false;
             document.body.classList.remove('isMoving');
@@ -731,14 +728,13 @@ class ElementMover {
     }
     static moveByKey(pOffsetX, pOffsetY = 0) {
         const selectedElement = ElementMover.elements[ElementMover.selectedSelectorId];
-        console.log(selectedElement);
         const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform);
         const translateX = translate.m41 + pOffsetX;
         const translateY = translate.m42 + pOffsetY;
         setTimeout(() => {
             selectedElement.style.transform = `translate(${translateX}px, ${translateY}px)`;
         });
-        selectedElement.callback({ x: translateX, y: translateY });
+        selectedElement.moverCallback({ x: translateX, y: translateY });
     }
 }
 ElementMover.elements = {};
@@ -757,7 +753,7 @@ class ElementManager {
                     if (selectedElement.tagName === 'LABEL') {
                         Datas$1.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
                     }
-                    if (selectedElement.tagName === 'div') {
+                    if (selectedElement.tagName === 'DIV') {
                         Datas$1.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
                     }
                 });
@@ -765,10 +761,10 @@ class ElementManager {
                     x: Sheet.containerLeft,
                     y: Sheet.containerTop
                 }, (pMousePosition) => {
-                    if (selectedElement.tagName === 'input') {
+                    if (selectedElement.tagName === 'LABEL') {
                         Datas$1.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
                     }
-                    if (selectedElement.tagName === 'image') {
+                    if (selectedElement.tagName === 'DIV') {
                         Datas$1.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
                     }
                 });
@@ -1215,7 +1211,7 @@ class View {
                 View.render();
             }
         }}">
-								<div style="background-image: url(${pImage.image})"></div>
+								<div style="background-image: url(${pImage.image});"></div>
 								${ElementResizer.boxPositions.map((pBoxPosition) => x `<div .hidden="${ElementManager.selectedElementId !== pImage.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
 							</div>
 							${ElementManager.selectedElementId === pImage.id ? Interface.selectBlock(pImage) : ''}
@@ -1401,11 +1397,18 @@ class Datas {
             }
         }
         const sheets = (await Utils.request('/db', 'POST', { body: JSON.stringify(body) })).pop();
-        this.sheet = sheets.find((pSheet) => pSheet._id === this.id);
-        await Caches.set(true, 'sheets', sheets);
-        await this.cacheResources();
-        this.isSaving = false;
-        States$1.isSaved = true;
+        if (sheets) {
+            this.sheet = sheets.find((pSheet) => pSheet._id === this.id);
+            await Caches.set(true, 'sheets', sheets);
+            await this.cacheResources();
+            this.changedInputs = [];
+            this.changedImages = [];
+            this.deletedInputs = [];
+            this.deletedImages = [];
+            this.sheetProperties = [];
+            this.isSaving = false;
+            States$1.isSaved = true;
+        }
     }
 }
 Datas.isSaving = false;

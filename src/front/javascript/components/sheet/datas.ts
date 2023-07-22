@@ -159,11 +159,18 @@ export default class Datas {
                 body.push(property)
             }
         }
-        const sheets = <TSheet[]>(await Utils.request('/db', 'POST', {body: JSON.stringify(body)}) as unknown as [TSheet[]]).pop()
-        this.sheet = <TSheet>sheets.find((pSheet): boolean => pSheet._id === this.id)
-        await Caches.set(true, 'sheets', sheets)
-        await this.cacheResources()
-        this.isSaving = false
-        States.isSaved = true
+        const sheets = <TSheet[] | undefined>(await Utils.request('/db', 'POST', {body: JSON.stringify(body)}) as unknown as [TSheet[]]).pop()
+        if (sheets) {
+            this.sheet = <TSheet>sheets.find((pSheet): boolean => pSheet._id === this.id)
+            await Caches.set(true, 'sheets', sheets)
+            await this.cacheResources()
+            this.changedInputs = []
+            this.changedImages = []
+            this.deletedInputs = []
+            this.deletedImages = []
+            this.sheetProperties = []
+            this.isSaving = false
+            States.isSaved = true
+        }
     }
 }
