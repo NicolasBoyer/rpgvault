@@ -779,7 +779,7 @@ class ElementManager {
                 Datas$1.deletedInputs.push(pElementId);
             }
         }
-        if (selectedElement?.tagName === 'div') {
+        if (selectedElement?.tagName === 'DIV') {
             const index = Datas$1.sheet.images?.findIndex((image) => image.id === pElementId);
             if (index !== -1) {
                 Datas$1.sheet.images?.splice(index, 1);
@@ -794,7 +794,7 @@ class ElementManager {
         if (selectedElement?.tagName === 'LABEL') {
             Datas$1.addInputValues({ ...pElement, id: Utils.generateId().toString() });
         }
-        if (selectedElement?.tagName === 'div') {
+        if (selectedElement?.tagName === 'DIV') {
             await Datas$1.addImageValues({ ...pElement, id: Utils.generateId().toString() });
         }
         this.select(pEvent, pElement);
@@ -814,7 +814,7 @@ class ElementManager {
         if (selectedElement?.tagName === 'LABEL') {
             Datas$1.addInputValues(element);
         }
-        if (selectedElement?.tagName === 'div') {
+        if (selectedElement?.tagName === 'DIV') {
             await Datas$1.addImageValues(element);
         }
         this.select(pEvent, element);
@@ -1310,7 +1310,7 @@ class Datas {
         const cache = await Caches.get(this.id);
         if (Utils.isValidHttpUrl(this.sheet.backgroundImage)) {
             this.sheet.backgroundImage_url = this.sheet.backgroundImage;
-            if (cache && cache.backgroundImage_url !== this.sheet.backgroundImage || !cache)
+            if (cache && cache?.backgroundImage !== this.sheet.backgroundImage || !cache)
                 this.sheet.backgroundImage = (await Utils.urlToBase64(this.sheet.backgroundImage));
         }
         if (this.sheet.images) {
@@ -1318,7 +1318,7 @@ class Datas {
                 const image = this.sheet.images[i];
                 if (Utils.isValidHttpUrl(image.image)) {
                     image.image_url = image.image;
-                    if (cache && cache.images && cache.images[i].image_url !== image.image || !cache)
+                    if (cache && cache.images && cache.images[i]?.image !== image.image || !cache)
                         image.image = await Utils.urlToBase64(image.image);
                 }
             }
@@ -1328,7 +1328,7 @@ class Datas {
                 const font = this.sheet.fonts[i];
                 if (Utils.isValidHttpUrl(font.fontUrl)) {
                     font.fontUrl_url = font.fontUrl;
-                    if (cache && cache.fonts && cache.fonts[i].fontUrl_url !== font.fontUrl || !cache)
+                    if (cache && cache.fonts && cache.fonts[i]?.fontUrl !== font.fontUrl || !cache)
                         font.fontUrl = await Utils.urlToBase64(font.fontUrl);
                 }
             }
