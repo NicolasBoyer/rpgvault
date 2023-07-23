@@ -66,40 +66,48 @@ export default class Sheet extends HTMLElement {
     static changeBackgroundColor(): void {
         States.displayEditBlock(false)
         let color: string
-        Utils.confirm(html`
+        Utils.confirm(
+            html`
 			<label for="color">
 				<span>Choisissez une couleur</span>
 				<input type="color" id="color" name="color" value="${Datas.sheet.backgroundColor || '#ffffff'}" @change="${async (pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => {
     color = pEvent.target.value
 }}">
 			</label>
-		`, (): void => {
-            this.element.style.backgroundColor = color
-            Datas.sheet.backgroundColor = color
-            Datas.sheetProperties.push({setBackgroundColor: {color}})
-            States.isSaved = false
-            States.displayEditBlock(true)
-            View.render()
-        })
+		`,
+            (): void => {
+                this.element.style.backgroundColor = color
+                Datas.sheet.backgroundColor = color
+                Datas.sheetProperties.push({setBackgroundColor: {color}})
+                States.isSaved = false
+                States.displayEditBlock(true)
+                View.render()
+            },
+            (): void => States.displayEditBlock(true)
+        )
     }
 
     static editBackgroundImage(): void {
         States.displayEditBlock(false)
         let file: File
-        Utils.confirm(html`
+        Utils.confirm(
+            html`
 			<label for="file">
 				<span>Choisissez un fichier</span>
 				<input type="file" id="file" name="file" @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
         file = (pEvent.target.files as FileList)[0]
     }}">
 			</label>
-		`, async (): Promise<void> => {
-            this.setBackgroundImage(<string>(await Utils.getBase64FromFileReader(file)))
-            Datas.sheetProperties.push({setBackgroundImage: {image: file}})
-            States.isSaved = false
-            States.displayEditBlock(true)
-            View.render()
-        })
+		`,
+            async (): Promise<void> => {
+                this.setBackgroundImage(<string>(await Utils.getBase64FromFileReader(file)))
+                Datas.sheetProperties.push({setBackgroundImage: {image: file}})
+                States.isSaved = false
+                States.displayEditBlock(true)
+                View.render()
+            },
+            (): void => States.displayEditBlock(true)
+        )
     }
 
     static addFont(): void {
@@ -107,7 +115,8 @@ export default class Sheet extends HTMLElement {
         let fontUrl
         let fontFamily: string
         let file: File
-        Utils.confirm(html`
+        Utils.confirm(
+            html`
 			<label for="file">
 				<input accept=".ttf,.woff,.woff2,.eot" type="file" id="file" name="file" @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
         file = (pEvent.target.files as FileList)[0]
@@ -119,23 +128,27 @@ export default class Sheet extends HTMLElement {
         fontFamily = pEvent.target.value
     }}">
 			</label>
-		`, async (): Promise<void> => {
-            if (!Datas.sheet.fonts) Datas.sheet.fonts = []
-            fontUrl = await Utils.getBase64FromFileReader(file)
-            const font: TFont = {name: file.name, fontUrl, fontFamily}
-            Datas.sheet.fonts.push(font)
-            fontUrl = file
-            Datas.sheetProperties.push({setFont: font})
-            States.isSaved = false
-            States.displayEditBlock(true)
-            View.render()
-        })
+		`,
+            async (): Promise<void> => {
+                if (!Datas.sheet.fonts) Datas.sheet.fonts = []
+                fontUrl = await Utils.getBase64FromFileReader(file)
+                const font: TFont = {name: file.name, fontUrl, fontFamily}
+                Datas.sheet.fonts.push(font)
+                fontUrl = file
+                Datas.sheetProperties.push({setFont: font})
+                States.isSaved = false
+                States.displayEditBlock(true)
+                View.render()
+            },
+            (): void => States.displayEditBlock(true)
+        )
     }
 
     static deleteFont(): void {
         States.displayEditBlock(false)
         let fonts: string[] = []
-        Utils.confirm(html`
+        Utils.confirm(
+            html`
 			<ul>
 				${Datas.sheet.fonts?.map((pFont): TemplateResult => html`
 					<li>
@@ -148,15 +161,18 @@ export default class Sheet extends HTMLElement {
 					</li>
 				`)}
 			</ul>
-		`, (): void => {
-            fonts.forEach((pFontFamily): void => {
-                Datas.sheet.fonts = Datas.sheet.fonts?.filter((pFont): boolean => pFont.fontFamily !== pFontFamily)
-            })
-            Datas.sheetProperties.push({deleteFont: {fonts: fonts}})
-            States.isSaved = false
-            States.displayEditBlock(true)
-            View.render()
-        })
+		`,
+            (): void => {
+                fonts.forEach((pFontFamily): void => {
+                    Datas.sheet.fonts = Datas.sheet.fonts?.filter((pFont): boolean => pFont.fontFamily !== pFontFamily)
+                })
+                Datas.sheetProperties.push({deleteFont: {fonts: fonts}})
+                States.isSaved = false
+                States.displayEditBlock(true)
+                View.render()
+            },
+            (): void => States.displayEditBlock(true)
+        )
     }
 
     static async printScreen(): Promise<void> {

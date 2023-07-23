@@ -30,7 +30,8 @@ export default class Image {
                     ElementManager.select(pEvent, image)
                     States.displayEditBlock(true)
                     States.isSaved = false
-                }
+                },
+                (): void => States.displayEditBlock(true)
             )
         })
     }

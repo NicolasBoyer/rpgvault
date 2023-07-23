@@ -924,7 +924,7 @@ let Image$1 = class Image {
                 ElementManager.select(pEvent, image);
                 States$1.displayEditBlock(true);
                 States$1.isSaved = false;
-            });
+            }, () => States$1.displayEditBlock(true));
         });
     }
 };
@@ -1483,7 +1483,7 @@ class Sheet extends HTMLElement {
             States$1.isSaved = false;
             States$1.displayEditBlock(true);
             View.render();
-        });
+        }, () => States$1.displayEditBlock(true));
     }
     static editBackgroundImage() {
         States$1.displayEditBlock(false);
@@ -1501,7 +1501,7 @@ class Sheet extends HTMLElement {
             States$1.isSaved = false;
             States$1.displayEditBlock(true);
             View.render();
-        });
+        }, () => States$1.displayEditBlock(true));
     }
     static addFont() {
         States$1.displayEditBlock(false);
@@ -1531,7 +1531,7 @@ class Sheet extends HTMLElement {
             States$1.isSaved = false;
             States$1.displayEditBlock(true);
             View.render();
-        });
+        }, () => States$1.displayEditBlock(true));
     }
     static deleteFont() {
         States$1.displayEditBlock(false);
@@ -1559,7 +1559,7 @@ class Sheet extends HTMLElement {
             States$1.isSaved = false;
             States$1.displayEditBlock(true);
             View.render();
-        });
+        }, () => States$1.displayEditBlock(true));
     }
     static async printScreen() {
     }
