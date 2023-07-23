@@ -77,6 +77,7 @@ export default class Datas {
     }
 
     private static async cacheResources(): Promise<void> {
+        // TODO bug ajout image quand on enregistre ICI
         const cache = <TSheet>await Caches.get(this.id)
         if (Utils.isValidHttpUrl(<string>this.sheet.backgroundImage)) {
             this.sheet.backgroundImage_url = this.sheet.backgroundImage

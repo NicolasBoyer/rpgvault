@@ -11,6 +11,7 @@ import {TSheet} from '../types.js'
 // TODO parametre pour gérer zoom ou pas zoom
 // TODO dupliquer avec aucun ékément avec aucun texte ?
 // TODO améliorer notepade avec des onglets
+// TODO anuler doit revenir en arrière sur les choix
 export default class Home extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null

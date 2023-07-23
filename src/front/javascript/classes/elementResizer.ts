@@ -33,7 +33,6 @@ export class ElementResizer {
     ]
 
     static init(pElement: SHEETRPGElement, pOffset: TPosition, pCallback: (position: TPosition) => void): void {
-        console.log('init')
         pElement.selector = pElement.querySelector('input, textarea') || pElement
         this.elements[pElement.selector.id] = pElement
         this.offsetPosition = pOffset
