@@ -394,18 +394,19 @@ class Caches {
 window.addEventListener('beforeunload', () => indexedDBCaches.forEach((dbName) => deleteDB(dbName)));
 
 class Utils {
-    static helpers({ confirmMessage = '', cbConfirm = null, isConfirmInit = true, loaderVisible = false } = {}) {
+    static helpers({ confirmMessage = '', cbConfirm = null, cbCancel = null, isConfirmInit = true, loaderVisible = false } = {}) {
         const confirm = cbConfirm;
+        const cancel = cbCancel;
         B(x `
 			<fs-loader ?visible="${loaderVisible}"></fs-loader>
-			<fs-confirm .message="${confirmMessage}" ?open="${isConfirmInit ? !isConfirmInit : Math.random()}" @modalConfirm="${() => confirm()}"></fs-confirm>
+			<fs-confirm .message="${confirmMessage}" ?open="${isConfirmInit ? !isConfirmInit : Math.random()}" @modalConfirm="${() => confirm()}" @modalCancel="${() => cancel()}"></fs-confirm>
 		`, document.body);
     }
     static loader(visible) {
         this.helpers({ loaderVisible: visible });
     }
-    static confirm(message, cbConfirm) {
-        this.helpers({ confirmMessage: message, cbConfirm, isConfirmInit: false });
+    static confirm(message, cbConfirm, cbCancel = null) {
+        this.helpers({ confirmMessage: message, cbConfirm, cbCancel, isConfirmInit: false });
     }
     static toast(type, message) {
         const bd = Dom.newDom(document.body);
@@ -699,6 +700,8 @@ class ElementMover {
         ElementMover.selectedSelectorId = pEvent.currentTarget.id || pEvent.currentTarget.parentElement.id;
     }
     static pointerMove(pEvent) {
+        if (States$1.isDrawing)
+            return;
         pEvent.returnValue = false;
         const selectedElement = ElementMover.elements[ElementMover.selectedSelectorId];
         if (selectedElement) {
@@ -855,6 +858,7 @@ class Drawer {
         };
     }
     static pointerDown() {
+        States$1.isDrawing = true;
         Drawer.element.addEventListener('click', Drawer.pointerUp);
         Drawer.mouse.startX = Drawer.mouse.x;
         Drawer.mouse.startY = Drawer.mouse.y;
@@ -873,6 +877,7 @@ class Drawer {
         Drawer.reset();
     }
     static reset() {
+        States$1.isDrawing = false;
         this.resetMousePosition();
         this.element.removeEventListener('pointerdown', this.pointerDown);
         this.element.removeEventListener('pointermove', this.pointerMove);
@@ -1245,6 +1250,7 @@ class States {
 }
 States.interface = 'hover';
 States.isSaved = true;
+States.isDrawing = false;
 States.isZoomed = false;
 var States$1 = States;
 
@@ -1319,7 +1325,6 @@ class Datas {
                 const image = this.sheet.images[i];
                 if (Utils.isValidHttpUrl(image.image)) {
                     image.image_url = image.image;
-                    console.log(cache?.images && cache?.images[i]?.image);
                     image.image = cache?.images && cache?.images[i]?.image || image.image;
                     if (cache?.images && cache?.images[i]?.image !== image.image && cache?.images && cache?.images[i]?.image_url !== image.image || !cache)
                         image.image = await Utils.urlToBase64(image.image);
@@ -1596,6 +1601,7 @@ class Confirm extends HTMLElement {
 										<footer>
 												<a role="button" class="secondary" @click="${(pEvent) => {
             pEvent.preventDefault();
+            this.dispatchEvent(new CustomEvent('modalCancel'));
             this.closeDialog();
         }}">Cancel</a>
 																	<a role="button" @click="${(pEvent) => {

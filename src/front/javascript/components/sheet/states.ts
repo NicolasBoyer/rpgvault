@@ -13,6 +13,7 @@ export default class States {
     static isEditBlockHidden: boolean
     static interface = 'hover'
     static isSaved = true
+    static isDrawing: boolean = false
     static isZoomed: string | boolean = false
 
     static displayEditMode(pValue: boolean): void {

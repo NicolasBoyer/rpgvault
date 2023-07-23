@@ -1,6 +1,7 @@
 import {ShortcutManager} from './shortcutManager.js'
 import {ElementResizer} from './elementResizer.js'
 import {SHEETRPGElement, TPosition} from '../types.js'
+import States from '../components/sheet/states.js'
 
 export class ElementMover {
     private static mouse: TPosition
@@ -44,6 +45,7 @@ export class ElementMover {
     }
 
     private static pointerMove(pEvent: PointerEvent): void {
+        if (States.isDrawing) return
         pEvent.returnValue = false
         const selectedElement = ElementMover.elements[ElementMover.selectedSelectorId]
         if (selectedElement) {

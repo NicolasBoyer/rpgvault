@@ -1,11 +1,12 @@
 import {Dom} from './dom.js'
 import {TPosition} from '../types.js'
+import States from '../components/sheet/states.js'
 
 type Mouse = {
-	x: number
-	y: number
-	startX: number
-	startY: number
+    x: number
+    y: number
+    startX: number
+    startY: number
 }
 
 export class Drawer {
@@ -35,6 +36,7 @@ export class Drawer {
     }
 
     private static pointerDown(): void {
+        States.isDrawing = true
         Drawer.element.addEventListener('click', Drawer.pointerUp)
         Drawer.mouse.startX = Drawer.mouse.x
         Drawer.mouse.startY = Drawer.mouse.y
@@ -55,6 +57,7 @@ export class Drawer {
     }
 
     private static reset(): void {
+        States.isDrawing = false
         this.resetMousePosition()
         this.element.removeEventListener('pointerdown', this.pointerDown)
         this.element.removeEventListener('pointermove', this.pointerMove)
