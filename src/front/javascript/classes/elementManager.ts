@@ -59,7 +59,7 @@ export class ElementManager {
                 Datas.deletedInputs.push(pElementId)
             }
         }
-        if (selectedElement?.tagName === 'div') {
+        if (selectedElement?.tagName === 'DIV') {
             const index = <number>Datas.sheet.images?.findIndex((image: TImage): boolean => image.id === pElementId)
             if (index !== -1) {
                 Datas.sheet.images?.splice(index, 1)
@@ -75,7 +75,7 @@ export class ElementManager {
         if (selectedElement?.tagName === 'LABEL') {
             Datas.addInputValues(<TInput>{...pElement, id: Utils.generateId().toString()})
         }
-        if (selectedElement?.tagName === 'div') {
+        if (selectedElement?.tagName === 'DIV') {
             await Datas.addImageValues(<TImage>{...pElement, id: Utils.generateId().toString()})
         }
         this.select(pEvent, pElement)
@@ -97,7 +97,7 @@ export class ElementManager {
         if (selectedElement?.tagName === 'LABEL') {
             Datas.addInputValues(<TInput>element)
         }
-        if (selectedElement?.tagName === 'div') {
+        if (selectedElement?.tagName === 'DIV') {
             await Datas.addImageValues(<TImage>element)
         }
         this.select(pEvent, element)
