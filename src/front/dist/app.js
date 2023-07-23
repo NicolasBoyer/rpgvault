@@ -848,6 +848,10 @@ class Drawer {
         this.resetMousePosition();
         this.element.addEventListener('pointerdown', this.pointerDown);
         this.element.addEventListener('pointermove', this.pointerMove);
+        ShortcutManager.set(document.body, ['Escape'], () => {
+            this.reset();
+            States$1.displayEditBlock(true);
+        });
     }
     static resetMousePosition() {
         this.mouse = {

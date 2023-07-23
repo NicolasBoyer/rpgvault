@@ -2,6 +2,7 @@ import {Dom} from './dom.js'
 import {TPosition} from '../types.js'
 import States from '../components/sheet/states.js'
 import {ElementMover} from './elementMover.js'
+import {ShortcutManager} from './shortcutManager.js'
 
 type Mouse = {
     x: number
@@ -25,6 +26,10 @@ export class Drawer {
         this.resetMousePosition()
         this.element.addEventListener('pointerdown', this.pointerDown)
         this.element.addEventListener('pointermove', this.pointerMove)
+        ShortcutManager.set(document.body, ['Escape'], (): void => {
+            this.reset()
+            States.displayEditBlock(true)
+        })
     }
 
     private static resetMousePosition(): void {
