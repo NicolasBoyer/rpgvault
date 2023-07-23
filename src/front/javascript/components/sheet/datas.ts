@@ -88,6 +88,7 @@ export default class Datas {
                 const image = this.sheet.images[i]
                 if (Utils.isValidHttpUrl(<string>image.image)) {
                     image.image_url = image.image
+                    console.log(image)
                     if (cache && cache.images && cache.images[i].image_url !== image.image || !cache) image.image = await Utils.urlToBase64(<string>image.image)
                 }
             }
