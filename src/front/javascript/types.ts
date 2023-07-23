@@ -79,7 +79,7 @@ export type TFont = {
     file?: never
     image_url?: never
     name: string
-    fontUrl: string | ArrayBuffer | null
+    fontUrl?: string | ArrayBuffer | null
     fontUrl_url?: string | ArrayBuffer | null
 }
 

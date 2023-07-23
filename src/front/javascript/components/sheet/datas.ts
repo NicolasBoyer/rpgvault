@@ -80,14 +80,17 @@ export default class Datas {
         const cache = <TSheet>await Caches.get(this.id)
         if (Utils.isValidHttpUrl(<string>this.sheet.backgroundImage)) {
             this.sheet.backgroundImage_url = this.sheet.backgroundImage
-            if (cache && cache?.backgroundImage !== this.sheet.backgroundImage || !cache) this.sheet.backgroundImage = <string>(await Utils.urlToBase64(<string>this.sheet.backgroundImage))
+            this.sheet.backgroundImage = cache?.backgroundImage || this.sheet.backgroundImage
+            if (cache?.backgroundImage !== this.sheet.backgroundImage && cache?.backgroundImage_url !== this.sheet.backgroundImage || !cache) this.sheet.backgroundImage = <string>(await Utils.urlToBase64(<string>this.sheet.backgroundImage))
         }
         if (this.sheet.images) {
             for (let i = 0; i < this.sheet.images.length; i++) {
                 const image = this.sheet.images[i]
                 if (Utils.isValidHttpUrl(<string>image.image)) {
                     image.image_url = image.image
-                    if (cache && cache.images && cache.images[i]?.image !== image.image || !cache) image.image = await Utils.urlToBase64(<string>image.image)
+                    console.log(cache?.images && cache?.images[i]?.image)
+                    image.image = cache?.images && cache?.images[i]?.image || image.image
+                    if (cache?.images && cache?.images[i]?.image !== image.image && cache?.images && cache?.images[i]?.image_url !== image.image || !cache) image.image = await Utils.urlToBase64(<string>image.image)
                 }
             }
         }
@@ -96,7 +99,8 @@ export default class Datas {
                 const font = this.sheet.fonts[i]
                 if (Utils.isValidHttpUrl(<string>font.fontUrl)) {
                     font.fontUrl_url = font.fontUrl
-                    if (cache && cache.fonts && cache.fonts[i]?.fontUrl !== font.fontUrl || !cache) font.fontUrl = await Utils.urlToBase64(<string>font.fontUrl)
+                    font.fontUrl = cache?.fonts && cache?.fonts[i]?.fontUrl_url || font.fontUrl
+                    if (cache?.fonts && cache.fonts[i]?.fontUrl !== font.fontUrl && cache?.fonts[i]?.fontUrl_url !== font.fontUrl || !cache) font.fontUrl = await Utils.urlToBase64(<string>font.fontUrl)
                 }
             }
         }
@@ -130,7 +134,8 @@ export default class Datas {
                     if (image.file) {
                         image.image = await Utils.uploadFileAndGetUrl(image.file)
                         delete image.file
-                    } else {
+                    }
+                    if (image.image_url) {
                         image.image = image.image_url
                         delete image.image_url
                     }

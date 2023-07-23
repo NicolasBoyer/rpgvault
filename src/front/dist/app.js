@@ -1310,7 +1310,8 @@ class Datas {
         const cache = await Caches.get(this.id);
         if (Utils.isValidHttpUrl(this.sheet.backgroundImage)) {
             this.sheet.backgroundImage_url = this.sheet.backgroundImage;
-            if (cache && cache?.backgroundImage !== this.sheet.backgroundImage || !cache)
+            this.sheet.backgroundImage = cache?.backgroundImage || this.sheet.backgroundImage;
+            if (cache?.backgroundImage !== this.sheet.backgroundImage && cache?.backgroundImage_url !== this.sheet.backgroundImage || !cache)
                 this.sheet.backgroundImage = (await Utils.urlToBase64(this.sheet.backgroundImage));
         }
         if (this.sheet.images) {
@@ -1318,7 +1319,9 @@ class Datas {
                 const image = this.sheet.images[i];
                 if (Utils.isValidHttpUrl(image.image)) {
                     image.image_url = image.image;
-                    if (cache && cache.images && cache.images[i]?.image !== image.image || !cache)
+                    console.log(cache?.images && cache?.images[i]?.image);
+                    image.image = cache?.images && cache?.images[i]?.image || image.image;
+                    if (cache?.images && cache?.images[i]?.image !== image.image && cache?.images && cache?.images[i]?.image_url !== image.image || !cache)
                         image.image = await Utils.urlToBase64(image.image);
                 }
             }
@@ -1328,7 +1331,8 @@ class Datas {
                 const font = this.sheet.fonts[i];
                 if (Utils.isValidHttpUrl(font.fontUrl)) {
                     font.fontUrl_url = font.fontUrl;
-                    if (cache && cache.fonts && cache.fonts[i]?.fontUrl !== font.fontUrl || !cache)
+                    font.fontUrl = cache?.fonts && cache?.fonts[i]?.fontUrl_url || font.fontUrl;
+                    if (cache?.fonts && cache.fonts[i]?.fontUrl !== font.fontUrl && cache?.fonts[i]?.fontUrl_url !== font.fontUrl || !cache)
                         font.fontUrl = await Utils.urlToBase64(font.fontUrl);
                 }
             }
@@ -1363,7 +1367,7 @@ class Datas {
                         image.image = await Utils.uploadFileAndGetUrl(image.file);
                         delete image.file;
                     }
-                    else {
+                    if (image.image_url) {
                         image.image = image.image_url;
                         delete image.image_url;
                     }
