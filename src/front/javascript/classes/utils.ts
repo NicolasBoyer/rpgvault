@@ -4,11 +4,12 @@ import {Caches} from './caches.js'
 
 
 export class Utils {
-    static helpers({confirmMessage = '', cbConfirm = null, isConfirmInit = true, loaderVisible = false}: Record<string, (() => void) | TemplateResult | string | boolean | null> = {}): void {
+    static helpers({confirmMessage = '', cbConfirm = null, cbCancel = null, isConfirmInit = true, loaderVisible = false}: Record<string, (() => void) | TemplateResult | string | boolean | null> = {}): void {
         const confirm = cbConfirm as () => void
+        const cancel = cbCancel as () => void
         render(html`
 			<fs-loader ?visible="${loaderVisible}"></fs-loader>
-			<fs-confirm .message="${confirmMessage}" ?open="${isConfirmInit ? !isConfirmInit : Math.random()}" @modalConfirm="${(): void => confirm()}"></fs-confirm>
+			<fs-confirm .message="${confirmMessage}" ?open="${isConfirmInit ? !isConfirmInit : Math.random()}" @modalConfirm="${(): void => confirm()}" @modalCancel="${(): void => cancel()}"></fs-confirm>
 		`, document.body)
     }
 
@@ -16,8 +17,8 @@ export class Utils {
         this.helpers({loaderVisible: visible})
     }
 
-    static confirm(message: string | TemplateResult, cbConfirm: () => void): void {
-        this.helpers({confirmMessage: message, cbConfirm, isConfirmInit: false})
+    static confirm(message: string | TemplateResult, cbConfirm: () => void, cbCancel: (() => void) | null = null): void {
+        this.helpers({confirmMessage: message, cbConfirm, cbCancel, isConfirmInit: false})
     }
 
     static toast(type: string, message: string): void {
@@ -79,9 +80,9 @@ export class Utils {
             .replace(/\s+/g, '_') // Replace spaces with _
             .replace(p, (c): string => b.charAt(a.indexOf(c))) // Replace special chars
             .replace(/&/g, '_and_') // Replace & with 'and'
-        // eslint-disable-next-line no-useless-escape
+            // eslint-disable-next-line no-useless-escape
             .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-        // eslint-disable-next-line no-useless-escape
+            // eslint-disable-next-line no-useless-escape
             .replace(/--+/g, '_') // Replace multiple - with single _
             .replace(/^-+/, '') // Trim - from start of text
             .replace(/-+$/, '') // Trim - from end of text
@@ -115,11 +116,11 @@ export class Utils {
     static isValidHttpUrl(pStr: string): boolean {
         const pattern = new RegExp(
             '^(https?:\\/\\/)?' + // protocol
-			'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-			'((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-			'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-			'(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-			'(\\#[-a-z\\d_]*)?$', // fragment locator
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$', // fragment locator
             'i'
         )
         return pattern.test(pStr)

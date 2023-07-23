@@ -23,7 +23,6 @@ export class ElementManager {
                     x: Sheet.containerLeft,
                     y: Sheet.containerTop
                 }, (pMousePosition): void => {
-                    // TODO pb car à chaque déplacement crée une image
                     if (selectedElement.tagName === 'LABEL') {
                         Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
                     }
@@ -33,7 +32,6 @@ export class ElementManager {
                 })
                 // TODO la fonction est appelé à chaque render il faut donc soir la limiter avec une variable soit l'appeler à un endroit qui ne l'appelle qu'une fois
                 // TODO ICI reste réparation de resizer et revues code comme move + changer ici le selected element qui n'est plus utilisé + voir si je déplace l'appel de cet init ailleurs ...
-                // Problème une image est créé suite à chaque déplacement
                 ElementResizer.init(selectedElement, {
                     x: Sheet.containerLeft,
                     y: Sheet.containerTop
