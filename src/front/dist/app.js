@@ -872,6 +872,7 @@ class Drawer {
             Drawer.bd.att('style', `width:${Math.abs(Drawer.mouse.x - Drawer.mouse.startX)}px;height:${Math.abs(Drawer.mouse.y - Drawer.mouse.startY)}px;left:${(Drawer.mouse.x - Drawer.mouse.startX < 0) ? `${Drawer.mouse.x}px` : `${Drawer.mouse.startX}px`};top:${(Drawer.mouse.y - Drawer.mouse.startY < 0) ? `${Drawer.mouse.y}px` : `${Drawer.mouse.startY}px`}`);
     }
     static async pointerUp(pEvent) {
+        ElementMover.isPointerDown = false;
         await Drawer.callBack(Drawer.mouse, pEvent);
         Drawer.bd.current().remove();
         Drawer.reset();

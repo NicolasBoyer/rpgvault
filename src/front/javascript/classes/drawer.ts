@@ -1,6 +1,7 @@
 import {Dom} from './dom.js'
 import {TPosition} from '../types.js'
 import States from '../components/sheet/states.js'
+import {ElementMover} from './elementMover.js'
 
 type Mouse = {
     x: number
@@ -51,6 +52,7 @@ export class Drawer {
     }
 
     private static async pointerUp(pEvent: MouseEvent): Promise<void> {
+        ElementMover.isPointerDown = false
         await Drawer.callBack(Drawer.mouse, pEvent)
         Drawer.bd.current().remove()
         Drawer.reset()

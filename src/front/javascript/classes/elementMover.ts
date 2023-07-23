@@ -49,7 +49,6 @@ export class ElementMover {
         pEvent.returnValue = false
         const selectedElement = ElementMover.elements[ElementMover.selectedSelectorId]
         if (selectedElement) {
-            // eslint-disable-next-line no-undef
             const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform)
             ElementMover.offsetPosition = {
                 x: ElementMover.offsetPosition.x + (ElementMover.mouse.x - translate.m41),
