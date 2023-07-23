@@ -10,6 +10,7 @@ export type TSheet = {
     backgroundColor?: string
     backgroundImage?: string
     backgroundImage_url?: string
+    ui?: Record<string, TPosition>
 }
 
 export type TSheetProperties = {
@@ -18,6 +19,7 @@ export type TSheetProperties = {
     setFont?: TFont
     deleteFont?: Record<string, string[]>
     setNotepad?: Record<string, string>
+    setUIBlocksPosition?: Record<string, TPosition>
 }
 
 export type TInput = {

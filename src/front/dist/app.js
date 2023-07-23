@@ -1022,12 +1022,16 @@ const elements = (pElement, pFonts) => [
 
 class Interface {
     static initializeMove(pElement) {
-        if (States.interface === 'visible' && States.editMode && pElement) {
+        if (States.interface === 'movable' && States.editMode && pElement) {
             ElementMover.init(pElement, {
                 x: Sheet.containerLeft,
                 y: Sheet.containerTop
             }, (pMousePosition) => {
-                console.log(pMousePosition);
+                States.isSaved = false;
+                View.render();
+                const setUIBlocksPosition = {};
+                setUIBlocksPosition[pElement.classList[0]] = pMousePosition;
+                Datas.sheetProperties.push({ setUIBlocksPosition: setUIBlocksPosition });
             }, pElement);
         }
     }
@@ -1042,10 +1046,10 @@ class Interface {
 						<use href="#eye-plus"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="viewSelection ${States.interface === 'visible' ? 'selected' : ''}" @click="${(pEvent) => {
+				<a href="#" role="button" class="viewSelection ${States.interface === 'movable' ? 'selected' : ''}" @click="${(pEvent) => {
             pEvent.preventDefault();
-            States.interface = 'visible';
-        }}" title="Interface toujours visible">
+            States.interface = 'movable';
+        }}" title="Interface toujours visible et déplaçable">
 					<svg class="eye">
 						<use href="#eye"></use>
 					</svg>
@@ -1071,10 +1075,11 @@ class Interface {
 		`;
     }
     static editBlock() {
-        if (States.interface === 'visible')
+        if (States.interface === 'movable')
             setTimeout(() => this.initializeMove(document.querySelector('.editBlock')));
+        const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.editBlock;
         return x `
-			<article .hidden="${States.isEditBlockHidden}" class="editBlock" id="editBlock">
+			<article .hidden="${States.isEditBlockHidden}" class="editBlock${hasMoved ? ' hasMoved' : ''}" id="editBlock" style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.editBlock.x}px, ${Datas.sheet.ui?.editBlock.y}px);` : ''}">
 				${States.interface !== 'hidden' ? this.viewBlock() : ''}
 				<button class="contrast" @click="${() => Sheet.editBackgroundImage()}">Image de fond</button>
 				<button class="contrast" @click="${() => Sheet.changeBackgroundColor()}">Couleur du fond</button>
@@ -1098,10 +1103,11 @@ class Interface {
 		`;
     }
     static selectBlock(pElement) {
-        if (States.interface === 'visible')
+        if (States.interface === 'movable')
             setTimeout(() => this.initializeMove(document.querySelector('.selectBlock')));
+        const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.selectBlock;
         return x `
-			<article id="selectBlock" class="selectBlock" @click="${(pEvent) => pEvent.stopPropagation()}">
+			<article id="selectBlock" class="selectBlock${hasMoved ? ' hasMoved' : ''}" @click="${(pEvent) => pEvent.stopPropagation()}" style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.selectBlock.x}px, ${Datas.sheet.ui?.selectBlock.y}px);` : ''}">
 				<a href="#" role="button" class="cloneInput" @click="${(pEvent) => {
             pEvent.preventDefault();
             ElementManager.clone(pEvent, pElement);
@@ -1436,7 +1442,7 @@ class Sheet extends HTMLElement {
             View.render();
         });
         ShortcutManager.set(document.body, ['Tab'], () => {
-            States.interface = States.interface === 'hover' ? 'visible' : States.interface === 'visible' ? 'hidden' : 'hover';
+            States.interface = States.interface === 'hover' ? 'movable' : States.interface === 'movable' ? 'hidden' : 'hover';
             View.render();
         });
     }

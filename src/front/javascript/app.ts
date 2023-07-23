@@ -27,7 +27,7 @@ class App {
     //         }
     //     }
     //     document.addEventListener('visibilitychange', async (): Promise<void> => {
-    //         if (wakeLock !== null && document.visibilityState === 'visible') {
+    //         if (wakeLock !== null && document.visibilityState === 'movable') {
     //             await requestWakeLock()
     //         }
     //     })

@@ -7,7 +7,7 @@ import {ElementMover} from '../../classes/elementMover.js'
 import Input from './input.js'
 import Image from './image.js'
 import {elements} from '../../datas/elements.js'
-import {HTMLElementEvent, SHEETRPGElement, TElement, TFont, TInput} from '../../types.js'
+import {HTMLElementEvent, SHEETRPGElement, TElement, TFont, TInput, TPosition} from '../../types.js'
 import View from './view.js'
 
 /**
@@ -15,18 +15,16 @@ import View from './view.js'
  */
 export default class Interface {
     private static initializeMove(pElement: SHEETRPGElement): void {
-        if (States.interface === 'visible' && States.editMode && pElement) {
+        if (States.interface === 'movable' && States.editMode && pElement) {
             ElementMover.init(pElement, {
                 x: Sheet.containerLeft,
                 y: Sheet.containerTop
             }, (pMousePosition): void => {
-                console.log(pMousePosition)
-                // if (this.#elementType === 'input') {
-                //	Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
-                // }
-                // if (this.#elementType === 'image') {
-                //	Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
-                // }
+                States.isSaved = false
+                View.render()
+                const setUIBlocksPosition: Record<string, TPosition> = {}
+                setUIBlocksPosition[pElement.classList[0]] = pMousePosition
+                Datas.sheetProperties.push({setUIBlocksPosition: setUIBlocksPosition})
             }, pElement)
         }
     }
@@ -42,10 +40,10 @@ export default class Interface {
 						<use href="#eye-plus"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="viewSelection ${States.interface === 'visible' ? 'selected' : ''}" @click="${(pEvent: PointerEvent): void => {
+				<a href="#" role="button" class="viewSelection ${States.interface === 'movable' ? 'selected' : ''}" @click="${(pEvent: PointerEvent): void => {
     pEvent.preventDefault()
-    States.interface = 'visible'
-}}" title="Interface toujours visible">
+    States.interface = 'movable'
+}}" title="Interface toujours visible et déplaçable">
 					<svg class="eye">
 						<use href="#eye"></use>
 					</svg>
@@ -72,9 +70,10 @@ export default class Interface {
     }
 
     static editBlock(): TemplateResult {
-        if (States.interface === 'visible') setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.editBlock')))
+        if (States.interface === 'movable') setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.editBlock')))
+        const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.editBlock
         return html`
-			<article .hidden="${States.isEditBlockHidden}" class="editBlock" id="editBlock">
+			<article .hidden="${States.isEditBlockHidden}" class="editBlock${hasMoved ? ' hasMoved' : ''}" id="editBlock" style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.editBlock.x}px, ${Datas.sheet.ui?.editBlock.y}px);` : ''}">
 				${States.interface !== 'hidden' ? this.viewBlock() : ''}
 				<button class="contrast" @click="${(): void => Sheet.editBackgroundImage()}">Image de fond</button>
 				<button class="contrast" @click="${(): void => Sheet.changeBackgroundColor()}">Couleur du fond</button>
@@ -99,9 +98,10 @@ export default class Interface {
     }
 
     static selectBlock(pElement: TElement): TemplateResult {
-        if (States.interface === 'visible') setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.selectBlock')))
+        if (States.interface === 'movable') setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.selectBlock')))
+        const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.selectBlock
         return html`
-			<article id="selectBlock" class="selectBlock" @click="${(pEvent: PointerEvent): void => pEvent.stopPropagation()}">
+			<article id="selectBlock" class="selectBlock${hasMoved ? ' hasMoved' : ''}" @click="${(pEvent: PointerEvent): void => pEvent.stopPropagation()}" style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.selectBlock.x}px, ${Datas.sheet.ui?.selectBlock.y}px);` : ''}">
 				<a href="#" role="button" class="cloneInput" @click="${(pEvent: PointerEvent): void => {
         pEvent.preventDefault()
         ElementManager.clone(pEvent, pElement)
