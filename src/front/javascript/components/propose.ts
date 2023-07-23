@@ -5,12 +5,12 @@ export default class Propose extends HTMLElement {
 
     static get observedAttributes(): [string] { return ['list'] }
 
-    get list(): string[] | undefined {
-        return this.getAttribute('list')?.split(',').filter((pEntry: string): string => pEntry)
+    get list(): string | null {
+        return this.getAttribute('list')
     }
 
-    set list(pValue: string) {
-        this.setAttribute('list', pValue)
+    set list(pValue: string | null) {
+        this.setAttribute('list', <string>pValue)
     }
 
     connectedCallback(): void {
@@ -30,9 +30,10 @@ export default class Propose extends HTMLElement {
     }
 
     private render(): void {
-        render(this.list?.length ? html`
+        const list = this.list?.split(',').filter((pEntry: string): string => pEntry)
+        render(list?.length ? html`
 			<div class='propose'>
-				${this.list.map(
+				${list.map(
         (pText: string): TemplateResult => html`
 							<a
 									href="#"

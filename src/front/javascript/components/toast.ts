@@ -17,8 +17,8 @@ export default class Toast extends HTMLElement {
         return this.getAttribute('visible')
     }
 
-    set visible(pValue: string) {
-        this.setAttribute('visible', pValue)
+    set visible(pValue: string | null) {
+        this.setAttribute('visible', <string>pValue)
     }
 
     connectedCallback(): void {

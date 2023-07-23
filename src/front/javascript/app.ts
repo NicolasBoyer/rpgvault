@@ -5,41 +5,40 @@ import Confirm from './components/confirm.js'
 import Login from './components/login.js'
 import Label from './components/label.js'
 import Home from './components/home.js'
-import Toast from './components/toast.js'
 import Link from './components/link.js'
 
 class App {
     constructor() {
         Utils.helpers()
-        this.wakeLock()
+        // this.wakeLock()
         // Websocket.init()
         if (location.href.charAt(location.href.length - 1) === '/') history.replaceState({}, '', location.href.replace(/\/$/, ''))
     }
 
-    private async wakeLock(): Promise<void> {
-        let wakeLock: WakeLockSentinel | null = null
-        const requestWakeLock = async (): Promise<void> => {
-            try {
-                wakeLock = await navigator.wakeLock.request()
-            } catch (err: unknown) {
-                if (err instanceof Error) {
-                    console.error(`${err.name}, ${err.message}`)
-                }
-            }
-        }
-        document.addEventListener('visibilitychange', async (): Promise<void> => {
-            if (wakeLock !== null && document.visibilityState === 'visible') {
-                await requestWakeLock()
-            }
-        })
-        await requestWakeLock()
-    }
+    // private async wakeLock(): Promise<void> {
+    //     let wakeLock: WakeLockSentinel | null = null
+    //     const requestWakeLock = async (): Promise<void> => {
+    //         try {
+    //             wakeLock = await navigator.wakeLock.request()
+    //         } catch (err: unknown) {
+    //             if (err instanceof Error) {
+    //                 console.error(`${err.name}, ${err.message}`)
+    //             }
+    //         }
+    //     }
+    //     document.addEventListener('visibilitychange', async (): Promise<void> => {
+    //         if (wakeLock !== null && document.visibilityState === 'visible') {
+    //             await requestWakeLock()
+    //         }
+    //     })
+    //     await requestWakeLock()
+    // }
 }
 
 new App()
 customElements.define('fs-loader', Loader)
 // customElements.define('fs-header', Header)
-customElements.define('fs-toast', Toast)
+// customElements.define('fs-toast', Toast)
 customElements.define('fs-confirm', Confirm)
 customElements.define('fs-home', Home)
 customElements.define('fs-sheet', Sheet)

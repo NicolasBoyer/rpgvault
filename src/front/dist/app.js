@@ -16,13 +16,13 @@ const t$1=window,e$2=t$1.ShadowRoot&&(void 0===t$1.ShadyCSS||t$1.ShadyCSS.native
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-var t;const i=window,s$1=i.trustedTypes,e=s$1?s$1.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$1="$lit$",n$1=`lit$${(Math.random()+"").slice(9)}$`,l$1="?"+n$1,h=`<${l$1}>`,r=document,d=()=>r.createComment(""),u=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c=Array.isArray,v=t=>c(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_=/-->/g,m=/>/g,p=RegExp(`>|${a}(?:([^\\s"'>=/]+)(${a}*=${a}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g=/'/g,$=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=w(1),T=Symbol.for("lit-noChange"),A=Symbol.for("lit-nothing"),E=new WeakMap,C=r.createTreeWalker(r,129,null,!1),P=(t,i)=>{const s=t.length-1,l=[];let r,d=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let e,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_:void 0!==c[1]?u=m:void 0!==c[2]?(y.test(c[2])&&(r=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=r?r:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,e=c[1],u=void 0===c[3]?p:'"'===c[3]?$:g):u===$||u===g?u=p:u===_||u===m?u=f:(u=p,r=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";d+=u===f?s+h:v>=0?(l.push(e),s.slice(0,v)+o$1+s.slice(v)+n$1+w):s+n$1+(-2===v?(l.push(void 0),i):w);}const c=d+(t[s]||"<?>")+(2===i?"</svg>":"");if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return [void 0!==e?e.createHTML(c):c,l]};class V{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,u=0;const c=t.length-1,v=this.parts,[a,f]=P(t,i);if(this.el=V.createElement(a,e),C.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$1)||i.startsWith(n$1)){const s=f[u++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$1).split(n$1),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?k:"?"===i[1]?I:"@"===i[1]?L:R});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$1),i=t.length-1;if(i>0){h.textContent=s$1?s$1.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],d()),C.nextNode(),v.push({type:2,index:++r});h.append(t[i],d());}}}else if(8===h.nodeType)if(h.data===l$1)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$1,t+1));)v.push({type:7,index:r}),t+=n$1.length-1;}r++;}}static createElement(t,i){const s=r.createElement("template");return s.innerHTML=t,s}}function N(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const d=u(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==d&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===d?r=void 0:(r=new d(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=N(t,r._$AS(t,i.values),r,e)),i}class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r).importNode(s,!0);C.currentNode=o;let n=C.nextNode(),l=0,h=0,d=e[0];for(;void 0!==d;){if(l===d.index){let i;2===d.type?i=new M(n,n.nextSibling,this,t):1===d.type?i=new d.ctor(n,d.name,d.strings,this,t):6===d.type&&(i=new z(n,this,t)),this._$AV.push(i),d=e[++h];}l!==(null==d?void 0:d.index)&&(n=C.nextNode(),l++);}return C.currentNode=r,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class M{constructor(t,i,s,e){var o;this.type=2,this._$AH=A,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N(this,t,i),u(t)?t===A||null==t||""===t?(this._$AH!==A&&this._$AR(),this._$AH=A):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A&&u(this._$AH)?this._$AA.nextSibling.data=t:this.$(r.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=V.createElement(e.h,this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new S(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new V(t)),i}T(t){c(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new M(this.k(d()),this.k(d()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}class R{constructor(t,i,s,e,o){this.type=1,this._$AH=A,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=N(this,t,i,0),n=!u(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=N(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!u(h)||h!==this._$AH[l]),h===A?t=A:t!==A&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}}class k extends R{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A?void 0:t;}}const H=s$1?s$1.emptyScript:"";class I extends R{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A?this.element.setAttribute(this.name,H):this.element.removeAttribute(this.name);}}class L extends R{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=N(this,t,i,0))&&void 0!==s?s:A)===T)return;const e=this._$AH,o=t===A&&e!==A||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A&&(e===A||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}}class z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N(this,t);}}const j=i.litHtmlPolyfillSupport;null==j||j(V,M),(null!==(t=i.litHtmlVersions)&&void 0!==t?t:i.litHtmlVersions=[]).push("2.7.4");const B=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new M(i.insertBefore(d(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
+var t;const i=window,s$1=i.trustedTypes,e=s$1?s$1.createPolicy("lit-html",{createHTML:t=>t}):void 0,o$1="$lit$",n$1=`lit$${(Math.random()+"").slice(9)}$`,l$1="?"+n$1,h=`<${l$1}>`,r=document,u=()=>r.createComment(""),d=t=>null===t||"object"!=typeof t&&"function"!=typeof t,c=Array.isArray,v=t=>c(t)||"function"==typeof(null==t?void 0:t[Symbol.iterator]),a="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,_=/-->/g,m=/>/g,p=RegExp(`>|${a}(?:([^\\s"'>=/]+)(${a}*=${a}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),g=/'/g,$=/"/g,y=/^(?:script|style|textarea|title)$/i,w=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=w(1),T=Symbol.for("lit-noChange"),A=Symbol.for("lit-nothing"),E=new WeakMap,C=r.createTreeWalker(r,129,null,!1);function P(t,i){if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==e?e.createHTML(i):i}const V=(t,i)=>{const s=t.length-1,e=[];let l,r=2===i?"<svg>":"",u=f;for(let i=0;i<s;i++){const s=t[i];let d,c,v=-1,a=0;for(;a<s.length&&(u.lastIndex=a,c=u.exec(s),null!==c);)a=u.lastIndex,u===f?"!--"===c[1]?u=_:void 0!==c[1]?u=m:void 0!==c[2]?(y.test(c[2])&&(l=RegExp("</"+c[2],"g")),u=p):void 0!==c[3]&&(u=p):u===p?">"===c[0]?(u=null!=l?l:f,v=-1):void 0===c[1]?v=-2:(v=u.lastIndex-c[2].length,d=c[1],u=void 0===c[3]?p:'"'===c[3]?$:g):u===$||u===g?u=p:u===_||u===m?u=f:(u=p,l=void 0);const w=u===p&&t[i+1].startsWith("/>")?" ":"";r+=u===f?s+h:v>=0?(e.push(d),s.slice(0,v)+o$1+s.slice(v)+n$1+w):s+n$1+(-2===v?(e.push(void 0),i):w);}return [P(t,r+(t[s]||"<?>")+(2===i?"</svg>":"")),e]};class N{constructor({strings:t,_$litType$:i},e){let h;this.parts=[];let r=0,d=0;const c=t.length-1,v=this.parts,[a,f]=V(t,i);if(this.el=N.createElement(a,e),C.currentNode=this.el.content,2===i){const t=this.el.content,i=t.firstChild;i.remove(),t.append(...i.childNodes);}for(;null!==(h=C.nextNode())&&v.length<c;){if(1===h.nodeType){if(h.hasAttributes()){const t=[];for(const i of h.getAttributeNames())if(i.endsWith(o$1)||i.startsWith(n$1)){const s=f[d++];if(t.push(i),void 0!==s){const t=h.getAttribute(s.toLowerCase()+o$1).split(n$1),i=/([.?@])?(.*)/.exec(s);v.push({type:1,index:r,name:i[2],strings:t,ctor:"."===i[1]?H:"?"===i[1]?L:"@"===i[1]?z:k});}else v.push({type:6,index:r});}for(const i of t)h.removeAttribute(i);}if(y.test(h.tagName)){const t=h.textContent.split(n$1),i=t.length-1;if(i>0){h.textContent=s$1?s$1.emptyScript:"";for(let s=0;s<i;s++)h.append(t[s],u()),C.nextNode(),v.push({type:2,index:++r});h.append(t[i],u());}}}else if(8===h.nodeType)if(h.data===l$1)v.push({type:2,index:r});else {let t=-1;for(;-1!==(t=h.data.indexOf(n$1,t+1));)v.push({type:7,index:r}),t+=n$1.length-1;}r++;}}static createElement(t,i){const s=r.createElement("template");return s.innerHTML=t,s}}function S(t,i,s=t,e){var o,n,l,h;if(i===T)return i;let r=void 0!==e?null===(o=s._$Co)||void 0===o?void 0:o[e]:s._$Cl;const u=d(i)?void 0:i._$litDirective$;return (null==r?void 0:r.constructor)!==u&&(null===(n=null==r?void 0:r._$AO)||void 0===n||n.call(r,!1),void 0===u?r=void 0:(r=new u(t),r._$AT(t,s,e)),void 0!==e?(null!==(l=(h=s)._$Co)&&void 0!==l?l:h._$Co=[])[e]=r:s._$Cl=r),void 0!==r&&(i=S(t,r._$AS(t,i.values),r,e)),i}class M{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){var i;const{el:{content:s},parts:e}=this._$AD,o=(null!==(i=null==t?void 0:t.creationScope)&&void 0!==i?i:r).importNode(s,!0);C.currentNode=o;let n=C.nextNode(),l=0,h=0,u=e[0];for(;void 0!==u;){if(l===u.index){let i;2===u.type?i=new R(n,n.nextSibling,this,t):1===u.type?i=new u.ctor(n,u.name,u.strings,this,t):6===u.type&&(i=new Z(n,this,t)),this._$AV.push(i),u=e[++h];}l!==(null==u?void 0:u.index)&&(n=C.nextNode(),l++);}return C.currentNode=r,o}v(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class R{constructor(t,i,s,e){var o;this.type=2,this._$AH=A,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cp=null===(o=null==e?void 0:e.isConnected)||void 0===o||o;}get _$AU(){var t,i;return null!==(i=null===(t=this._$AM)||void 0===t?void 0:t._$AU)&&void 0!==i?i:this._$Cp}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===(null==t?void 0:t.nodeType)&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=S(this,t,i),d(t)?t===A||null==t||""===t?(this._$AH!==A&&this._$AR(),this._$AH=A):t!==this._$AH&&t!==T&&this._(t):void 0!==t._$litType$?this.g(t):void 0!==t.nodeType?this.$(t):v(t)?this.T(t):this._(t);}k(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}$(t){this._$AH!==t&&(this._$AR(),this._$AH=this.k(t));}_(t){this._$AH!==A&&d(this._$AH)?this._$AA.nextSibling.data=t:this.$(r.createTextNode(t)),this._$AH=t;}g(t){var i;const{values:s,_$litType$:e}=t,o="number"==typeof e?this._$AC(t):(void 0===e.el&&(e.el=N.createElement(P(e.h,e.h[0]),this.options)),e);if((null===(i=this._$AH)||void 0===i?void 0:i._$AD)===o)this._$AH.v(s);else {const t=new M(o,this),i=t.u(this.options);t.v(s),this.$(i),this._$AH=t;}}_$AC(t){let i=E.get(t.strings);return void 0===i&&E.set(t.strings,i=new N(t)),i}T(t){c(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const o of t)e===i.length?i.push(s=new R(this.k(u()),this.k(u()),this,this.options)):s=i[e],s._$AI(o),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){var s;for(null===(s=this._$AP)||void 0===s||s.call(this,!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){var i;void 0===this._$AM&&(this._$Cp=t,null===(i=this._$AP)||void 0===i||i.call(this,t));}}class k{constructor(t,i,s,e,o){this.type=1,this._$AH=A,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=o,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=A;}get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}_$AI(t,i=this,s,e){const o=this.strings;let n=!1;if(void 0===o)t=S(this,t,i,0),n=!d(t)||t!==this._$AH&&t!==T,n&&(this._$AH=t);else {const e=t;let l,h;for(t=o[0],l=0;l<o.length-1;l++)h=S(this,e[s+l],i,l),h===T&&(h=this._$AH[l]),n||(n=!d(h)||h!==this._$AH[l]),h===A?t=A:t!==A&&(t+=(null!=h?h:"")+o[l+1]),this._$AH[l]=h;}n&&!e&&this.j(t);}j(t){t===A?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,null!=t?t:"");}}class H extends k{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===A?void 0:t;}}const I=s$1?s$1.emptyScript:"";class L extends k{constructor(){super(...arguments),this.type=4;}j(t){t&&t!==A?this.element.setAttribute(this.name,I):this.element.removeAttribute(this.name);}}class z extends k{constructor(t,i,s,e,o){super(t,i,s,e,o),this.type=5;}_$AI(t,i=this){var s;if((t=null!==(s=S(this,t,i,0))&&void 0!==s?s:A)===T)return;const e=this._$AH,o=t===A&&e!==A||t.capture!==e.capture||t.once!==e.once||t.passive!==e.passive,n=t!==A&&(e===A||o);o&&this.element.removeEventListener(this.name,this,e),n&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){var i,s;"function"==typeof this._$AH?this._$AH.call(null!==(s=null===(i=this.options)||void 0===i?void 0:i.host)&&void 0!==s?s:this.element,t):this._$AH.handleEvent(t);}}class Z{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){S(this,t);}}const B=i.litHtmlPolyfillSupport;null==B||B(N,R),(null!==(t=i.litHtmlVersions)&&void 0!==t?t:i.litHtmlVersions=[]).push("2.7.5");const D=(t,i,s)=>{var e,o;const n=null!==(e=null==s?void 0:s.renderBefore)&&void 0!==e?e:i;let l=n._$litPart$;if(void 0===l){const t=null!==(o=null==s?void 0:s.renderBefore)&&void 0!==o?o:null;n._$litPart$=l=new R(i.insertBefore(u(),t),t,void 0,null!=s?s:{});}return l._$AI(t),l};
 
 /**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */var l,o;class s extends u$1{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=B(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T}}s.finalized=!0,s._$litElement$=!0,null===(l=globalThis.litElementHydrateSupport)||void 0===l||l.call(globalThis,{LitElement:s});const n=globalThis.litElementPolyfillSupport;null==n||n({LitElement:s});(null!==(o=globalThis.litElementVersions)&&void 0!==o?o:globalThis.litElementVersions=[]).push("3.3.2");
+ */var l,o;class s extends u$1{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){var t,e;const i=super.createRenderRoot();return null!==(t=(e=this.renderOptions).renderBefore)&&void 0!==t||(e.renderBefore=i.firstChild),i}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=D(i,this.renderRoot,this.renderOptions);}connectedCallback(){var t;super.connectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!0);}disconnectedCallback(){var t;super.disconnectedCallback(),null===(t=this._$Do)||void 0===t||t.setConnected(!1);}render(){return T}}s.finalized=!0,s._$litElement$=!0,null===(l=globalThis.litElementHydrateSupport)||void 0===l||l.call(globalThis,{LitElement:s});const n=globalThis.litElementPolyfillSupport;null==n||n({LitElement:s});(null!==(o=globalThis.litElementVersions)&&void 0!==o?o:globalThis.litElementVersions=[]).push("3.3.2");
 
 class Dom {
     static newDom(element) {
@@ -397,7 +397,7 @@ class Utils {
     static helpers({ confirmMessage = '', cbConfirm = null, cbCancel = null, isConfirmInit = true, loaderVisible = false } = {}) {
         const confirm = cbConfirm;
         const cancel = cbCancel;
-        B(x `
+        D(x `
 			<fs-loader ?visible="${loaderVisible}"></fs-loader>
 			<fs-confirm .message="${confirmMessage}" ?open="${isConfirmInit ? !isConfirmInit : Math.random()}" @modalConfirm="${() => confirm()}" @modalCancel="${() => cancel()}"></fs-confirm>
 		`, document.body);
@@ -533,7 +533,7 @@ class Loader extends HTMLElement {
         }
     }
     render() {
-        B(x `<div class="spinner"></div>`, this);
+        D(x `<div class="spinner"></div>`, this);
     }
 }
 
@@ -651,7 +651,7 @@ class ShortcutManager {
         pElement?.addEventListener('keyup', this.keyUp);
     }
     static keyDown(pEvent) {
-        if (Object.keys(ShortcutManager.shortCuts).some((pKey) => pKey.split(',').includes(pEvent.key)) && States$1.editMode) {
+        if (Object.keys(ShortcutManager.shortCuts).some((pKey) => pKey.split(',').includes(pEvent.key)) && States.editMode) {
             pEvent.preventDefault();
             ShortcutManager.keysPress[pEvent.key] = true;
             const shortcut = ShortcutManager.shortCuts[Object.keys(ShortcutManager.shortCuts).find((pKey) => pKey.split(',').sort().join() === Object.keys(ShortcutManager.keysPress).filter((pKey) => ShortcutManager.keysPress[pKey]).map((pKey) => pKey).sort().join())];
@@ -700,7 +700,7 @@ class ElementMover {
         ElementMover.selectedSelectorId = pEvent.currentTarget.id || pEvent.currentTarget.parentElement.id;
     }
     static pointerMove(pEvent) {
-        if (States$1.isDrawing)
+        if (States.isDrawing)
             return;
         pEvent.returnValue = false;
         const selectedElement = ElementMover.elements[ElementMover.selectedSelectorId];
@@ -744,7 +744,7 @@ ElementMover.isPointerDown = false;
 
 class ElementManager {
     static init() {
-        Datas$1.sheet.inputs?.concat(Datas$1.sheet.images).forEach((pElement) => {
+        Datas.sheet.inputs?.concat(Datas.sheet.images).forEach((pElement) => {
             const selectedElement = document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`);
             if (!selectedElement.getAttribute('data-movable')) {
                 ElementMover.init(selectedElement, {
@@ -752,10 +752,10 @@ class ElementManager {
                     y: Sheet.containerTop
                 }, (pMousePosition) => {
                     if (selectedElement.tagName === 'LABEL') {
-                        Datas$1.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
+                        Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
                     }
                     if (selectedElement.tagName === 'DIV') {
-                        Datas$1.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
+                        Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
                     }
                 });
                 ElementResizer.init(selectedElement, {
@@ -763,10 +763,10 @@ class ElementManager {
                     y: Sheet.containerTop
                 }, (pMousePosition) => {
                     if (selectedElement.tagName === 'LABEL') {
-                        Datas$1.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
+                        Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
                     }
                     if (selectedElement.tagName === 'DIV') {
-                        Datas$1.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
+                        Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
                     }
                 });
                 selectedElement.setAttribute('data-movable', 'true');
@@ -776,29 +776,29 @@ class ElementManager {
     static delete(pElementId) {
         const selectedElement = document.querySelector(`label[for='${pElementId}'], div[id='${pElementId}']`);
         if (selectedElement?.tagName === 'LABEL') {
-            const index = Datas$1.sheet.inputs?.findIndex((input) => input.id === pElementId);
+            const index = Datas.sheet.inputs?.findIndex((input) => input.id === pElementId);
             if (index !== -1) {
-                Datas$1.sheet.inputs?.splice(index, 1);
-                Datas$1.deletedInputs.push(pElementId);
+                Datas.sheet.inputs?.splice(index, 1);
+                Datas.deletedInputs.push(pElementId);
             }
         }
         if (selectedElement?.tagName === 'DIV') {
-            const index = Datas$1.sheet.images?.findIndex((image) => image.id === pElementId);
+            const index = Datas.sheet.images?.findIndex((image) => image.id === pElementId);
             if (index !== -1) {
-                Datas$1.sheet.images?.splice(index, 1);
-                Datas$1.deletedImages.push(pElementId);
+                Datas.sheet.images?.splice(index, 1);
+                Datas.deletedImages.push(pElementId);
             }
         }
-        States$1.isSaved = false;
+        States.isSaved = false;
         View.render();
     }
     static async clone(pEvent, pElement) {
         const selectedElement = document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`);
         if (selectedElement?.tagName === 'LABEL') {
-            Datas$1.addInputValues({ ...pElement, id: Utils.generateId().toString() });
+            Datas.addInputValues({ ...pElement, id: Utils.generateId().toString() });
         }
         if (selectedElement?.tagName === 'DIV') {
-            await Datas$1.addImageValues({ ...pElement, id: Utils.generateId().toString() });
+            await Datas.addImageValues({ ...pElement, id: Utils.generateId().toString() });
         }
         this.select(pEvent, pElement);
     }
@@ -815,15 +815,15 @@ class ElementManager {
             id: Utils.generateId().toString()
         };
         if (selectedElement?.tagName === 'LABEL') {
-            Datas$1.addInputValues(element);
+            Datas.addInputValues(element);
         }
         if (selectedElement?.tagName === 'DIV') {
-            await Datas$1.addImageValues(element);
+            await Datas.addImageValues(element);
         }
         this.select(pEvent, element);
     }
     static select(pEvent = null, pElement = null) {
-        if (States$1.editMode) {
+        if (States.editMode) {
             if (pEvent)
                 pEvent.stopPropagation();
             this.selectedElementId = pElement?.id || null;
@@ -850,7 +850,7 @@ class Drawer {
         this.element.addEventListener('pointermove', this.pointerMove);
         ShortcutManager.set(document.body, ['Escape'], () => {
             this.reset();
-            States$1.displayEditBlock(true);
+            States.displayEditBlock(true);
         });
     }
     static resetMousePosition() {
@@ -862,7 +862,7 @@ class Drawer {
         };
     }
     static pointerDown() {
-        States$1.isDrawing = true;
+        States.isDrawing = true;
         Drawer.element.addEventListener('click', Drawer.pointerUp);
         Drawer.mouse.startX = Drawer.mouse.x;
         Drawer.mouse.startY = Drawer.mouse.y;
@@ -882,7 +882,7 @@ class Drawer {
         Drawer.reset();
     }
     static reset() {
-        States$1.isDrawing = false;
+        States.isDrawing = false;
         this.resetMousePosition();
         this.element.removeEventListener('pointerdown', this.pointerDown);
         this.element.removeEventListener('pointermove', this.pointerMove);
@@ -892,15 +892,15 @@ class Drawer {
 
 class Input {
     static add() {
-        States$1.displayEditBlock(false);
+        States.displayEditBlock(false);
         Drawer.init(Sheet.element.querySelector('.wrapper'), { x: Sheet.containerLeft, y: Sheet.containerTop }, async (pMousePosition, pEvent) => {
-            States$1.displayEditBlock(true);
+            States.displayEditBlock(true);
             const inputId = Utils.generateId().toString();
             const input = {
                 id: inputId,
                 type: 'text'
             };
-            await Datas$1.addInputValues(input, 'x', Math.round(pMousePosition.startX / Sheet.ratio), 'y', Math.round(pMousePosition.startY / Sheet.ratio), 'width', Math.round(pMousePosition.x / Sheet.ratio - pMousePosition.startX / Sheet.ratio), 'height', Math.round(pMousePosition.y / Sheet.ratio - pMousePosition.startY / Sheet.ratio));
+            await Datas.addInputValues(input, 'x', Math.round(pMousePosition.startX / Sheet.ratio), 'y', Math.round(pMousePosition.startY / Sheet.ratio), 'width', Math.round(pMousePosition.x / Sheet.ratio - pMousePosition.startX / Sheet.ratio), 'height', Math.round(pMousePosition.y / Sheet.ratio - pMousePosition.startY / Sheet.ratio));
             ElementManager.select(pEvent, input);
         });
     }
@@ -908,7 +908,7 @@ class Input {
 
 let Image$1 = class Image {
     static add() {
-        States$1.displayEditBlock(false);
+        States.displayEditBlock(false);
         Drawer.init(Sheet.element.querySelector('.wrapper'), { x: Sheet.containerLeft, y: Sheet.containerTop }, async (pMousePosition, pEvent) => {
             const image = { id: Utils.generateId().toString() };
             let file;
@@ -920,11 +920,11 @@ let Image$1 = class Image {
             }}">
 					</label>
 				`, async () => {
-                await Datas$1.addImageValues(image, 'x', Math.round(pMousePosition.startX / Sheet.ratio), 'y', Math.round(pMousePosition.startY / Sheet.ratio), 'width', Math.round(pMousePosition.x / Sheet.ratio - pMousePosition.startX / Sheet.ratio), 'height', Math.round(pMousePosition.y / Sheet.ratio - pMousePosition.startY / Sheet.ratio), 'file', file);
+                await Datas.addImageValues(image, 'x', Math.round(pMousePosition.startX / Sheet.ratio), 'y', Math.round(pMousePosition.startY / Sheet.ratio), 'width', Math.round(pMousePosition.x / Sheet.ratio - pMousePosition.startX / Sheet.ratio), 'height', Math.round(pMousePosition.y / Sheet.ratio - pMousePosition.startY / Sheet.ratio), 'file', file);
                 ElementManager.select(pEvent, image);
-                States$1.displayEditBlock(true);
-                States$1.isSaved = false;
-            }, () => States$1.displayEditBlock(true));
+                States.displayEditBlock(true);
+                States.isSaved = false;
+            }, () => States.displayEditBlock(true));
         });
     }
 };
@@ -1022,7 +1022,7 @@ const elements = (pElement, pFonts) => [
 
 class Interface {
     static initializeMove(pElement) {
-        if (States$1.interface === 'visible' && States$1.editMode && pElement) {
+        if (States.interface === 'visible' && States.editMode && pElement) {
             ElementMover.init(pElement, {
                 x: Sheet.containerLeft,
                 y: Sheet.containerTop
@@ -1034,33 +1034,33 @@ class Interface {
     static viewBlock() {
         return x `
 			<div class="viewBlock">
-				<a href="#" role="button" class="viewSelection ${States$1.interface === 'hover' ? 'selected' : ''}" @click="${(pEvent) => {
+				<a href="#" role="button" class="viewSelection ${States.interface === 'hover' ? 'selected' : ''}" @click="${(pEvent) => {
             pEvent.preventDefault();
-            States$1.interface = 'hover';
+            States.interface = 'hover';
         }}" title="Interface sur demande">
 					<svg class="eye-plus">
 						<use href="#eye-plus"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="viewSelection ${States$1.interface === 'visible' ? 'selected' : ''}" @click="${(pEvent) => {
+				<a href="#" role="button" class="viewSelection ${States.interface === 'visible' ? 'selected' : ''}" @click="${(pEvent) => {
             pEvent.preventDefault();
-            States$1.interface = 'visible';
+            States.interface = 'visible';
         }}" title="Interface toujours visible">
 					<svg class="eye">
 						<use href="#eye"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="viewSelection ${States$1.interface === 'hidden' ? 'selected' : ''}" @click="${(pEvent) => {
+				<a href="#" role="button" class="viewSelection ${States.interface === 'hidden' ? 'selected' : ''}" @click="${(pEvent) => {
             pEvent.preventDefault();
-            States$1.interface = 'hidden';
+            States.interface = 'hidden';
         }}" title="Interface cachée">
 					<svg class="eye-blocked">
 						<use href="#eye-blocked"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" ?disabled="${States$1.isSaved}" class="saveButton" @click="${async (pEvent) => {
+				<a href="#" role="button" ?disabled="${States.isSaved}" class="saveButton" @click="${async (pEvent) => {
             pEvent.preventDefault();
-            await Datas$1.save();
+            await Datas.save();
             View.render();
         }}" title="Sauvegarder">
 					<svg class="floppy">
@@ -1071,11 +1071,11 @@ class Interface {
 		`;
     }
     static editBlock() {
-        if (States$1.interface === 'visible')
+        if (States.interface === 'visible')
             setTimeout(() => this.initializeMove(document.querySelector('.editBlock')));
         return x `
-			<article .hidden="${States$1.isEditBlockHidden}" class="editBlock" id="editBlock">
-				${States$1.interface !== 'hidden' ? this.viewBlock() : ''}
+			<article .hidden="${States.isEditBlockHidden}" class="editBlock" id="editBlock">
+				${States.interface !== 'hidden' ? this.viewBlock() : ''}
 				<button class="contrast" @click="${() => Sheet.editBackgroundImage()}">Image de fond</button>
 				<button class="contrast" @click="${() => Sheet.changeBackgroundColor()}">Couleur du fond</button>
 				<button class="contrast" @click="${() => Sheet.addFont()}">Ajouter une police</button>
@@ -1084,21 +1084,21 @@ class Interface {
 				<button class="contrast" @click="${() => Image$1.add()}">Ajouter une image</button>
 				<div class="validBlock">
 					<button @click="${() => {
-            States$1.displayEditMode(false);
+            States.displayEditMode(false);
         }}">Annuler
 					</button>
 					<button class="save" @click="${async () => {
-            await Datas$1.save();
-            States$1.displayEditMode(false);
+            await Datas.save();
+            States.displayEditMode(false);
         }}">Enregistrer et fermer
-						<fs-loader ?visible="${Datas$1.isSaving}"></fs-loader>
+						<fs-loader ?visible="${Datas.isSaving}"></fs-loader>
 					</button>
 				</div>
 			</article>
 		`;
     }
     static selectBlock(pElement) {
-        if (States$1.interface === 'visible')
+        if (States.interface === 'visible')
             setTimeout(() => this.initializeMove(document.querySelector('.selectBlock')));
         return x `
 			<article id="selectBlock" class="selectBlock" @click="${(pEvent) => pEvent.stopPropagation()}">
@@ -1118,7 +1118,7 @@ class Interface {
 						<use href="#trash"></use>
 					</svg>
 				</a>
-				${elements(pElement, Datas$1.sheet.fonts.map((pFont) => ({
+				${elements(pElement, Datas.sheet.fonts.map((pFont) => ({
             name: pFont.fontFamily,
             value: pFont.fontFamily
         }))).filter((pEntry) => pElement.type || pElement.image && pElement[pEntry.id]).map((pEntry) => x `
@@ -1127,7 +1127,7 @@ class Interface {
 							type="${pEntry.type}"
 							name="${pEntry.name}"
 							value="${pEntry.value}"
-							@input="${(pEvent) => Datas$1.addInputValues(pElement, pEntry.id, pEvent.target.value)}"
+							@input="${(pEvent) => Datas.addInputValues(pElement, pEntry.id, pEvent.target.value)}"
 							options="${JSON.stringify(pEntry.options)}"
 					></fs-label>
 				`)}
@@ -1138,9 +1138,9 @@ class Interface {
 
 class View {
     static render() {
-        B(x `
+        D(x `
 			<style>
-				${Datas$1.sheet.fonts?.map((pFont) => `
+				${Datas.sheet.fonts?.map((pFont) => `
 				@font-face {
 				font-family: ${pFont.fontFamily};
 				src: url(${pFont.fontUrl});
@@ -1148,25 +1148,25 @@ class View {
 				`)}
 			</style>
 		`, document.head);
-        B(x `			
-				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States$1.editMode && 'editMode'} ${States$1.notepadMode && 'notepadMode'} ${States$1.interface || 'hover'}" @click="${(pEvent) => {
-            if (States$1.editMode)
+        D(x `			
+				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.notepadMode && 'notepadMode'} ${States.interface || 'hover'}" @click="${(pEvent) => {
+            if (States.editMode)
                 ElementManager.select(pEvent);
-            if (States$1.notepadMode)
-                States$1.displayNotepadMode(false);
+            if (States.notepadMode)
+                States.displayNotepadMode(false);
         }}">
-				${States$1.interface === 'hidden' ? Interface.viewBlock() : ''}
-				${States$1.editMode ? Interface.editBlock() : x `
+				${States.interface === 'hidden' ? Interface.viewBlock() : ''}
+				${States.editMode ? Interface.editBlock() : x `
 					<fs-link role="button" class="home contrast" href="/">
 						<svg class="home"> 
 							<use href="#home"></use>
 						</svg>
 						<span>Accueil</span>
 					</fs-link>
-					<button class="edit contrast" @click="${() => States$1.displayEditMode(true)}">Éditer</button>
-					<button class="notepad contrast ${States$1.notepadMode && 'selected'}" @click="${(pEvent) => {
+					<button class="edit contrast" @click="${() => States.displayEditMode(true)}">Éditer</button>
+					<button class="notepad contrast ${States.notepadMode && 'selected'}" @click="${(pEvent) => {
             pEvent.stopPropagation();
-            States$1.displayNotepadMode(!States$1.notepadMode);
+            States.displayNotepadMode(!States.notepadMode);
         }}">Bloc notes</button>
 					<button class="print contrast" @click="${() => Sheet.printScreen()}">
 						<svg class="print"> 
@@ -1174,21 +1174,21 @@ class View {
 						</svg>
 						<span>Imprimer</span>
 					</button>
-					${States$1.notepadMode ? x `
+					${States.notepadMode ? x `
 					<article id="notepad" @click="${(pEvent) => pEvent.stopPropagation()}">
-						<textarea @change="${(pEvent) => Datas$1.saveNotepad(pEvent.target.value)}">${Datas$1.sheet.notepad}</textarea>
+						<textarea @change="${(pEvent) => Datas.saveNotepad(pEvent.target.value)}">${Datas.sheet.notepad}</textarea>
 					</article>
 					` : ''}
 				`}
-				${Datas$1.sheet.inputs?.map((pInput) => x `
+				${Datas.sheet.inputs?.map((pInput) => x `
 							<label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${ElementManager.selectedElementId === pInput.id ? 'selected' : ''}">
 								${pInput.type === 'textarea' ? x `
 									<textarea
 											id="${pInput.id}"
 											name="${pInput.id}"
 											style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height * Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
-											@change="${(pEvent) => Datas$1.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
-											?readonly="${States$1.editMode}"
+											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
+											?readonly="${States.editMode}"
 											@click="${(pEvent) => ElementManager.select(pEvent, pInput)}"
 									>${pInput.value}</textarea>
 								` : x `
@@ -1198,8 +1198,8 @@ class View {
 											name="${pInput.id}"
 											value="${pInput.value}"
 											style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height * Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
-											@change="${(pEvent) => Datas$1.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
-											?readonly="${States$1.editMode}"
+											@change="${(pEvent) => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
+											?readonly="${States.editMode}"
 											@click="${(pEvent) => ElementManager.select(pEvent, pInput)}"
 									/>
 								`}
@@ -1207,15 +1207,15 @@ class View {
 							</label>
 							${ElementManager.selectedElementId === pInput.id ? Interface.selectBlock(pInput) : ''}
 						`)}
-				${Datas$1.sheet.images?.map((pImage) => x `
-							<div id="${pImage.id}" style="transform: translate(${pImage.x * Sheet.ratio}px, ${pImage.y * Sheet.ratio}px);width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''} ${States$1.isZoomed === pImage.id ? 'isZoomed' : ''}" @click="${(pEvent) => {
-            if (States$1.editMode)
+				${Datas.sheet.images?.map((pImage) => x `
+							<div id="${pImage.id}" style="transform: translate(${pImage.x * Sheet.ratio}px, ${pImage.y * Sheet.ratio}px);width: ${pImage.width * Sheet.ratio}px;height: ${pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}" @click="${(pEvent) => {
+            if (States.editMode)
                 ElementManager.select(pEvent, pImage);
             else {
-                if (!States$1.isZoomed)
-                    States$1.isZoomed = pImage.id;
+                if (!States.isZoomed)
+                    States.isZoomed = pImage.id;
                 else
-                    States$1.isZoomed = false;
+                    States.isZoomed = false;
                 View.render();
             }
         }}">
@@ -1235,11 +1235,11 @@ class States {
         ElementManager.select();
         this.editMode = pValue;
         this.notepadMode = this.notepadMode && !pValue;
-        Datas$1.changedInputs = [];
-        Datas$1.changedImages = [];
-        Datas$1.deletedInputs = [];
-        Datas$1.deletedImages = [];
-        Datas$1.sheetProperties = [];
+        Datas.changedInputs = [];
+        Datas.changedImages = [];
+        Datas.deletedInputs = [];
+        Datas.deletedImages = [];
+        Datas.sheetProperties = [];
         View.render();
     }
     static displayNotepadMode(pValue) {
@@ -1257,7 +1257,6 @@ States.interface = 'hover';
 States.isSaved = true;
 States.isDrawing = false;
 States.isZoomed = false;
-var States$1 = States;
 
 class Datas {
     static async init() {
@@ -1288,13 +1287,13 @@ class Datas {
         let index;
         if (!this.sheet.inputs)
             this.sheet.inputs = [];
-        if (States$1.editMode) {
+        if (States.editMode) {
             index = this.changedInputs.findIndex((input) => input.id === pInput.id);
             this.changedInputs[index !== -1 ? index : this.changedInputs.length || 0] = pInput;
         }
         index = this.sheet.inputs.findIndex((input) => input.id === pInput.id);
         this.sheet.inputs[index !== -1 ? index : this.sheet.inputs.length || 0] = pInput;
-        States$1.isSaved = false;
+        States.isSaved = false;
         View.render();
     }
     static async addImageValues(pImage, ...args) {
@@ -1304,7 +1303,7 @@ class Datas {
                 pImage[args[i]] = Number(value) || value;
         }
         let index;
-        if (States$1.editMode) {
+        if (States.editMode) {
             index = this.changedImages.findIndex((image) => image.id === pImage.id);
             this.changedImages[index !== -1 ? index : this.changedImages.length || 0] = pImage;
         }
@@ -1314,7 +1313,7 @@ class Datas {
         if (pImage.file)
             pImage.image = await Utils.getBase64FromFileReader(pImage.file);
         this.sheet.images[index !== -1 ? index : this.sheet.images.length || 0] = pImage;
-        States$1.isSaved = false;
+        States.isSaved = false;
         View.render();
     }
     static async cacheResources() {
@@ -1419,26 +1418,25 @@ class Datas {
             this.deletedImages = [];
             this.sheetProperties = [];
             this.isSaving = false;
-            States$1.isSaved = true;
+            States.isSaved = true;
         }
     }
 }
 Datas.isSaving = false;
-var Datas$1 = Datas;
 
 class Sheet extends HTMLElement {
     async connectedCallback() {
-        await Datas$1.init();
+        await Datas.init();
         Sheet.element = this;
-        this.style.backgroundColor = Datas$1.sheet.backgroundColor;
-        Sheet.setBackgroundImage(Datas$1.sheet.backgroundImage || '../../assets/default.jpg');
+        this.style.backgroundColor = Datas.sheet.backgroundColor;
+        Sheet.setBackgroundImage(Datas.sheet.backgroundImage || '../../assets/default.jpg');
         window.addEventListener('resize', () => Sheet.resize());
         ShortcutManager.set(document.body, ['Control', 's'], async () => {
-            await Datas$1.save();
+            await Datas.save();
             View.render();
         });
         ShortcutManager.set(document.body, ['Tab'], () => {
-            States$1.interface = States$1.interface === 'hover' ? 'visible' : States$1.interface === 'visible' ? 'hidden' : 'hover';
+            States.interface = States.interface === 'hover' ? 'visible' : States.interface === 'visible' ? 'hidden' : 'hover';
             View.render();
         });
     }
@@ -1467,26 +1465,26 @@ class Sheet extends HTMLElement {
         setTimeout(() => Utils.loader(false));
     }
     static changeBackgroundColor() {
-        States$1.displayEditBlock(false);
+        States.displayEditBlock(false);
         let color;
         Utils.confirm(x `
 			<label for="color">
 				<span>Choisissez une couleur</span>
-				<input type="color" id="color" name="color" value="${Datas$1.sheet.backgroundColor || '#ffffff'}" @change="${async (pEvent) => {
+				<input type="color" id="color" name="color" value="${Datas.sheet.backgroundColor || '#ffffff'}" @change="${async (pEvent) => {
             color = pEvent.target.value;
         }}">
 			</label>
 		`, () => {
             this.element.style.backgroundColor = color;
-            Datas$1.sheet.backgroundColor = color;
-            Datas$1.sheetProperties.push({ setBackgroundColor: { color } });
-            States$1.isSaved = false;
-            States$1.displayEditBlock(true);
+            Datas.sheet.backgroundColor = color;
+            Datas.sheetProperties.push({ setBackgroundColor: { color } });
+            States.isSaved = false;
+            States.displayEditBlock(true);
             View.render();
-        }, () => States$1.displayEditBlock(true));
+        }, () => States.displayEditBlock(true));
     }
     static editBackgroundImage() {
-        States$1.displayEditBlock(false);
+        States.displayEditBlock(false);
         let file;
         Utils.confirm(x `
 			<label for="file">
@@ -1497,14 +1495,14 @@ class Sheet extends HTMLElement {
 			</label>
 		`, async () => {
             this.setBackgroundImage((await Utils.getBase64FromFileReader(file)));
-            Datas$1.sheetProperties.push({ setBackgroundImage: { image: file } });
-            States$1.isSaved = false;
-            States$1.displayEditBlock(true);
+            Datas.sheetProperties.push({ setBackgroundImage: { image: file } });
+            States.isSaved = false;
+            States.displayEditBlock(true);
             View.render();
-        }, () => States$1.displayEditBlock(true));
+        }, () => States.displayEditBlock(true));
     }
     static addFont() {
-        States$1.displayEditBlock(false);
+        States.displayEditBlock(false);
         let fontUrl;
         let fontFamily;
         let file;
@@ -1521,24 +1519,24 @@ class Sheet extends HTMLElement {
         }}">
 			</label>
 		`, async () => {
-            if (!Datas$1.sheet.fonts)
-                Datas$1.sheet.fonts = [];
+            if (!Datas.sheet.fonts)
+                Datas.sheet.fonts = [];
             fontUrl = await Utils.getBase64FromFileReader(file);
             const font = { name: file.name, fontUrl, fontFamily };
-            Datas$1.sheet.fonts.push(font);
+            Datas.sheet.fonts.push(font);
             fontUrl = file;
-            Datas$1.sheetProperties.push({ setFont: font });
-            States$1.isSaved = false;
-            States$1.displayEditBlock(true);
+            Datas.sheetProperties.push({ setFont: font });
+            States.isSaved = false;
+            States.displayEditBlock(true);
             View.render();
-        }, () => States$1.displayEditBlock(true));
+        }, () => States.displayEditBlock(true));
     }
     static deleteFont() {
-        States$1.displayEditBlock(false);
+        States.displayEditBlock(false);
         let fonts = [];
         Utils.confirm(x `
 			<ul>
-				${Datas$1.sheet.fonts?.map((pFont) => x `
+				${Datas.sheet.fonts?.map((pFont) => x `
 					<li>
 						<label for="${pFont.fontFamily}">
 							<input type="checkbox" id="${pFont.fontFamily}" name="${pFont.fontFamily}" value="${pFont.fontFamily}" @change="${(pEvent) => {
@@ -1553,13 +1551,13 @@ class Sheet extends HTMLElement {
 			</ul>
 		`, () => {
             fonts.forEach((pFontFamily) => {
-                Datas$1.sheet.fonts = Datas$1.sheet.fonts?.filter((pFont) => pFont.fontFamily !== pFontFamily);
+                Datas.sheet.fonts = Datas.sheet.fonts?.filter((pFont) => pFont.fontFamily !== pFontFamily);
             });
-            Datas$1.sheetProperties.push({ deleteFont: { fonts: fonts } });
-            States$1.isSaved = false;
-            States$1.displayEditBlock(true);
+            Datas.sheetProperties.push({ deleteFont: { fonts: fonts } });
+            States.isSaved = false;
+            States.displayEditBlock(true);
             View.render();
-        }, () => States$1.displayEditBlock(true));
+        }, () => States.displayEditBlock(true));
     }
     static async printScreen() {
     }
@@ -1599,7 +1597,7 @@ class Confirm extends HTMLElement {
         }, 225);
     }
     render() {
-        B(x `
+        D(x `
 						<dialog ?open="${this.open}"> 
 								<article>
 										${this.message} 
@@ -1635,7 +1633,7 @@ class Login extends HTMLElement {
         });
     }
     render() {
-        B(x `
+        D(x `
 					<form>
 						<label>
 							<span>Identifiant</span>
@@ -1689,7 +1687,7 @@ class Label extends HTMLElement {
         }
     }
     render() {
-        B(x `
+        D(x `
 			<label for="${this.id}" @click="${(pEvent) => pEvent.stopPropagation()}">
 				<span>${this.name}</span>
 				${this.type === 'select' ? x `
@@ -1804,7 +1802,7 @@ class Home extends HTMLElement {
         document.body.style.height = '';
     }
     render() {
-        B(x `
+        D(x `
 			<div class="title">
 				<h2>Vos feuilles de personnage</h2>
 				<button type="button" class="add" @click="${() => this.addSheet()}">
@@ -1881,49 +1879,6 @@ class Home extends HTMLElement {
     }
 }
 
-class Toast extends HTMLElement {
-    constructor() {
-        super(...arguments);
-        this.messageProperty = null;
-    }
-    static get observedAttributes() { return ['visible']; }
-    get type() {
-        return this.getAttribute('type');
-    }
-    get message() {
-        return this.getAttribute('message');
-    }
-    get visible() {
-        return this.getAttribute('visible');
-    }
-    set visible(pValue) {
-        this.setAttribute('visible', pValue);
-    }
-    connectedCallback() {
-        this.render();
-        setTimeout(() => {
-            this.messageProperty = this.message;
-            this.removeAttribute('message');
-            this.visible = 'visible';
-        }, 50);
-        setTimeout(() => {
-            this.visible = '';
-            setTimeout(() => this.remove(), 225);
-        }, 4000);
-    }
-    attributeChangedCallback(name, oldValue, newValue) {
-        if ((name === 'visible') && oldValue !== newValue)
-            this.render();
-    }
-    render() {
-        B(x `
-						<div class='toast ${this.type} ${this.visible}' role='alert'>
-							${this.messageProperty}
-						</div>
-		`, this);
-    }
-}
-
 class Link extends HTMLElement {
     get href() {
         return this.getAttribute('href');
@@ -1942,7 +1897,7 @@ class Link extends HTMLElement {
         });
     }
     render() {
-        B(x `
+        D(x `
 			<slot></slot>
 		`, this);
     }
@@ -1959,33 +1914,12 @@ window.addEventListener('popstate', async () => REPLACEZONE(await Utils.getFragm
 class App {
     constructor() {
         Utils.helpers();
-        this.wakeLock();
         if (location.href.charAt(location.href.length - 1) === '/')
             history.replaceState({}, '', location.href.replace(/\/$/, ''));
-    }
-    async wakeLock() {
-        let wakeLock = null;
-        const requestWakeLock = async () => {
-            try {
-                wakeLock = await navigator.wakeLock.request();
-            }
-            catch (err) {
-                if (err instanceof Error) {
-                    console.error(`${err.name}, ${err.message}`);
-                }
-            }
-        };
-        document.addEventListener('visibilitychange', async () => {
-            if (wakeLock !== null && document.visibilityState === 'visible') {
-                await requestWakeLock();
-            }
-        });
-        await requestWakeLock();
     }
 }
 new App();
 customElements.define('fs-loader', Loader);
-customElements.define('fs-toast', Toast);
 customElements.define('fs-confirm', Confirm);
 customElements.define('fs-home', Home);
 customElements.define('fs-sheet', Sheet);
