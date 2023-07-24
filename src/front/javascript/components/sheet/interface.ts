@@ -9,13 +9,20 @@ import Image from './image.js'
 import {elements} from '../../datas/elements.js'
 import {HTMLElementEvent, SHEETRPGElement, TElement, TFont, TInput, TPosition} from '../../types.js'
 import View from './view.js'
+import {ShortcutManager} from '../../classes/shortcutManager.js'
+import {EInterface} from '../../enum.js'
 
 /**
  * Contient toutes les fonctions relatives à l'interface et son rendu
  */
 export default class Interface {
     private static initializeMove(pElement: SHEETRPGElement): void {
-        if (States.interface === 'movable' && States.editMode && pElement) {
+        ShortcutManager.set(document.body, ['Tab'], (): void => {
+            if (States.interface === EInterface.hover) this.changeInterface(EInterface.movable)
+            else if (States.interface === EInterface.movable) this.changeInterface(EInterface.hidden)
+            else if (States.interface === EInterface.hidden) this.changeInterface(EInterface.hover)
+        })
+        if (States.interface === EInterface.movable && States.editMode && pElement) {
             ElementMover.init(pElement, {
                 x: Sheet.containerLeft,
                 y: Sheet.containerTop
@@ -32,25 +39,25 @@ export default class Interface {
     static viewBlock(): TemplateResult {
         return html`
 			<div class="viewBlock">
-				<a href="#" role="button" class="viewSelection ${States.interface === 'hover' ? 'selected' : ''}" @click="${(pEvent: PointerEvent): void => {
+				<a href="#" role="button" class="viewSelection ${States.interface === EInterface.hover ? 'selected' : ''}" @click="${(pEvent: PointerEvent): void => {
     pEvent.preventDefault()
-    States.interface = 'hover'
+    this.changeInterface(EInterface.hover)
 }}" title="Interface sur demande">
 					<svg class="eye-plus">
 						<use href="#eye-plus"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="viewSelection ${States.interface === 'movable' ? 'selected' : ''}" @click="${(pEvent: PointerEvent): void => {
+				<a href="#" role="button" class="viewSelection ${States.interface === EInterface.movable ? 'selected' : ''}" @click="${(pEvent: PointerEvent): void => {
     pEvent.preventDefault()
-    States.interface = 'movable'
+    this.changeInterface(EInterface.movable)
 }}" title="Interface toujours visible et déplaçable">
 					<svg class="eye">
 						<use href="#eye"></use>
 					</svg>
 				</a>
-				<a href="#" role="button" class="viewSelection ${States.interface === 'hidden' ? 'selected' : ''}" @click="${(pEvent: PointerEvent): void => {
+				<a href="#" role="button" class="viewSelection ${States.interface === EInterface.hidden ? 'selected' : ''}" @click="${(pEvent: PointerEvent): void => {
     pEvent.preventDefault()
-    States.interface = 'hidden'
+    this.changeInterface(EInterface.hidden)
 }}" title="Interface cachée">
 					<svg class="eye-blocked">
 						<use href="#eye-blocked"></use>
@@ -70,7 +77,7 @@ export default class Interface {
     }
 
     static editBlock(): TemplateResult {
-        if (States.interface === 'movable') setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.editBlock')))
+        setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.editBlock')))
         const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.editBlock
         return html`
 			<article .hidden="${States.isEditBlockHidden}" class="editBlock${hasMoved ? ' hasMoved' : ''}" id="editBlock" style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.editBlock.x}px, ${Datas.sheet.ui?.editBlock.y}px);` : ''}">
@@ -98,7 +105,7 @@ export default class Interface {
     }
 
     static selectBlock(pElement: TElement): TemplateResult {
-        if (States.interface === 'movable') setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.selectBlock')))
+        setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.selectBlock')))
         const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.selectBlock
         return html`
 			<article id="selectBlock" class="selectBlock${hasMoved ? ' hasMoved' : ''}" @click="${(pEvent: PointerEvent): void => pEvent.stopPropagation()}" style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.selectBlock.x}px, ${Datas.sheet.ui?.selectBlock.y}px);` : ''}">
@@ -133,5 +140,13 @@ export default class Interface {
 				`)}
 			</article>
 		`
+    }
+
+    private static changeInterface(pInterface: EInterface): void {
+        if (pInterface !== EInterface.movable) ElementMover.reset()
+        States.interface = pInterface
+        Datas.sheetProperties.push({setUIBlocksInterface: {interface: States.interface}})
+        States.isSaved = false
+        View.render()
     }
 }

@@ -14,6 +14,7 @@ import {TSheet} from '../types.js'
 // TODO anuler doit revenir en arrière sur les choix en réalité ajouter un historique
 // TODO passer sous vitejs ?
 // TODO finaliser elementManager
+// TODO finir passage au typescript
 export default class Home extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null

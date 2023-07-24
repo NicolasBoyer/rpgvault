@@ -3,6 +3,7 @@ import View from './view.js'
 import {ElementResizer} from '../../classes/elementResizer.js'
 import {ElementMover} from '../../classes/elementMover.js'
 import {ElementManager} from '../../classes/elementManager.js'
+import {EInterface} from '../../enum.js'
 
 /**
  * Fonctions relatives au statut du composant
@@ -11,7 +12,7 @@ export default class States {
     static editMode: boolean
     static notepadMode: boolean
     static isEditBlockHidden: boolean
-    static interface = 'hover'
+    static interface = EInterface.hover
     static isSaved = true
     static isDrawing: boolean = false
     static isZoomed: string | boolean = false

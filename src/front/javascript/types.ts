@@ -20,6 +20,7 @@ export type TSheetProperties = {
     deleteFont?: Record<string, string[]>
     setNotepad?: Record<string, string>
     setUIBlocksPosition?: Record<string, TPosition>
+    setUIBlocksInterface?: Record<string, string>
 }
 
 export type TInput = {

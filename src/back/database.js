@@ -86,6 +86,13 @@ export default class Database {
                 return await resolvers.getSheets()
             },
 
+            async setUIBlocksInterface(args) {
+                const isUIBlocksExists = (await resolvers.getSheets({id: args.id})).ui
+                const update = !isUIBlocksExists ? {$set: {ui: args}} : {$set: {'ui.interface': args.interface}}
+                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, update, {upsert: true})
+                return await resolvers.getSheets()
+            },
+
             async deleteFont(args) {
                 await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$pull: {fonts: {fontFamily: {$in: args.fonts}}}})
                 return await resolvers.getSheets()

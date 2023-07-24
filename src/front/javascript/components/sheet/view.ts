@@ -6,6 +6,7 @@ import {ElementResizer} from '../../classes/elementResizer.js'
 import {ElementManager} from '../../classes/elementManager.js'
 import Interface from './interface.js'
 import {HTMLElementEvent} from '../../types.js'
+import {EInterface} from '../../enum.js'
 
 /**
  * Fonctions de rendu du composant
@@ -23,7 +24,7 @@ export default class View {
 			</style>
 		`, document.head)
         render(html`			
-				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.notepadMode && 'notepadMode'} ${States.interface || 'hover'}" @click="${(pEvent: PointerEvent): void => {
+				<div style="position: relative;width: ${Sheet.containerWidth};height: ${Sheet.containerHeight};" class="wrapper ${States.editMode && 'editMode'} ${States.notepadMode && 'notepadMode'} ${States.interface || EInterface.hover}" @click="${(pEvent: PointerEvent): void => {
     if (States.editMode) ElementManager.select(pEvent)
     if (States.notepadMode) States.displayNotepadMode(false)
 }}">

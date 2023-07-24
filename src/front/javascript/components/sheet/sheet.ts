@@ -30,11 +30,6 @@ export default class Sheet extends HTMLElement {
             await Datas.save()
             View.render()
         })
-        // TODO a voir si on déplace ça
-        ShortcutManager.set(document.body, ['Tab'], (): void => {
-            States.interface = States.interface === 'hover' ? 'movable' : States.interface === 'movable' ? 'hidden' : 'hover'
-            View.render()
-        })
     }
 
     static setBackgroundImage(pImageSrc: string): void {
