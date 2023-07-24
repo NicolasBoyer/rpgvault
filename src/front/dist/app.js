@@ -731,7 +731,9 @@ class ElementMover {
         }
     }
     static moveByKey(pOffsetX, pOffsetY = 0) {
-        const selectedElement = ElementMover.elements[ElementMover.selectedSelectorId];
+        if (!ElementManager.selectedElementId)
+            return;
+        const selectedElement = ElementMover.elements[ElementManager.selectedElementId];
         const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform);
         const translateX = translate.m41 + pOffsetX;
         const translateY = translate.m42 + pOffsetY;

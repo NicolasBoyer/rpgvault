@@ -2,6 +2,7 @@ import {ShortcutManager} from './shortcutManager.js'
 import {ElementResizer} from './elementResizer.js'
 import {SHEETRPGElement, TPosition} from '../types.js'
 import States from '../components/sheet/states.js'
+import {ElementManager} from './elementManager.js'
 
 export class ElementMover {
     private static mouse: TPosition
@@ -77,7 +78,8 @@ export class ElementMover {
     }
 
     private static moveByKey(pOffsetX: number, pOffsetY = 0): void {
-        const selectedElement = ElementMover.elements[ElementMover.selectedSelectorId]
+        if (!ElementManager.selectedElementId) return
+        const selectedElement = ElementMover.elements[ElementManager.selectedElementId]
         const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform)
         const translateX = translate.m41 + pOffsetX
         const translateY = translate.m42 + pOffsetY
