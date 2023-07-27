@@ -16,34 +16,36 @@ export class ElementManager {
 
     static init(): void {
         (<TElement[]>Datas.sheet.inputs)?.concat(<TElement[]>Datas.sheet.images).forEach((pElement: TElement): void => {
-            const selectedElement: SHEETRPGElement = <SHEETRPGElement>document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`)
-            // TODO marche mais voir si on peut faire mieux l'idée ne passer qu'une fois
-            if (!selectedElement.getAttribute('data-movable')) {
-                ElementMover.init(selectedElement, {
-                    x: Sheet.containerLeft,
-                    y: Sheet.containerTop
-                }, (pMousePosition): void => {
-                    if (selectedElement.tagName === 'LABEL') {
-                        Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
-                    }
-                    if (selectedElement.tagName === 'DIV') {
-                        Datas.addImageValues(<TImage>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
-                    }
-                })
-                // TODO la fonction est appelé à chaque render il faut donc soir la limiter avec une variable soit l'appeler à un endroit qui ne l'appelle qu'une fois
-                // TODO ICI reste réparation de resizer et revues code comme move + changer ici le selected element qui n'est plus utilisé + voir si je déplace l'appel de cet init ailleurs ...
-                ElementResizer.init(selectedElement, {
-                    x: Sheet.containerLeft,
-                    y: Sheet.containerTop
-                }, (pMousePosition: TPosition): void => {
-                    if (selectedElement.tagName === 'LABEL') {
-                        Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
-                    }
-                    if (selectedElement.tagName === 'DIV') {
-                        Datas.addImageValues(<TImage>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
-                    }
-                })
-                selectedElement.setAttribute('data-movable', 'true')
+            if (pElement) {
+                const selectedElement: SHEETRPGElement = <SHEETRPGElement>document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`)
+                // TODO marche mais voir si on peut faire mieux l'idée ne passer qu'une fois
+                if (!selectedElement.getAttribute('data-movable')) {
+                    ElementMover.init(selectedElement, {
+                        x: Sheet.containerLeft,
+                        y: Sheet.containerTop
+                    }, (pMousePosition): void => {
+                        if (selectedElement.tagName === 'LABEL') {
+                            Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
+                        }
+                        if (selectedElement.tagName === 'DIV') {
+                            Datas.addImageValues(<TImage>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
+                        }
+                    })
+                    // TODO la fonction est appelé à chaque render il faut donc soir la limiter avec une variable soit l'appeler à un endroit qui ne l'appelle qu'une fois
+                    // TODO ICI reste réparation de resizer et revues code comme move + changer ici le selected element qui n'est plus utilisé + voir si je déplace l'appel de cet init ailleurs ...
+                    ElementResizer.init(selectedElement, {
+                        x: Sheet.containerLeft,
+                        y: Sheet.containerTop
+                    }, (pMousePosition: TPosition): void => {
+                        if (selectedElement.tagName === 'LABEL') {
+                            Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
+                        }
+                        if (selectedElement.tagName === 'DIV') {
+                            Datas.addImageValues(<TImage>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
+                        }
+                    })
+                    selectedElement.setAttribute('data-movable', 'true')
+                }
             }
         })
     }

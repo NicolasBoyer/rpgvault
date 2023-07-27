@@ -694,8 +694,11 @@ class ElementMover {
         ShortcutManager.set(pElement, ['Control', 'ArrowRight'], () => this.moveByKey(50));
         ShortcutManager.set(pElement, ['Control', 'ArrowLeft'], () => this.moveByKey(-50));
     }
-    static reset() {
-        document.body.removeEventListener('pointermove', this.pointerMove);
+    static resetElement(pId) {
+        if (ElementMover.elements[pId]) {
+            ElementMover.elements[pId].removeEventListener('pointerdown', this.pointerDown);
+            ElementMover.elements[pId].removeEventListener('pointerup', this.pointerUp);
+        }
     }
     static async pointerDown(pEvent) {
         ElementMover.isPointerDown = true;
@@ -750,31 +753,33 @@ ElementMover.isPointerDown = false;
 class ElementManager {
     static init() {
         Datas.sheet.inputs?.concat(Datas.sheet.images).forEach((pElement) => {
-            const selectedElement = document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`);
-            if (!selectedElement.getAttribute('data-movable')) {
-                ElementMover.init(selectedElement, {
-                    x: Sheet.containerLeft,
-                    y: Sheet.containerTop
-                }, (pMousePosition) => {
-                    if (selectedElement.tagName === 'LABEL') {
-                        Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
-                    }
-                    if (selectedElement.tagName === 'DIV') {
-                        Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
-                    }
-                });
-                ElementResizer.init(selectedElement, {
-                    x: Sheet.containerLeft,
-                    y: Sheet.containerTop
-                }, (pMousePosition) => {
-                    if (selectedElement.tagName === 'LABEL') {
-                        Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
-                    }
-                    if (selectedElement.tagName === 'DIV') {
-                        Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
-                    }
-                });
-                selectedElement.setAttribute('data-movable', 'true');
+            if (pElement) {
+                const selectedElement = document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`);
+                if (!selectedElement.getAttribute('data-movable')) {
+                    ElementMover.init(selectedElement, {
+                        x: Sheet.containerLeft,
+                        y: Sheet.containerTop
+                    }, (pMousePosition) => {
+                        if (selectedElement.tagName === 'LABEL') {
+                            Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
+                        }
+                        if (selectedElement.tagName === 'DIV') {
+                            Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio));
+                        }
+                    });
+                    ElementResizer.init(selectedElement, {
+                        x: Sheet.containerLeft,
+                        y: Sheet.containerTop
+                    }, (pMousePosition) => {
+                        if (selectedElement.tagName === 'LABEL') {
+                            Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
+                        }
+                        if (selectedElement.tagName === 'DIV') {
+                            Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio));
+                        }
+                    });
+                    selectedElement.setAttribute('data-movable', 'true');
+                }
             }
         });
     }
@@ -1054,6 +1059,8 @@ class Interface {
                 Datas.sheetProperties.push({ setUIBlocksPosition: setUIBlocksPosition });
             }, pElement);
         }
+        else
+            ElementMover.resetElement('editBlock');
     }
     static viewBlock() {
         return x `
@@ -1142,7 +1149,7 @@ class Interface {
 						<use href="#trash"></use>
 					</svg>
 				</a>
-				${elements(pElement, Datas.sheet.fonts.map((pFont) => ({
+				${elements(pElement, Datas.sheet.fonts && Datas.sheet.fonts.map((pFont) => ({
             name: pFont.fontFamily,
             value: pFont.fontFamily
         }))).filter((pEntry) => pElement.type || pElement.image && pElement[pEntry.id]).map((pEntry) => x `
@@ -1159,8 +1166,6 @@ class Interface {
 		`;
     }
     static changeInterface(pInterface) {
-        if (pInterface !== EInterface.movable)
-            ElementMover.reset();
         States.interface = pInterface;
         Datas.sheetProperties.push({ setUIBlocksInterface: { interface: States.interface } });
         States.isSaved = false;

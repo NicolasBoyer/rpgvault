@@ -33,7 +33,7 @@ export default class Interface {
                 setUIBlocksPosition[pElement.classList[0]] = pMousePosition
                 Datas.sheetProperties.push({setUIBlocksPosition: setUIBlocksPosition})
             }, pElement)
-        }
+        } else ElementMover.resetElement('editBlock')
     }
 
     static viewBlock(): TemplateResult {
@@ -125,10 +125,10 @@ export default class Interface {
 						<use href="#trash"></use>
 					</svg>
 				</a>
-				${elements(pElement, Datas.sheet.fonts!.map((pFont: TFont): { name: string, value: string } => ({
-    name: pFont.fontFamily,
-    value: pFont.fontFamily
-}))).filter((pEntry): unknown => pElement.type || pElement.image && pElement[pEntry.id]).map((pEntry): TemplateResult => html`
+				${elements(pElement, Datas.sheet.fonts && Datas.sheet.fonts.map((pFont: TFont): { name: string, value: string } => ({
+        name: pFont.fontFamily,
+        value: pFont.fontFamily
+    }))).filter((pEntry): unknown => pElement.type || pElement.image && pElement[pEntry.id]).map((pEntry): TemplateResult => html`
 					<fs-label
 							id="${pEntry.id}"
 							type="${pEntry.type}"
@@ -143,7 +143,6 @@ export default class Interface {
     }
 
     private static changeInterface(pInterface: EInterface): void {
-        if (pInterface !== EInterface.movable) ElementMover.reset()
         States.interface = pInterface
         Datas.sheetProperties.push({setUIBlocksInterface: {interface: States.interface}})
         States.isSaved = false

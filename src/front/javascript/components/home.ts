@@ -7,7 +7,6 @@ import {TSheet} from '../types.js'
 // TODO Suppr comment + pass sur ipad
 // TODO permettre plusieurs utilisateurs
 // TODO image comme un lien en choix si pas de place
-// TODO permettre le déplacement des zones d'édition
 // TODO parametre pour gérer zoom ou pas zoom
 // TODO dupliquer avec aucun ékément avec aucun texte ?
 // TODO améliorer notepade avec des onglets
@@ -15,6 +14,11 @@ import {TSheet} from '../types.js'
 // TODO passer sous vitejs ?
 // TODO finaliser elementManager
 // TODO finir passage au typescript
+// TODO pas de move sur tous les éléments quand on change d'interface
+// TODO bug sur le ctrl d ctrl move parfois
+// TODO ajouter possibilité de changer l'image
+// TODO Ajouter une grille ?
+// TODO ajouter masque mode cadre ?
 export default class Home extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null

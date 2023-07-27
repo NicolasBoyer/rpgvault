@@ -39,8 +39,11 @@ export class ElementMover {
         ShortcutManager.set(pElement, ['Control', 'ArrowLeft'], (): void => this.moveByKey(-50))
     }
 
-    static reset(): void {
-        document.body.removeEventListener('pointermove', this.pointerMove)
+    static resetElement(pId: string): void {
+        if (ElementMover.elements[pId]) {
+            ElementMover.elements[pId].removeEventListener('pointerdown', this.pointerDown)
+            ElementMover.elements[pId].removeEventListener('pointerup', this.pointerUp)
+        }
     }
 
     private static async pointerDown(pEvent: PointerEvent): Promise<void> {
