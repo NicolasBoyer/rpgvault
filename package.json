@@ -6,24 +6,24 @@
   "type": "module",
   "scripts": {
     "update": "npx npm-check-updates -u & npm i",
-    "dev": "nodemon -e ts --exec \"npx rollup -c & node src/back/dev.js\"",
-    "start": "rollup -c & node src/back/prod.js"
+    "dev:frontend": "vite",
+    "dev:backend": "nodemon --watch src/back src/back/dev.js",
+    "dev": "concurrently 'npm:dev:frontend' 'npm:dev:backend'",
+    "start": "vite build & node src/back/prod.js"
   },
   "author": "Nicolas Boyer",
   "license": "ISC",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "15.1.0",
-    "@rollup/plugin-terser": "0.4.3",
-    "@rollup/plugin-typescript": "11.1.2",
     "@types/node": "20.4.5",
     "@typescript-eslint/eslint-plugin": "6.2.0",
     "@typescript-eslint/parser": "6.2.0",
-    "eslint": "8.45.0",
-    "eslint-plugin-import": "2.27.5",
+    "concurrently": "8.2.0",
+    "eslint": "8.46.0",
+    "eslint-plugin-import": "2.28.0",
+    "livereload": "0.9.3",
     "mongodb": "5.7.0",
     "nodemon": "3.0.1",
-    "rollup": "3.26.3",
-    "tslib": "^2.6.1"
+    "vite": "4.4.7"
   },
   "dependencies": {
     "html2canvas": "1.4.1",
