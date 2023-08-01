@@ -2,27 +2,29 @@
   "name": "sheetrpg",
   "version": "1.0.0",
   "description": "",
-  "main": "src/back/dev.js",
+  "main": "src/back/dev.ts",
   "type": "module",
   "scripts": {
     "update": "npx npm-check-updates -u & npm i",
     "dev:frontend": "vite",
-    "dev:backend": "nodemon --watch src/back src/back/dev.js",
+    "dev:backend": "nodemon -w src/back -e ts -x \"ts-node --esm src/back/dev.ts\"",
     "dev": "concurrently 'npm:dev:frontend' 'npm:dev:backend'",
-    "start": "vite build & node src/back/prod.js"
+    "start": "vite build & node src/back/prod.ts"
   },
   "author": "Nicolas Boyer",
   "license": "ISC",
   "devDependencies": {
+    "@types/livereload": "^0.9.2",
     "@types/node": "20.4.5",
-    "@typescript-eslint/eslint-plugin": "6.2.0",
-    "@typescript-eslint/parser": "6.2.0",
+    "@typescript-eslint/eslint-plugin": "6.2.1",
+    "@typescript-eslint/parser": "6.2.1",
     "concurrently": "8.2.0",
     "eslint": "8.46.0",
     "eslint-plugin-import": "2.28.0",
     "livereload": "0.9.3",
     "mongodb": "5.7.0",
     "nodemon": "3.0.1",
+    "ts-node": "10.9.1",
     "vite": "4.4.7"
   },
   "dependencies": {

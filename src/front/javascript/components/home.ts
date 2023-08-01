@@ -14,7 +14,6 @@ import {TSheet} from '../types.js'
 // TODO passer sous vitejs ?
 // TODO finaliser elementManager
 // TODO finir passage au typescript
-// TODO pas de move sur tous les éléments quand on change d'interface
 // TODO bug sur le ctrl d ctrl move parfois
 // TODO ajouter possibilité de changer l'image
 // TODO Ajouter une grille ?
