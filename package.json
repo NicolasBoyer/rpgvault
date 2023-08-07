@@ -2,14 +2,13 @@
   "name": "sheetrpg",
   "version": "1.0.0",
   "description": "",
-  "main": "src/back/dev.ts",
   "type": "module",
   "scripts": {
     "update": "npx npm-check-updates -u & npm i",
     "dev:frontend": "vite",
     "dev:backend": "nodemon -w src/back -e ts -x \"ts-node --esm src/back/dev.ts\"",
     "dev": "concurrently 'npm:dev:frontend' 'npm:dev:backend'",
-    "start": "vite build & ts-node --transpileOnly --esm src/back/prod.ts"
+    "start": "vite build & ts-node --esm src/back/prod.ts"
   },
   "author": "Nicolas Boyer",
   "license": "ISC",
