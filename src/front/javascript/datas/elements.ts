@@ -1,17 +1,17 @@
 import {TElement, TElements, TFont} from '../types.js'
 
-export const elements = (pElement: TElement | TFont, pFonts: { name: string, value: string }[] | undefined): TElements[] => [
+export const elements = (pInfosElement: TElement | TFont, pFonts: { name: string, value: string }[] | undefined): TElements[] => [
     {
         id: 'id',
         type: 'hidden',
         name: 'id',
-        value: <string>pElement.id
+        value: <string>pInfosElement.id
     },
     {
         id: 'type',
         type: 'select',
         name: 'Type',
-        value: <string>pElement.type,
+        value: <string>pInfosElement.type,
         options: [
             {
                 name: 'Texte court',
@@ -29,26 +29,26 @@ export const elements = (pElement: TElement | TFont, pFonts: { name: string, val
         id: 'fontFamily',
         type: 'select',
         name: 'Police',
-        value: <string>pElement.fontFamily,
+        value: <string>pInfosElement.fontFamily,
         options: pFonts
     },
     {
         id: 'fontSize',
         type: 'number',
         name: 'Taille de la police',
-        value: <number>pElement.fontSize
+        value: <number>pInfosElement.fontSize
     },
     {
         id: 'color',
         type: 'color',
         name: 'Couleur de la police',
-        value: <string>pElement.color
+        value: <string>pInfosElement.color
     },
     {
         id: 'textAlign',
         type: 'select',
         name: 'Alignement',
-        value: <string>pElement.textAlign,
+        value: <string>pInfosElement.textAlign,
         options: [
             {
                 name: 'Gauche',
@@ -69,24 +69,24 @@ export const elements = (pElement: TElement | TFont, pFonts: { name: string, val
         id: 'width',
         type: 'number',
         name: 'Largeur',
-        value: <number>pElement.width
+        value: <number>pInfosElement.width
     },
     {
         id: 'height',
         type: 'number',
         name: 'Hauteur',
-        value: <number>pElement.height
+        value: <number>pInfosElement.height
     },
     {
         id: 'x',
         type: 'number',
         name: 'Abscisse',
-        value: <number>pElement.x
+        value: <number>pInfosElement.x
     },
     {
         id: 'y',
         type: 'number',
         name: 'Ordonnée',
-        value: <number>pElement.y
+        value: <number>pInfosElement.y
     }
 ]

@@ -104,14 +104,14 @@ export default class Interface {
 		`
     }
 
-    static selectBlock(pElement: TElement): TemplateResult {
+    static selectBlock(pInfosElement: TElement): TemplateResult {
         setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.selectBlock')))
         const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.selectBlock
         return html`
 			<article id="selectBlock" class="selectBlock${hasMoved ? ' hasMoved' : ''}" @click="${(pEvent: PointerEvent): void => pEvent.stopPropagation()}" style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.selectBlock.x}px, ${Datas.sheet.ui?.selectBlock.y}px);` : ''}">
 				<a href="#" role="button" class="cloneInput" @click="${(pEvent: PointerEvent): void => {
         pEvent.preventDefault()
-        ElementManager.clone(pEvent, pElement)
+        ElementManager.clone(pEvent)
     }}" title="Dupliquer (ctrl D)">
 					<svg class="clone">
 						<use href="#clone"></use>
@@ -119,22 +119,22 @@ export default class Interface {
 				</a>
 				<a href="#" role="button" class="deleteInput" @click="${(pEvent: PointerEvent): void => {
         pEvent.preventDefault()
-        ElementManager.delete(pElement.id)
+        ElementManager.delete()
     }}" title="Supprimer (Suppr)">
 					<svg class="trash">
 						<use href="#trash"></use>
 					</svg>
 				</a>
-				${elements(pElement, Datas.sheet.fonts && Datas.sheet.fonts.map((pFont: TFont): { name: string, value: string } => ({
+				${elements(pInfosElement, Datas.sheet.fonts && Datas.sheet.fonts.map((pFont: TFont): { name: string, value: string } => ({
         name: pFont.fontFamily,
         value: pFont.fontFamily
-    }))).filter((pEntry): unknown => pElement.type || pElement.image && pElement[pEntry.id]).map((pEntry): TemplateResult => html`
+    }))).filter((pEntry): unknown => pInfosElement.type || pInfosElement.image && pInfosElement[pEntry.id]).map((pEntry): TemplateResult => html`
 					<fs-label
 							id="${pEntry.id}"
 							type="${pEntry.type}"
 							name="${pEntry.name}"
 							value="${pEntry.value}"
-							@input="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => Datas.addInputValues(<TInput>pElement, pEntry.id, pEvent.target.value)}"
+							@input="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => Datas.addInputValues(<TInput>pInfosElement, pEntry.id, pEvent.target.value)}"
 							options="${JSON.stringify(pEntry.options)}"
 					></fs-label>
 				`)}

@@ -8,137 +8,109 @@ import {Caches} from './caches.js'
 import {ElementMover} from './elementMover.js'
 import {ElementResizer} from './elementResizer.js'
 import {SHEETRPGElement, TElement, TImage, TInput, TPosition} from '../types.js'
+import {EElementType} from '../enum.js'
 
 export class ElementManager {
-    // TODO a supprimer car le selected element change à chaque fois ou déclarer le selectedelement ailleur
-    // static #elementType
-    static selectedElementId: string | null
+    static selectedInfosElement: TElement
 
     static init(): void {
-        (<TElement[]>Datas.sheet.inputs)?.concat(<TElement[]>Datas.sheet.images).forEach((pElement: TElement): void => {
-            if (pElement) {
-                const selectedElement: SHEETRPGElement = <SHEETRPGElement>document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`)
-                // TODO marche mais voir si on peut faire mieux l'idée ne passer qu'une fois
-                if (!selectedElement.getAttribute('data-movable')) {
-                    ElementMover.init(selectedElement, {
+        (<TElement[]>Datas.sheet.inputs)?.concat(<TElement[]>Datas.sheet.images).forEach((pInfosElement: TElement): void => {
+            if (pInfosElement) {
+                const htmlElement: SHEETRPGElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
+                if (!htmlElement.getAttribute('data-initialized')) {
+                    ElementMover.init(htmlElement, {
                         x: Sheet.containerLeft,
                         y: Sheet.containerTop
                     }, (pMousePosition): void => {
-                        if (selectedElement.tagName === 'LABEL') {
-                            Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
+                        if (pInfosElement.elementType === EElementType.input) {
+                            Datas.addInputValues(<TInput>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
                         }
-                        if (selectedElement.tagName === 'DIV') {
-                            Datas.addImageValues(<TImage>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
+                        if (pInfosElement.elementType === EElementType.image) {
+                            Datas.addImageValues(<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
                         }
                     })
-                    // TODO la fonction est appelé à chaque render il faut donc soir la limiter avec une variable soit l'appeler à un endroit qui ne l'appelle qu'une fois
-                    // TODO ICI reste réparation de resizer et revues code comme move + changer ici le selected element qui n'est plus utilisé + voir si je déplace l'appel de cet init ailleurs ...
-                    ElementResizer.init(selectedElement, {
+                    ElementResizer.init(htmlElement, {
                         x: Sheet.containerLeft,
                         y: Sheet.containerTop
                     }, (pMousePosition: TPosition): void => {
-                        if (selectedElement.tagName === 'LABEL') {
-                            Datas.addInputValues(<TInput>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
+                        if (pInfosElement.elementType === EElementType.input) {
+                            Datas.addInputValues(<TInput>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
                         }
-                        if (selectedElement.tagName === 'DIV') {
-                            Datas.addImageValues(<TImage>pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
+                        if (pInfosElement.elementType === EElementType.image) {
+                            Datas.addImageValues(<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(<number>pMousePosition.width / Sheet.ratio), 'height', Math.round(<number>pMousePosition.height / Sheet.ratio))
                         }
                     })
-                    selectedElement.setAttribute('data-movable', 'true')
+                    htmlElement.setAttribute('data-initialized', 'true')
                 }
             }
         })
     }
 
-    static delete(pElementId: string): void {
-        const selectedElement = document.querySelector(`label[for='${pElementId}'], div[id='${pElementId}']`)
-        if (selectedElement?.tagName === 'LABEL') {
-            const index = <number>Datas.sheet.inputs?.findIndex((input: TInput): boolean => input.id === pElementId)
-            if (index !== -1) {
-                Datas.sheet.inputs?.splice(index, 1)
-                Datas.deletedInputs.push(pElementId)
-            }
-        }
-        if (selectedElement?.tagName === 'DIV') {
-            const index = <number>Datas.sheet.images?.findIndex((image: TImage): boolean => image.id === pElementId)
-            if (index !== -1) {
-                Datas.sheet.images?.splice(index, 1)
-                Datas.deletedImages.push(pElementId)
-            }
+    static delete(): void {
+        const selectedInfosElementId = this.selectedInfosElement.id
+        switch (this.selectedInfosElement.elementType) {
+        case EElementType.input:
+            Datas.sheet.inputs = Datas.sheet.inputs?.filter((input: TInput): boolean => input.id !== selectedInfosElementId)
+            Datas.deletedInputs.push(selectedInfosElementId)
+            break
+        case EElementType.image:
+            Datas.sheet.images = Datas.sheet.images?.filter((image: TImage): boolean => image.id !== selectedInfosElementId)
+            Datas.deletedImages.push(selectedInfosElementId)
+            break
         }
         States.isSaved = false
         View.render()
     }
 
-    static async clone(pEvent: Event, pElement: TElement): Promise<void> {
-        const selectedElement: HTMLElement | null = document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`)
-        if (selectedElement?.tagName === 'LABEL') {
-            Datas.addInputValues(<TInput>{...pElement, id: Utils.generateId().toString()})
+    static async clone(pEvent: Event): Promise<void> {
+        const clone: TElement = {...this.selectedInfosElement, id: Utils.generateId().toString(), elementType: this.selectedInfosElement.elementType}
+        switch (this.selectedInfosElement.elementType) {
+        case EElementType.input:
+            Datas.addInputValues(<TInput>clone)
+            break
+        case EElementType.image:
+            await Datas.addImageValues(<TImage>clone)
+            break
         }
-        if (selectedElement?.tagName === 'DIV') {
-            await Datas.addImageValues(<TImage>{...pElement, id: Utils.generateId().toString()})
-        }
-        this.select(pEvent, pElement)
+        this.select(pEvent, clone)
     }
 
-    static copy(pElement: TElement): void {
-        Caches.set(false, 'elementDatas', pElement)
+    static copy(): void {
+        Caches.set(false, 'elementDatas', this.selectedInfosElement)
     }
 
-    static async paste(pEvent: Event, pElement: TElement): Promise<void> {
-        const selectedElement: HTMLElement | null = document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`)
+    static async paste(pEvent: Event): Promise<void> {
         const mousePosition = Utils.getMousePosition()
-        const element: TElement = {
+        const infosElement: TElement = {
             ...<TElement>(await Caches.get('elementDatas')),
             x: Math.round((mousePosition.x - Sheet.containerLeft) / Sheet.ratio),
             y: Math.round((mousePosition.y - Sheet.containerTop) / Sheet.ratio),
-            id: Utils.generateId().toString()
+            id: Utils.generateId().toString(),
+            elementType: this.selectedInfosElement.elementType
         }
-        if (selectedElement?.tagName === 'LABEL') {
-            Datas.addInputValues(<TInput>element)
+        switch (this.selectedInfosElement.elementType) {
+        case EElementType.input:
+            Datas.addInputValues(<TInput>infosElement)
+            break
+        case EElementType.image:
+            await Datas.addImageValues(<TImage>infosElement)
+            break
         }
-        if (selectedElement?.tagName === 'DIV') {
-            await Datas.addImageValues(<TImage>element)
-        }
-        this.select(pEvent, element)
+        this.select(pEvent, infosElement)
     }
 
-    static select(pEvent: Event | null = null, pElement: TElement | null = null): void {
+    static select(pEvent: Event | null = null, pInfosElement: TElement | null = null): void {
         if (States.editMode) {
             if (pEvent) pEvent.stopPropagation()
-            // TODO à revoir au niveau des types
             // TODO aussi revue du code pour etre sur que les choix de type soit les bons
-            this.selectedElementId = pElement?.id || null
+            this.selectedInfosElement = <TElement>pInfosElement
             View.render()
-            if (pElement) {
-                const selectedElement: HTMLElement = <HTMLElement>document.querySelector(`label[for='${pElement.id}'], div[id='${pElement.id}']`)
-                // this.#elementType = selectedElement.tagName === 'LABEL' ? 'input' : 'image'
-                // ElementMover.init(selectedElement, {
-                //	x: Sheet.containerLeft,
-                //	y: Sheet.containerTop
-                // }, (pMousePosition) => {
-                //	if (this.#elementType === 'input') {
-                //		Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
-                //	}
-                //	if (this.#elementType === 'image') {
-                //		Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
-                //	}
-                // })
-                // ElementResizer.init(selectedElement, {
-                //	x: Sheet.containerLeft,
-                //	y: Sheet.containerTop
-                // }, (pMousePosition) => {
-                //	if (this.#elementType === 'input') {
-                //		Datas.addInputValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio))
-                //	}
-                //	if (this.#elementType === 'image') {
-                //		Datas.addImageValues(pElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio), 'width', Math.round(pMousePosition.width / Sheet.ratio), 'height', Math.round(pMousePosition.height / Sheet.ratio))
-                //	}
-                // })
-                ShortcutManager.set(selectedElement, ['Control', 'd'], (pEvent: KeyboardEvent): Promise<void> => this.clone(pEvent, pElement))
-                ShortcutManager.set(selectedElement, ['Control', 'c'], (): void => this.copy(pElement))
-                ShortcutManager.set(document.body, ['Control', 'v'], (pEvent: KeyboardEvent): Promise<void> => this.paste(pEvent, pElement))
-                ShortcutManager.set(selectedElement, ['Delete'], (): void => this.delete(<string>this.selectedElementId))
+            if (pInfosElement) {
+                const selectedElement: HTMLElement = <HTMLElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
+                ShortcutManager.set(selectedElement, ['Control', 'd'], (pEvent: KeyboardEvent): Promise<void> => this.clone(pEvent))
+                ShortcutManager.set(selectedElement, ['Control', 'c'], (): void => this.copy())
+                ShortcutManager.set(document.body, ['Control', 'v'], (pEvent: KeyboardEvent): Promise<void> => this.paste(pEvent))
+                ShortcutManager.set(selectedElement, ['Delete'], (): void => this.delete())
             }
         }
     }

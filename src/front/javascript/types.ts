@@ -42,6 +42,7 @@ export type TInput = {
     name?: never
     fontUrl?: never
     fontUrl_url?: never
+    elementType: string
 }
 
 export type TImage = {
@@ -63,6 +64,7 @@ export type TImage = {
     name?: never
     fontUrl?: never
     fontUrl_url?: never
+    elementType: string
 }
 
 export type TFont = {

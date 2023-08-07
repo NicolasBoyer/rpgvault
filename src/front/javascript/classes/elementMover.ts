@@ -81,8 +81,8 @@ export class ElementMover {
     }
 
     private static moveByKey(pOffsetX: number, pOffsetY = 0): void {
-        if (!ElementManager.selectedElementId) return
-        const selectedElement = ElementMover.elements[ElementManager.selectedElementId]
+        if (!ElementManager.selectedInfosElement?.id) return
+        const selectedElement = ElementMover.elements[ElementManager.selectedInfosElement.id]
         const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform)
         const translateX = translate.m41 + pOffsetX
         const translateY = translate.m42 + pOffsetY

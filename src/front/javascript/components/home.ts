@@ -11,9 +11,6 @@ import {TSheet} from '../types.js'
 // TODO dupliquer avec aucun ékément avec aucun texte ?
 // TODO améliorer notepade avec des onglets
 // TODO anuler doit revenir en arrière sur les choix en réalité ajouter un historique
-// TODO passer sous vitejs ?
-// TODO finaliser elementManager
-// TODO finir passage au typescript
 // TODO bug sur le ctrl d ctrl move parfois
 // TODO ajouter possibilité de changer l'image
 // TODO Ajouter une grille ?

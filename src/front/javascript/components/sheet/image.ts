@@ -6,6 +6,7 @@ import {Drawer} from '../../classes/drawer.js'
 import {html} from 'lit'
 import {ElementManager} from '../../classes/elementManager.js'
 import {HTMLElementEvent, TImage} from '../../types.js'
+import {EElementType} from '../../enum.js'
 
 /**
  * Contient toutes les fonctions relatives aux possibilités de l'image
@@ -14,7 +15,10 @@ export default class Image {
     static add(): void {
         States.displayEditBlock(false)
         Drawer.init(<HTMLElement>Sheet.element.querySelector('.wrapper'), {x: Sheet.containerLeft, y: Sheet.containerTop}, async (pMousePosition, pEvent): Promise<void> => {
-            const image: TImage = {id: Utils.generateId().toString()}
+            const image: TImage = {
+                id: Utils.generateId().toString(),
+                elementType: EElementType.image
+            }
             let file: File
             Utils.confirm(
                 html`

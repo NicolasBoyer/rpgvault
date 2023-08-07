@@ -54,7 +54,7 @@ export default class View {
 					` : ''}
 				`}
 				${Datas.sheet.inputs?.map((pInput): TemplateResult => html`
-							<label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${ElementManager.selectedElementId === pInput.id ? 'selected' : ''}">
+							<label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${ElementManager.selectedInfosElement?.id === pInput.id ? 'selected' : ''}">
 								${pInput.type === 'textarea' ? html`
 									<textarea
 											id="${pInput.id}"
@@ -76,13 +76,13 @@ export default class View {
 											@click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, pInput)}"
 									/>
 								`}
-								${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedElementId !== pInput.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
+								${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedInfosElement?.id !== pInput.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
 							</label>
-							${ElementManager.selectedElementId === pInput.id ? Interface.selectBlock(pInput) : ''}
+							${ElementManager.selectedInfosElement?.id === pInput.id ? Interface.selectBlock(pInput) : ''}
 						`
     )}
 				${Datas.sheet.images?.map((pImage): TemplateResult => html`
-							<div id="${pImage.id}" style="transform: translate(${<number>pImage.x * Sheet.ratio}px, ${<number>pImage.y * Sheet.ratio}px);width: ${<number>pImage.width * Sheet.ratio}px;height: ${<number>pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedElementId === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}" @click="${(pEvent: PointerEvent): void => {
+							<div id="${pImage.id}" style="transform: translate(${<number>pImage.x * Sheet.ratio}px, ${<number>pImage.y * Sheet.ratio}px);width: ${<number>pImage.width * Sheet.ratio}px;height: ${<number>pImage.height * Sheet.ratio}px;" class="image ${ElementManager.selectedInfosElement?.id === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}" @click="${(pEvent: PointerEvent): void => {
     if (States.editMode) ElementManager.select(pEvent, pImage)
     else {
         if (!States.isZoomed) States.isZoomed = pImage.id
@@ -91,9 +91,9 @@ export default class View {
     }
 }}">
 								<div style="background-image: url(${pImage.image});"></div>
-								${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedElementId !== pImage.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
+								${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedInfosElement?.id !== pImage.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
 							</div>
-							${ElementManager.selectedElementId === pImage.id ? Interface.selectBlock(pImage) : ''}
+							${ElementManager.selectedInfosElement?.id === pImage.id ? Interface.selectBlock(pImage) : ''}
 						`
     )}
 			</div>

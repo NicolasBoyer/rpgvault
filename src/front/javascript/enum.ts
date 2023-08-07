@@ -3,3 +3,8 @@ export enum EInterface {
     movable = 'movable',
     hidden = 'hidden'
 }
+
+export enum EElementType {
+    image = 'image',
+    input = 'input'
+}

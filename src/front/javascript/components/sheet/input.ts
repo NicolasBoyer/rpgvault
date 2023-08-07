@@ -5,6 +5,7 @@ import States from './states.js'
 import Sheet from './sheet.js'
 import {ElementManager} from '../../classes/elementManager.js'
 import {TInput} from '../../types.js'
+import {EElementType} from '../../enum.js'
 
 /**
  * Contient toutes les fonctions relatives aux possibilités de l'input
@@ -17,7 +18,8 @@ export default class Input {
             const inputId = Utils.generateId().toString()
             const input = {
                 id: inputId,
-                type: 'text'
+                type: 'text',
+                elementType: EElementType.input
             }
             await Datas.addInputValues(<TInput>input, 'x', Math.round(pMousePosition.startX / Sheet.ratio), 'y', Math.round(pMousePosition.startY / Sheet.ratio), 'width', Math.round(pMousePosition.x / Sheet.ratio - pMousePosition.startX / Sheet.ratio), 'height', Math.round(pMousePosition.y / Sheet.ratio - pMousePosition.startY / Sheet.ratio))
             ElementManager.select(pEvent, <TInput>input)
