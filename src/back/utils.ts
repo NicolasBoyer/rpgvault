@@ -1,5 +1,4 @@
 import fs from 'fs/promises'
-import {isDev} from './dev.js'
 
 const fromSrc = (pFile: string): string => `src/${pFile}`
 const fromTemplate = (pFile: string): string => fromSrc(`front/html/templates/${pFile}`)
@@ -21,7 +20,7 @@ export class Utils {
         let template = await fs.readFile(fromTemplate(pTemplateHtml), 'utf8')
         template = replaceTagAndGetHtml(template, '§§title§§', `<div class="subtitle" data-replaced-title>${pTitle}</div>`)
         template = replaceTagAndGetHtml(template, '§§className§§', pClassName)
-        if (isDev) {
+        if (process.env.NODE_ENV === 'dev') {
             template = replaceTagAndGetHtml(template, '§§scripts§§', `
 <script crossorigin="anonymous" defer="defer" src="http://localhost:5173/src/front/javascript/app.ts" type="module"></script>
 <script>
