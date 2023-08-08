@@ -15,6 +15,7 @@ import {TSheet} from '../types.js'
 // TODO ajouter possibilité de changer l'image
 // TODO Ajouter une grille ?
 // TODO ajouter masque mode cadre ?
+// TODO pas de ragrandissement des resizer lors du resize de la page
 export default class Home extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null
