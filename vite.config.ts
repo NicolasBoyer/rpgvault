@@ -7,7 +7,7 @@ export default defineConfig({
         rollupOptions: {
             input: 'src/front/javascript/app.ts',
             output: {
-                entryFileNames: 'app.js'
+                entryFileNames: 'app.min.js'
             }
         }
     }
