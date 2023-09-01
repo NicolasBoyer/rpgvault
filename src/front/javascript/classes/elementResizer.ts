@@ -47,6 +47,11 @@ export class ElementResizer {
         }
         this.selectedSelectorId = pElement.selector.id
         window.addEventListener('resize', (): void => this.resetHandler(pElement))
+        let wait: NodeJS.Timeout
+        window.addEventListener('resize', (): void => {
+            clearTimeout(wait)
+            wait = setTimeout((): void => this.resetHandler(pElement), 200)
+        })
         this.resetHandler(pElement)
         document.body.addEventListener('pointermove', this.pointerMove)
         document.body.addEventListener('pointerup', this.pointerUp)
@@ -116,7 +121,7 @@ export class ElementResizer {
     private static async pointerUp(): Promise<void> {
         if (ElementResizer.isPointerDown) {
             const element = ElementResizer.elements[ElementResizer.selectedSelectorId]
-            await element.resizerCallback({
+            element.resizerCallback({
                 x: ElementResizer.mouse.translateX,
                 y: ElementResizer.mouse.translateY,
                 width: parseInt(element.selector.style.width),
