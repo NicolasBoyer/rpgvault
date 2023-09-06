@@ -1,8 +1,8 @@
-import {Utils} from '../../classes/utils.js'
+import { Utils } from '../../classes/utils.js'
 import States from './states.js'
 import View from './view.js'
-import {Caches} from '../../classes/caches.js'
-import {TImage, TInput, TSheet, TSheetProperties} from '../../types.js'
+import { Caches } from '../../classes/caches.js'
+import { TImage, TInput, TSheet, TSheetProperties } from '../../types.js'
 
 /**
  * Fonctions permettant de gérer les données.
@@ -21,12 +21,12 @@ export default class Datas {
     static async init(): Promise<void> {
         Utils.loader(true)
         const splitUrl = location.pathname.split('/')
-        const sheets = <TSheet[]>(await Caches.get('sheets') || await Utils.request('/db', 'POST', {body: '{ "getSheets": "" }'}))
+        const sheets = <TSheet[]>((await Caches.get('sheets')) || (await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })))
         Caches.set(true, 'sheets', sheets)
         this.sheet = <TSheet>sheets.find((pSheet): boolean => pSheet.slug === splitUrl[splitUrl.length - 1])
         // TODO si pas de sheet retourner une 404
         this.id = <string>this.sheet._id
-        this.sheet = <TSheet>(await Caches.get(this.id) || this.sheet)
+        this.sheet = <TSheet>((await Caches.get(this.id)) || this.sheet)
         await this.cacheResources()
     }
 
@@ -37,7 +37,7 @@ export default class Datas {
 
     static async saveNotepad(text: string): Promise<void> {
         this.sheet.notepad = text
-        this.sheetProperties = [{setNotepad: {text}}]
+        this.sheetProperties = [{ setNotepad: { text } }]
         await this.save()
     }
 
@@ -76,36 +76,6 @@ export default class Datas {
         View.render()
     }
 
-    private static async cacheResources(): Promise<void> {
-        const cache = <TSheet>await Caches.get(this.id)
-        if (Utils.isValidHttpUrl(<string>this.sheet.backgroundImage)) {
-            this.sheet.backgroundImage_url = this.sheet.backgroundImage
-            this.sheet.backgroundImage = cache?.backgroundImage || this.sheet.backgroundImage
-            if (cache?.backgroundImage !== this.sheet.backgroundImage && cache?.backgroundImage_url !== this.sheet.backgroundImage || !cache) this.sheet.backgroundImage = <string>(await Utils.urlToBase64(<string>this.sheet.backgroundImage))
-        }
-        if (this.sheet.images) {
-            for (let i = 0; i < this.sheet.images.length; i++) {
-                const image = this.sheet.images[i]
-                if (Utils.isValidHttpUrl(<string>image.image)) {
-                    image.image_url = image.image
-                    image.image = cache?.images && cache?.images[i]?.image || image.image
-                    if (cache?.images && cache?.images[i]?.image !== image.image && cache?.images && cache?.images[i]?.image_url !== image.image || !cache) image.image = await Utils.urlToBase64(<string>image.image)
-                }
-            }
-        }
-        if (this.sheet.fonts) {
-            for (let i = 0; i < this.sheet.fonts.length; i++) {
-                const font = this.sheet.fonts[i]
-                if (Utils.isValidHttpUrl(<string>font.fontUrl)) {
-                    font.fontUrl_url = font.fontUrl
-                    font.fontUrl = cache?.fonts && cache?.fonts[i]?.fontUrl_url || font.fontUrl
-                    if (cache?.fonts && cache.fonts[i]?.fontUrl !== font.fontUrl && cache?.fonts[i]?.fontUrl_url !== font.fontUrl || !cache) font.fontUrl = await Utils.urlToBase64(<string>font.fontUrl)
-                }
-            }
-        }
-        Caches.set(true, this.id, this.sheet)
-    }
-
     static async save(pInput: TInput | null = null): Promise<void> {
         this.isSaving = true
         const body = []
@@ -115,8 +85,8 @@ export default class Datas {
                 setInput: {
                     id: this.id,
                     inputId: pInput.id,
-                    input: pInput
-                }
+                    input: pInput,
+                },
             })
         })
         if (!pInput) {
@@ -124,8 +94,8 @@ export default class Datas {
                 body.push({
                     deleteInput: {
                         id: this.id,
-                        inputId: pInputId
-                    }
+                        inputId: pInputId,
+                    },
                 })
             })
             if (this.changedImages) {
@@ -142,8 +112,8 @@ export default class Datas {
                         setImage: {
                             id: this.id,
                             imageId: image.id,
-                            image: image
-                        }
+                            image: image,
+                        },
                     })
                 }
             }
@@ -151,19 +121,19 @@ export default class Datas {
                 body.push({
                     deleteImage: {
                         id: this.id,
-                        imageId: pImageId
-                    }
+                        imageId: pImageId,
+                    },
                 })
             })
             for (const property of this.sheetProperties) {
                 const value = Object.values(property)[0]
                 if (Object.keys(property)[0] === 'setBackgroundImage') (<Record<string, string | Blob>>value).image = await Utils.uploadFileAndGetUrl((<Record<string, string | Blob>>value).image as Blob)
-                if (Object.keys(property)[0] === 'setFont') value.fontUrl = await Utils.uploadFileAndGetUrl(value.fontUrl as Blob, value.name as string);
-                (<Record<string, string> | Record<string, string | Blob> | Record<string, string[]>>value).id = this.id
+                if (Object.keys(property)[0] === 'setFont') value.fontUrl = await Utils.uploadFileAndGetUrl(value.fontUrl as Blob, value.name as string)
+                ;(<Record<string, string> | Record<string, string | Blob> | Record<string, string[]>>value).id = this.id
                 body.push(property)
             }
         }
-        const sheets = <TSheet[] | undefined>(await Utils.request('/db', 'POST', {body: JSON.stringify(body)}) as unknown as [TSheet[]]).pop()
+        const sheets = <TSheet[] | undefined>((await Utils.request('/db', 'POST', { body: JSON.stringify(body) })) as unknown as [TSheet[]]).pop()
         if (sheets) {
             this.sheet = <TSheet>sheets.find((pSheet): boolean => pSheet._id === this.id)
             await Caches.set(true, 'sheets', sheets)
@@ -176,5 +146,35 @@ export default class Datas {
             this.isSaving = false
             States.isSaved = true
         }
+    }
+
+    private static async cacheResources(): Promise<void> {
+        const cache = <TSheet>await Caches.get(this.id)
+        if (Utils.isValidHttpUrl(<string>this.sheet.backgroundImage)) {
+            this.sheet.backgroundImage_url = this.sheet.backgroundImage
+            this.sheet.backgroundImage = cache?.backgroundImage || this.sheet.backgroundImage
+            if ((cache?.backgroundImage !== this.sheet.backgroundImage && cache?.backgroundImage_url !== this.sheet.backgroundImage) || !cache) this.sheet.backgroundImage = <string>await Utils.urlToBase64(<string>this.sheet.backgroundImage)
+        }
+        if (this.sheet.images) {
+            for (let i = 0; i < this.sheet.images.length; i++) {
+                const image = this.sheet.images[i]
+                if (Utils.isValidHttpUrl(<string>image.image)) {
+                    image.image_url = image.image
+                    image.image = (cache?.images && cache?.images[i]?.image) || image.image
+                    if ((cache?.images && cache?.images[i]?.image !== image.image && cache?.images && cache?.images[i]?.image_url !== image.image) || !cache) image.image = await Utils.urlToBase64(<string>image.image)
+                }
+            }
+        }
+        if (this.sheet.fonts) {
+            for (let i = 0; i < this.sheet.fonts.length; i++) {
+                const font = this.sheet.fonts[i]
+                if (Utils.isValidHttpUrl(<string>font.fontUrl)) {
+                    font.fontUrl_url = font.fontUrl
+                    font.fontUrl = (cache?.fonts && cache?.fonts[i]?.fontUrl_url) || font.fontUrl
+                    if ((cache?.fonts && cache.fonts[i]?.fontUrl !== font.fontUrl && cache?.fonts[i]?.fontUrl_url !== font.fontUrl) || !cache) font.fontUrl = await Utils.urlToBase64(<string>font.fontUrl)
+                }
+            }
+        }
+        Caches.set(true, this.id, this.sheet)
     }
 }

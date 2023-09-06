@@ -1,9 +1,11 @@
-import {html, render} from 'lit'
+import { html, render } from 'lit'
 
 export default class Confirm extends HTMLElement {
     private message = ''
 
-    static get observedAttributes(): [string] { return ['open'] }
+    static get observedAttributes(): [string] {
+        return ['open']
+    }
 
     get open(): boolean {
         return this.hasAttribute('open')
@@ -20,7 +22,7 @@ export default class Confirm extends HTMLElement {
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-        if ((name === 'open') && oldValue !== newValue) {
+        if (name === 'open' && oldValue !== newValue) {
             this.style.display = ''
             setTimeout((): void => this.render(), 50)
         }
@@ -36,24 +38,36 @@ export default class Confirm extends HTMLElement {
     }
 
     private render(): void {
-        render(html`
-						<dialog ?open="${this.open}"> 
-								<article>
-										${this.message} 
-										<footer>
-												<a role="button" class="secondary" @click="${(pEvent: PointerEvent): void => {
-        pEvent.preventDefault()
-        this.dispatchEvent(new CustomEvent('modalCancel'))
-        this.closeDialog()
-    }}">Cancel</a>
-																	<a role="button" @click="${(pEvent: PointerEvent): void => {
-        pEvent.preventDefault()
-        this.dispatchEvent(new CustomEvent('modalConfirm'))
-        this.closeDialog()
-    }}">Confirm</a>
-										</footer>
-								</article>
-						</dialog>
-		`, this)
+        render(
+            html`
+                <dialog ?open="${this.open}">
+                    <article>
+                        ${this.message}
+                        <footer>
+                            <a
+                                role="button"
+                                class="secondary"
+                                @click="${(pEvent: PointerEvent): void => {
+                                    pEvent.preventDefault()
+                                    this.dispatchEvent(new CustomEvent('modalCancel'))
+                                    this.closeDialog()
+                                }}"
+                                >Cancel</a
+                            >
+                            <a
+                                role="button"
+                                @click="${(pEvent: PointerEvent): void => {
+                                    pEvent.preventDefault()
+                                    this.dispatchEvent(new CustomEvent('modalConfirm'))
+                                    this.closeDialog()
+                                }}"
+                                >Confirm</a
+                            >
+                        </footer>
+                    </article>
+                </dialog>
+            `,
+            this
+        )
     }
 }

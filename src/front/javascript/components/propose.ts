@@ -1,9 +1,11 @@
-import {html, render, TemplateResult} from 'lit'
+import { html, render, TemplateResult } from 'lit'
 
 export default class Propose extends HTMLElement {
     private input: HTMLInputElement | null = null
 
-    static get observedAttributes(): [string] { return ['list'] }
+    static get observedAttributes(): [string] {
+        return ['list']
+    }
 
     get list(): string | null {
         return this.getAttribute('list')
@@ -19,7 +21,7 @@ export default class Propose extends HTMLElement {
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-        if ((name === 'list') && oldValue !== newValue) this.render()
+        if (name === 'list' && oldValue !== newValue) this.render()
     }
 
     private resetList(pText: string): void {
@@ -31,27 +33,33 @@ export default class Propose extends HTMLElement {
 
     private render(): void {
         const list = this.list?.split(',').filter((pEntry: string): string => pEntry)
-        render(list?.length ? html`
-			<div class='propose'>
-				${list.map(
-        (pText: string): TemplateResult => html`
-							<a
-									href="#"
-									@click="${(pEvent: PointerEvent): void => {
-        pEvent.preventDefault()
-        this.resetList(pText)
-    }}"
-									@keyup="${(pEvent: Event): void => {
-        const keyboardEvent = <KeyboardEvent>pEvent
-        const link = <HTMLElement>pEvent.target
-        if (keyboardEvent.key === 'ArrowDown' && link.nextElementSibling) (<HTMLElement>link.nextElementSibling).focus()
-        if (keyboardEvent.key === 'ArrowUp' && link.previousElementSibling) (<HTMLElement>link.nextElementSibling).focus()
-        if (keyboardEvent.key === 'Enter') this.resetList(pText)
-    }}"
-							>${pText}</a>
-						`)
-}
-			</div>
-		` : html``, this)
+        render(
+            list?.length
+                ? html`
+                      <div class="propose">
+                          ${list.map(
+                              (pText: string): TemplateResult => html`
+                                  <a
+                                      href="#"
+                                      @click="${(pEvent: PointerEvent): void => {
+                                          pEvent.preventDefault()
+                                          this.resetList(pText)
+                                      }}"
+                                      @keyup="${(pEvent: Event): void => {
+                                          const keyboardEvent = <KeyboardEvent>pEvent
+                                          const link = <HTMLElement>pEvent.target
+                                          if (keyboardEvent.key === 'ArrowDown' && link.nextElementSibling) (<HTMLElement>link.nextElementSibling).focus()
+                                          if (keyboardEvent.key === 'ArrowUp' && link.previousElementSibling) (<HTMLElement>link.nextElementSibling).focus()
+                                          if (keyboardEvent.key === 'Enter') this.resetList(pText)
+                                      }}"
+                                      >${pText}</a
+                                  >
+                              `
+                          )}
+                      </div>
+                  `
+                : html``,
+            this
+        )
     }
 }

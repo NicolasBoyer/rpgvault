@@ -1,9 +1,11 @@
-import {html, render} from 'lit'
+import { html, render } from 'lit'
 
 export default class Toast extends HTMLElement {
     private messageProperty: string | null = null
 
-    static get observedAttributes(): [string] { return ['visible'] }
+    static get observedAttributes(): [string] {
+        return ['visible']
+    }
 
     get type(): string | null {
         return this.getAttribute('type')
@@ -35,14 +37,10 @@ export default class Toast extends HTMLElement {
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string): void {
-        if ((name === 'visible') && oldValue !== newValue) this.render()
+        if (name === 'visible' && oldValue !== newValue) this.render()
     }
 
     private render(): void {
-        render(html`
-						<div class='toast ${this.type} ${this.visible}' role='alert'>
-							${this.messageProperty}
-						</div>
-		`, this)
+        render(html` <div class="toast ${this.type} ${this.visible}" role="alert">${this.messageProperty}</div> `, this)
     }
 }

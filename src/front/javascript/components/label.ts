@@ -1,7 +1,9 @@
-import {html, render, TemplateResult} from 'lit'
+import { html, render, TemplateResult } from 'lit'
 
 export default class Label extends HTMLElement {
-    static get observedAttributes(): [string] { return ['value'] }
+    static get observedAttributes(): [string] {
+        return ['value']
+    }
 
     get name(): string | null {
         return this.getAttribute('name')
@@ -47,20 +49,21 @@ export default class Label extends HTMLElement {
     }
 
     private render(): void {
-        render(html`
-			<label for="${this.id}" @click="${(pEvent: PointerEvent): void => pEvent.stopPropagation()}">
-				<span>${this.name}</span>
-				${this.type === 'select' ? html`
-					<select id="${this.id}" title="${this.name}">
-						<option value="" selected>Choisir un ${this.name}</option>
-						${this.options?.map((pOption: Record<string, unknown>): TemplateResult => html`
-							<option ?selected="${this.value === pOption.value}" value="${pOption.value}">${pOption.name}</option>
-						`)}
-					</select>
-				` : html`
-					<input type="${this.type}" id="${this.id}" name="${this.id}" value="${this.value}" title="${this.name}"/>
-				`}
-			</label>
-		`, <HTMLElement | DocumentFragment>this)
+        render(
+            html`
+                <label for="${this.id}" @click="${(pEvent: PointerEvent): void => pEvent.stopPropagation()}">
+                    <span>${this.name}</span>
+                    ${this.type === 'select'
+                        ? html`
+                              <select id="${this.id}" title="${this.name}">
+                                  <option value="" selected>Choisir un ${this.name}</option>
+                                  ${this.options?.map((pOption: Record<string, unknown>): TemplateResult => html` <option ?selected="${this.value === pOption.value}" value="${pOption.value}">${pOption.name}</option> `)}
+                              </select>
+                          `
+                        : html` <input type="${this.type}" id="${this.id}" name="${this.id}" value="${this.value}" title="${this.name}" /> `}
+                </label>
+            `,
+            <HTMLElement | DocumentFragment>this
+        )
     }
 }

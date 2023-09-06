@@ -1,7 +1,9 @@
-import {html, render} from 'lit'
+import { html, render } from 'lit'
 
 export default class Loader extends HTMLElement {
-    static get observedAttributes(): [string] { return ['visible'] }
+    static get observedAttributes(): [string] {
+        return ['visible']
+    }
 
     get visible(): boolean {
         return this.hasAttribute('visible')

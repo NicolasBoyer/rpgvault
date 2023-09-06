@@ -1,17 +1,17 @@
-import {html, render} from 'lit'
+import { html, render } from 'lit'
 
 export default class Header extends HTMLElement {
+    constructor() {
+        super()
+        this.render()
+    }
+
     get src(): string | null {
         return this.getAttribute('src')
     }
 
     get alt(): string | null {
         return this.getAttribute('alt')
-    }
-
-    constructor() {
-        super()
-        this.render()
     }
 
     connectedCallback(): void {
@@ -25,10 +25,13 @@ export default class Header extends HTMLElement {
     }
 
     private render(): void {
-        render(html`
-			<div class="image">
-				<img alt="${this.alt}" src="${this.src}"/>
-			</div>
-		`, this)
+        render(
+            html`
+                <div class="image">
+                    <img alt="${this.alt}" src="${this.src}" />
+                </div>
+            `,
+            this
+        )
     }
 }

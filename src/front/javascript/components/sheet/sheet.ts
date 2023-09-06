@@ -1,10 +1,10 @@
 import Datas from './datas.js'
 import View from './view.js'
-import {Utils} from '../../classes/utils.js'
-import {html, TemplateResult} from 'lit'
-import {ShortcutManager} from '../../classes/shortcutManager.js'
+import { Utils } from '../../classes/utils.js'
+import { html, TemplateResult } from 'lit'
+import { ShortcutManager } from '../../classes/shortcutManager.js'
 import States from './states.js'
-import {HTMLElementEvent, SHEETRPGElement, TFont} from '../../types.js'
+import { HTMLElementEvent, SHEETRPGElement, TFont } from '../../types.js'
 import html2canvas from 'html2canvas'
 // import {html2canvas} from 'html2canvas'
 
@@ -12,26 +12,14 @@ import html2canvas from 'html2canvas'
  * Fichier de lancement du composant et ensemble de fonctions des features du composant
  */
 export default class Sheet extends HTMLElement {
-    private static imageWidth: number
-    private static imageHeight: number
     static element: Sheet
     static containerWidth: string
     static containerHeight: string
     static ratio: number
     static containerLeft: number
     static containerTop: number
-
-    async connectedCallback(): Promise<void> {
-        await Datas.init()
-        Sheet.element = this
-        this.style.backgroundColor = <string>Datas.sheet.backgroundColor
-        Sheet.setBackgroundImage(Datas.sheet.backgroundImage || '../../assets/default.jpg')
-        window.addEventListener('resize', (): void => Sheet.resize())
-        ShortcutManager.set(document.body, ['Control', 's'], async (): Promise<void> => {
-            await Datas.save()
-            View.render()
-        })
-    }
+    private static imageWidth: number
+    private static imageHeight: number
 
     static setBackgroundImage(pImageSrc: string): void {
         const image = new Image()
@@ -48,9 +36,9 @@ export default class Sheet extends HTMLElement {
         const dims = document.body.getBoundingClientRect()
         this.element.style.width = `${dims.width}px`
         this.element.style.height = `${dims.height}px`
-        const containerHeight = dims.width * this.imageHeight / this.imageWidth
+        const containerHeight = (dims.width * this.imageHeight) / this.imageWidth
         const isWidthResized = containerHeight < dims.height
-        this.containerWidth = `${isWidthResized ? dims.width : this.imageWidth * dims.height / this.imageHeight}px`
+        this.containerWidth = `${isWidthResized ? dims.width : (this.imageWidth * dims.height) / this.imageHeight}px`
         this.containerHeight = `${isWidthResized ? containerHeight : dims.height}px`
         this.ratio = isWidthResized ? dims.width / this.imageWidth : dims.height / this.imageHeight
         this.containerLeft = (dims.width - parseInt(this.containerWidth)) / 2
@@ -64,17 +52,23 @@ export default class Sheet extends HTMLElement {
         let color: string
         Utils.confirm(
             html`
-			<label for="color">
-				<span>Choisissez une couleur</span>
-				<input type="color" id="color" name="color" value="${Datas.sheet.backgroundColor || '#ffffff'}" @change="${async (pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => {
-    color = pEvent.target.value
-}}">
-			</label>
-		`,
+                <label for="color">
+                    <span>Choisissez une couleur</span>
+                    <input
+                        type="color"
+                        id="color"
+                        name="color"
+                        value="${Datas.sheet.backgroundColor || '#ffffff'}"
+                        @change="${async (pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => {
+                            color = pEvent.target.value
+                        }}"
+                    />
+                </label>
+            `,
             (): void => {
                 this.element.style.backgroundColor = color
                 Datas.sheet.backgroundColor = color
-                Datas.sheetProperties.push({setBackgroundColor: {color}})
+                Datas.sheetProperties.push({ setBackgroundColor: { color } })
                 States.isSaved = false
                 States.displayEditBlock(true)
                 View.render()
@@ -88,16 +82,21 @@ export default class Sheet extends HTMLElement {
         let file: File
         Utils.confirm(
             html`
-			<label for="file">
-				<span>Choisissez un fichier</span>
-				<input type="file" id="file" name="file" @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
-        file = (pEvent.target.files as FileList)[0]
-    }}">
-			</label>
-		`,
+                <label for="file">
+                    <span>Choisissez un fichier</span>
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
+                            file = (pEvent.target.files as FileList)[0]
+                        }}"
+                    />
+                </label>
+            `,
             async (): Promise<void> => {
-                this.setBackgroundImage(<string>(await Utils.getBase64FromFileReader(file)))
-                Datas.sheetProperties.push({setBackgroundImage: {image: file}})
+                this.setBackgroundImage(<string>await Utils.getBase64FromFileReader(file))
+                Datas.sheetProperties.push({ setBackgroundImage: { image: file } })
                 States.isSaved = false
                 States.displayEditBlock(true)
                 View.render()
@@ -113,25 +112,36 @@ export default class Sheet extends HTMLElement {
         let file: File
         Utils.confirm(
             html`
-			<label for="file">
-				<input accept=".ttf,.woff,.woff2,.eot" type="file" id="file" name="file" @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
-        file = (pEvent.target.files as FileList)[0]
-    }}">
-			</label>
-			<label for="fontFamily">
-				<span>Nom de la police (font family)</span>
-				<input type="text" id="fontFamily" name="fontFamily" @change="${async (pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => {
-        fontFamily = pEvent.target.value
-    }}">
-			</label>
-		`,
+                <label for="file">
+                    <input
+                        accept=".ttf,.woff,.woff2,.eot"
+                        type="file"
+                        id="file"
+                        name="file"
+                        @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
+                            file = (pEvent.target.files as FileList)[0]
+                        }}"
+                    />
+                </label>
+                <label for="fontFamily">
+                    <span>Nom de la police (font family)</span>
+                    <input
+                        type="text"
+                        id="fontFamily"
+                        name="fontFamily"
+                        @change="${async (pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => {
+                            fontFamily = pEvent.target.value
+                        }}"
+                    />
+                </label>
+            `,
             async (): Promise<void> => {
                 if (!Datas.sheet.fonts) Datas.sheet.fonts = []
                 fontUrl = await Utils.getBase64FromFileReader(file)
-                const font: TFont = {name: file.name, fontUrl, fontFamily}
+                const font: TFont = { name: file.name, fontUrl, fontFamily }
                 Datas.sheet.fonts.push(font)
                 fontUrl = file
-                Datas.sheetProperties.push({setFont: font})
+                Datas.sheetProperties.push({ setFont: font })
                 States.isSaved = false
                 States.displayEditBlock(true)
                 View.render()
@@ -145,24 +155,33 @@ export default class Sheet extends HTMLElement {
         let fonts: string[] = []
         Utils.confirm(
             html`
-			<ul>
-				${Datas.sheet.fonts?.map((pFont): TemplateResult => html`
-					<li>
-						<label for="${pFont.fontFamily}">
-							<input type="checkbox" id="${pFont.fontFamily}" name="${pFont.fontFamily}" value="${pFont.fontFamily}" @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
-    const value = pFont.fontFamily
-    if (pEvent.target.checked) fonts.push(value)
-    else fonts = fonts.filter((pChoice): boolean => pChoice !== value)
-}}">${pFont.fontFamily}</label>
-					</li>
-				`)}
-			</ul>
-		`,
+                <ul>
+                    ${Datas.sheet.fonts?.map(
+                        (pFont): TemplateResult => html`
+                            <li>
+                                <label for="${pFont.fontFamily}">
+                                    <input
+                                        type="checkbox"
+                                        id="${pFont.fontFamily}"
+                                        name="${pFont.fontFamily}"
+                                        value="${pFont.fontFamily}"
+                                        @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
+                                            const value = pFont.fontFamily
+                                            if (pEvent.target.checked) fonts.push(value)
+                                            else fonts = fonts.filter((pChoice): boolean => pChoice !== value)
+                                        }}"
+                                    />${pFont.fontFamily}</label
+                                >
+                            </li>
+                        `
+                    )}
+                </ul>
+            `,
             (): void => {
                 fonts.forEach((pFontFamily): void => {
                     Datas.sheet.fonts = Datas.sheet.fonts?.filter((pFont): boolean => pFont.fontFamily !== pFontFamily)
                 })
-                Datas.sheetProperties.push({deleteFont: {fonts: fonts}})
+                Datas.sheetProperties.push({ deleteFont: { fonts: fonts } })
                 States.isSaved = false
                 States.displayEditBlock(true)
                 View.render()
@@ -208,11 +227,11 @@ export default class Sheet extends HTMLElement {
                     divClone.setAttribute('style', <string>div.getAttribute('style'))
                     divClone.style.transform = 'none'
                     divClone.style.top = translate.m42 + 'px'
-                    divClone.style.left = translate.m41 + 'px';
-                    (<HTMLElement>div).style.display = 'none'
+                    divClone.style.left = translate.m41 + 'px'
+                    ;(<HTMLElement>div).style.display = 'none'
                     div.parentElement?.append(divClone)
                 })
-            }
+            },
         }).then((canvas: HTMLCanvasElement): void => {
             const link = document.createElement('a')
             link.href = canvas.toDataURL()
@@ -220,6 +239,18 @@ export default class Sheet extends HTMLElement {
             document.body.appendChild(link)
             link.click()
             document.body.removeChild(link)
+        })
+    }
+
+    async connectedCallback(): Promise<void> {
+        await Datas.init()
+        Sheet.element = this
+        this.style.backgroundColor = <string>Datas.sheet.backgroundColor
+        Sheet.setBackgroundImage(Datas.sheet.backgroundImage || '../../assets/default.jpg')
+        window.addEventListener('resize', (): void => Sheet.resize())
+        ShortcutManager.set(document.body, ['Control', 's'], async (): Promise<void> => {
+            await Datas.save()
+            View.render()
         })
     }
 }

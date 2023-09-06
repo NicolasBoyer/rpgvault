@@ -1,4 +1,4 @@
-import {Utils} from './classes/utils.js'
+import { Utils } from './classes/utils.js'
 import Loader from './components/loader.js'
 import Sheet from './components/sheet/sheet.js'
 import Confirm from './components/confirm.js'

@@ -1,5 +1,5 @@
-import {html, render} from 'lit'
-import {Utils} from '../classes/utils.js'
+import { html, render } from 'lit'
+import { Utils } from '../classes/utils.js'
 
 export default class Link extends HTMLElement {
     get href(): string | null {
@@ -22,9 +22,7 @@ export default class Link extends HTMLElement {
     }
 
     private render(): void {
-        render(html`
-			<slot></slot>
-		`, this)
+        render(html` <slot></slot> `, this)
     }
 }
 

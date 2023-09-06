@@ -1,11 +1,11 @@
-import {TElement, TElements, TFont} from '../types.js'
+import { TElement, TElements, TFont } from '../types.js'
 
-export const elements = (pInfosElement: TElement | TFont, pFonts: { name: string, value: string }[] | undefined): TElements[] => [
+export const elements = (pInfosElement: TElement | TFont, pFonts: { name: string; value: string }[] | undefined): TElements[] => [
     {
         id: 'id',
         type: 'hidden',
         name: 'id',
-        value: <string>pInfosElement.id
+        value: <string>pInfosElement.id,
     },
     {
         id: 'type',
@@ -15,34 +15,36 @@ export const elements = (pInfosElement: TElement | TFont, pFonts: { name: string
         options: [
             {
                 name: 'Texte court',
-                value: 'text'
-            }, {
+                value: 'text',
+            },
+            {
                 name: 'Texte long',
-                value: 'textarea'
-            }, {
+                value: 'textarea',
+            },
+            {
                 name: 'Nombre',
-                value: 'number'
-            }
-        ]
+                value: 'number',
+            },
+        ],
     },
     {
         id: 'fontFamily',
         type: 'select',
         name: 'Police',
         value: <string>pInfosElement.fontFamily,
-        options: pFonts
+        options: pFonts,
     },
     {
         id: 'fontSize',
         type: 'number',
         name: 'Taille de la police',
-        value: <number>pInfosElement.fontSize
+        value: <number>pInfosElement.fontSize,
     },
     {
         id: 'color',
         type: 'color',
         name: 'Couleur de la police',
-        value: <string>pInfosElement.color
+        value: <string>pInfosElement.color,
     },
     {
         id: 'textAlign',
@@ -52,41 +54,44 @@ export const elements = (pInfosElement: TElement | TFont, pFonts: { name: string
         options: [
             {
                 name: 'Gauche',
-                value: 'left'
-            }, {
+                value: 'left',
+            },
+            {
                 name: 'Centré',
-                value: 'center'
-            }, {
+                value: 'center',
+            },
+            {
                 name: 'Droite',
-                value: 'right'
-            }, {
+                value: 'right',
+            },
+            {
                 name: 'Justifié',
-                value: 'justify'
-            }
-        ]
+                value: 'justify',
+            },
+        ],
     },
     {
         id: 'width',
         type: 'number',
         name: 'Largeur',
-        value: <number>pInfosElement.width
+        value: <number>pInfosElement.width,
     },
     {
         id: 'height',
         type: 'number',
         name: 'Hauteur',
-        value: <number>pInfosElement.height
+        value: <number>pInfosElement.height,
     },
     {
         id: 'x',
         type: 'number',
         name: 'Abscisse',
-        value: <number>pInfosElement.x
+        value: <number>pInfosElement.x,
     },
     {
         id: 'y',
         type: 'number',
         name: 'Ordonnée',
-        value: <number>pInfosElement.y
-    }
+        value: <number>pInfosElement.y,
+    },
 ]

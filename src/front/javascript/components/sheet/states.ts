@@ -1,10 +1,10 @@
 import Datas from './datas.js'
 import View from './view.js'
-import {ElementResizer} from '../../classes/elementResizer.js'
-import {ElementMover} from '../../classes/elementMover.js'
-import {EInterface} from '../../enum.js'
-import {ElementManager} from '../../classes/elementManager.js'
-import {TElement} from '../../types.js'
+import { ElementResizer } from '../../classes/elementResizer.js'
+import { ElementMover } from '../../classes/elementMover.js'
+import { EInterface } from '../../enum.js'
+import { ElementManager } from '../../classes/elementManager.js'
+import { TElement } from '../../types.js'
 
 /**
  * Fonctions relatives au statut du composant
