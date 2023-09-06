@@ -1,8 +1,8 @@
-import {Dom} from './dom.js'
-import {TPosition} from '../types.js'
+import { Dom } from './dom.js'
+import { TPosition } from '../types.js'
 import States from '../components/sheet/states.js'
-import {ElementMover} from './elementMover.js'
-import {ShortcutManager} from './shortcutManager.js'
+import { ElementMover } from './elementMover.js'
+import { ShortcutManager } from './shortcutManager.js'
 
 type Mouse = {
     x: number
@@ -37,7 +37,7 @@ export class Drawer {
             x: 0,
             y: 0,
             startX: 0,
-            startY: 0
+            startY: 0,
         }
     }
 
@@ -53,7 +53,13 @@ export class Drawer {
         pEvent.returnValue = false
         Drawer.mouse.x = pEvent.pageX + window.scrollX - Drawer.offsetPosition.x
         Drawer.mouse.y = pEvent.pageY + window.scrollY - Drawer.offsetPosition.y
-        if (pEvent.pressure !== 0) Drawer.bd.att('style', `width:${Math.abs(Drawer.mouse.x - Drawer.mouse.startX)}px;height:${Math.abs(Drawer.mouse.y - Drawer.mouse.startY)}px;left:${(Drawer.mouse.x - Drawer.mouse.startX < 0) ? `${Drawer.mouse.x}px` : `${Drawer.mouse.startX}px`};top:${(Drawer.mouse.y - Drawer.mouse.startY < 0) ? `${Drawer.mouse.y}px` : `${Drawer.mouse.startY}px`}`)
+        if (pEvent.pressure !== 0)
+            Drawer.bd.att(
+                'style',
+                `width:${Math.abs(Drawer.mouse.x - Drawer.mouse.startX)}px;height:${Math.abs(Drawer.mouse.y - Drawer.mouse.startY)}px;left:${
+                    Drawer.mouse.x - Drawer.mouse.startX < 0 ? `${Drawer.mouse.x}px` : `${Drawer.mouse.startX}px`
+                };top:${Drawer.mouse.y - Drawer.mouse.startY < 0 ? `${Drawer.mouse.y}px` : `${Drawer.mouse.startY}px`}`
+            )
     }
 
     private static async pointerUp(pEvent: MouseEvent): Promise<void> {

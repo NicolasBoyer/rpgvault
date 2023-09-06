@@ -1,16 +1,16 @@
-import {ShortcutManager} from './shortcutManager.js'
-import {ElementResizer} from './elementResizer.js'
-import {SHEETRPGElement, TPosition} from '../types.js'
+import { ShortcutManager } from './shortcutManager.js'
+import { ElementResizer } from './elementResizer.js'
+import { SHEETRPGElement, TPosition } from '../types.js'
 import States from '../components/sheet/states.js'
-import {ElementManager} from './elementManager.js'
+import { ElementManager } from './elementManager.js'
 
 export class ElementMover {
+    static isPointerDown = false
     private static mouse: TPosition
     private static elements: Record<string, SHEETRPGElement> = {}
     private static selectedSelectorId: string
     private static offsetPosition: TPosition
     private static isMoving = false
-    static isPointerDown = false
 
     static init(pElement: SHEETRPGElement, pOffset: TPosition, pCallback: (position: TPosition) => void, pSelector: HTMLElement | null = null): void {
         const selector = pSelector || pElement.querySelector('input, textarea') || pElement
@@ -19,7 +19,7 @@ export class ElementMover {
         pElement.moverCallback = pCallback
         this.mouse = {
             x: 0,
-            y: 0
+            y: 0,
         }
         ElementMover.selectedSelectorId = selector.id
         document.body.addEventListener('pointermove', this.pointerMove)
@@ -60,7 +60,7 @@ export class ElementMover {
             const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform)
             ElementMover.offsetPosition = {
                 x: ElementMover.offsetPosition.x + (ElementMover.mouse.x - translate.m41),
-                y: ElementMover.offsetPosition.y + (ElementMover.mouse.y - translate.m42)
+                y: ElementMover.offsetPosition.y + (ElementMover.mouse.y - translate.m42),
             }
             ElementMover.mouse.x = pEvent.pageX + window.scrollX - ElementMover.offsetPosition.x
             ElementMover.mouse.y = pEvent.pageY + window.scrollY - ElementMover.offsetPosition.y
@@ -89,6 +89,6 @@ export class ElementMover {
         setTimeout((): void => {
             selectedElement.style.transform = `translate(${translateX}px, ${translateY}px)`
         })
-        selectedElement.moverCallback({x: translateX, y: translateY})
+        selectedElement.moverCallback({ x: translateX, y: translateY })
     }
 }

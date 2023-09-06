@@ -1,4 +1,4 @@
-import {SHEETRPGElement, TPosition} from '../types.js'
+import { SHEETRPGElement, TPosition } from '../types.js'
 
 type Mouse = {
     x: number
@@ -10,6 +10,8 @@ type Mouse = {
 }
 
 export class ElementResizer {
+    static isPointerDown = false
+    static boxPositions = [{ class: 'leftTop' }, { class: 'leftCenter' }, { class: 'leftBottom' }, { class: 'centerTop' }, { class: 'centerBottom' }, { class: 'rightTop' }, { class: 'rightCenter' }, { class: 'rightBottom' }]
     private static mouse: Mouse
     private static elements: Record<string, SHEETRPGElement> = {}
     private static offsetPosition: TPosition
@@ -20,17 +22,6 @@ export class ElementResizer {
     private static bottomVerticalMove: boolean
     private static width: number
     private static height: number
-    static isPointerDown = false
-    static boxPositions = [
-        {class: 'leftTop'},
-        {class: 'leftCenter'},
-        {class: 'leftBottom'},
-        {class: 'centerTop'},
-        {class: 'centerBottom'},
-        {class: 'rightTop'},
-        {class: 'rightCenter'},
-        {class: 'rightBottom'}
-    ]
 
     static init(pElement: SHEETRPGElement, pOffset: TPosition, pCallback: (position: TPosition) => void): void {
         pElement.selector = pElement.querySelector('input, textarea') || pElement
@@ -43,7 +34,7 @@ export class ElementResizer {
             translateX: 0,
             translateY: 0,
             originalX: 0,
-            originalY: 0
+            originalY: 0,
         }
         this.selectedSelectorId = pElement.selector.id
         window.addEventListener('resize', (): void => this.resetHandler(pElement))
@@ -61,14 +52,14 @@ export class ElementResizer {
         const boundingBox = pElement.getBoundingClientRect()
         const boxSize = 15
         const boxPositions = [
-            {top: 0, left: 0, class: 'leftTop'},
-            {top: boundingBox.height / 2, left: 0, class: 'leftCenter'},
-            {top: boundingBox.height, left: 0, class: 'leftBottom'},
-            {top: 0, left: boundingBox.width / 2, class: 'centerTop'},
-            {top: boundingBox.height, left: boundingBox.width / 2, class: 'centerBottom'},
-            {top: 0, left: boundingBox.width, class: 'rightTop'},
-            {top: boundingBox.height / 2, left: boundingBox.width, class: 'rightCenter'},
-            {top: boundingBox.height, left: boundingBox.width, class: 'rightBottom'}
+            { top: 0, left: 0, class: 'leftTop' },
+            { top: boundingBox.height / 2, left: 0, class: 'leftCenter' },
+            { top: boundingBox.height, left: 0, class: 'leftBottom' },
+            { top: 0, left: boundingBox.width / 2, class: 'centerTop' },
+            { top: boundingBox.height, left: boundingBox.width / 2, class: 'centerBottom' },
+            { top: 0, left: boundingBox.width, class: 'rightTop' },
+            { top: boundingBox.height / 2, left: boundingBox.width, class: 'rightCenter' },
+            { top: boundingBox.height, left: boundingBox.width, class: 'rightBottom' },
         ]
         for (const boxPosition of boxPositions) {
             const handler: HTMLElement | null = pElement.querySelector(`.${boxPosition.class}`)
@@ -125,7 +116,7 @@ export class ElementResizer {
                 x: ElementResizer.mouse.translateX,
                 y: ElementResizer.mouse.translateY,
                 width: parseInt(element.selector.style.width),
-                height: parseInt(element.selector.style.height)
+                height: parseInt(element.selector.style.height),
             })
             ElementResizer.isPointerDown = false
             document.body.classList.remove('isResizing')

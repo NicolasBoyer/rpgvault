@@ -1,4 +1,4 @@
-import {deleteDB, IDBPDatabase, IDBPObjectStore, openDB} from 'idb'
+import { deleteDB, IDBPDatabase, IDBPObjectStore, openDB } from 'idb'
 
 const indexedDBCaches: string[] = []
 
@@ -7,9 +7,9 @@ export class Caches {
         for (let i = 0; i < args.length; i++) {
             const maxStorageSize = 1024 * 1024 * 5 - JSON.stringify(sessionStorage).length
             const storage = JSON.stringify(args[i + 1])
-            if (storage && storage.length >= maxStorageSize || forceIndexedDb) {
+            if ((storage && storage.length >= maxStorageSize) || forceIndexedDb) {
                 const key = <string>args[i]
-                const db = await openDB(<string>args[i], 1, {upgrade: (db: IDBPDatabase): IDBPObjectStore<unknown, ArrayLike<string>, string, 'versionchange'> => db.createObjectStore(<string>args[i])})
+                const db = await openDB(<string>args[i], 1, { upgrade: (db: IDBPDatabase): IDBPObjectStore<unknown, ArrayLike<string>, string, 'versionchange'> => db.createObjectStore(<string>args[i]) })
                 indexedDBCaches.push(key)
                 const transaction = db.transaction(key, 'readwrite')
                 const objectStore = transaction.objectStore(key)
