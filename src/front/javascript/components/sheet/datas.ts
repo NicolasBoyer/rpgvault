@@ -30,7 +30,7 @@ export default class Datas {
         await this.cacheResources()
     }
 
-    static async addAndSaveInput(pInput: TInput, ...args: (keyof TInput)[]): Promise<void> {
+    static async addAndSaveInput(pInput: TInput, ...args: (keyof TInput | number | string)[]): Promise<void> {
         this.addInputValues(pInput, ...args)
         await this.save(pInput)
     }
@@ -41,10 +41,10 @@ export default class Datas {
         await this.save()
     }
 
-    static addInputValues(pInput: TInput, ...args: (keyof TInput)[]): void {
+    static addInputValues(pInput: TInput, ...args: (number | string)[]): void {
         for (let i = 0; i < args.length; i++) {
             const value: string | number = args[i + 1]
-            if (i % 2 === 0) pInput[args[i]] = Number(value) || value
+            if (i % 2 === 0) (pInput as Record<string, typeof value>)[args[i] as keyof TInput] = value
         }
         let index
         if (!this.sheet.inputs) this.sheet.inputs = []
@@ -58,10 +58,10 @@ export default class Datas {
         View.render()
     }
 
-    static async addImageValues(pImage: TImage, ...args: (keyof TImage | File)[]): Promise<void> {
+    static async addImageValues(pImage: TImage, ...args: (File | number | string)[]): Promise<void> {
         for (let i = 0; i < args.length; i++) {
             const value: string | number | File = args[i + 1]
-            if (i % 2 === 0) pImage[<string>args[i]] = Number(value) || value
+            if (i % 2 === 0) (pImage as Record<string, typeof value>)[args[i] as keyof TImage] = value
         }
         let index
         if (States.editMode) {

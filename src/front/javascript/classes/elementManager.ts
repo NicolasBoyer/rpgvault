@@ -130,7 +130,6 @@ export class ElementManager {
     static select(pEvent: Event | null = null, pInfosElement: TElement | null = null): void {
         if (States.editMode) {
             if (pEvent) pEvent.stopPropagation()
-            // TODO aussi revue du code pour etre sur que les choix de type soit les bons
             this.selectedInfosElement = <TElement>pInfosElement
             View.render()
             if (pInfosElement) {

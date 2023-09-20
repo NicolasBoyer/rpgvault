@@ -167,7 +167,7 @@ export default class Interface {
                             value: pFont.fontFamily,
                         }))
                 )
-                    .filter((pEntry): unknown => pInfosElement.type || (pInfosElement.image && pInfosElement[pEntry.id]))
+                    .filter((pEntry): unknown => pInfosElement.type || (pInfosElement.image && pInfosElement[pEntry.id as keyof TElement]))
                     .map(
                         (pEntry): TemplateResult => html`
                             <fs-label

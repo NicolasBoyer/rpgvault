@@ -1,6 +1,6 @@
-import { TElement, TElements, TFont } from '../types.js'
+import { TElement, TElements } from '../types.js'
 
-export const elements = (pInfosElement: TElement | TFont, pFonts: { name: string; value: string }[] | undefined): TElements[] => [
+export const elements = (pInfosElement: TElement, pFonts: { name: string; value: string }[] | undefined): TElements[] => [
     {
         id: 'id',
         type: 'hidden',

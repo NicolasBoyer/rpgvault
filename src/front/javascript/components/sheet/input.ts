@@ -4,7 +4,7 @@ import Datas from './datas.js'
 import States from './states.js'
 import Sheet from './sheet.js'
 import { ElementManager } from '../../classes/elementManager.js'
-import { TInput } from '../../types.js'
+import { TElement, TInput } from '../../types.js'
 import { EElementType } from '../../enum.js'
 
 /**
@@ -32,7 +32,7 @@ export default class Input {
                 'height',
                 Math.round(pMousePosition.y / Sheet.ratio - pMousePosition.startY / Sheet.ratio)
             )
-            ElementManager.select(pEvent, <TInput>input)
+            ElementManager.select(pEvent, <TElement>input)
         })
     }
 }

@@ -5,7 +5,7 @@ import Sheet from './sheet.js'
 import { Drawer } from '../../classes/drawer.js'
 import { html } from 'lit'
 import { ElementManager } from '../../classes/elementManager.js'
-import { HTMLElementEvent, TImage } from '../../types.js'
+import { HTMLElementEvent, TElement, TImage } from '../../types.js'
 import { EElementType } from '../../enum.js'
 
 /**
@@ -15,7 +15,7 @@ export default class Image {
     static add(): void {
         States.displayEditBlock(false)
         Drawer.init(<HTMLElement>Sheet.element.querySelector('.wrapper'), { x: Sheet.containerLeft, y: Sheet.containerTop }, async (pMousePosition, pEvent): Promise<void> => {
-            const image: TImage = {
+            const image = {
                 id: Utils.generateId().toString(),
                 elementType: EElementType.image,
             }
@@ -36,7 +36,7 @@ export default class Image {
                 `,
                 async (): Promise<void> => {
                     await Datas.addImageValues(
-                        image,
+                        <TImage>image,
                         'x',
                         Math.round(pMousePosition.startX / Sheet.ratio),
                         'y',
@@ -48,7 +48,7 @@ export default class Image {
                         'file',
                         file
                     )
-                    ElementManager.select(pEvent, image)
+                    ElementManager.select(pEvent, <TElement>image)
                     States.displayEditBlock(true)
                     States.isSaved = false
                 },

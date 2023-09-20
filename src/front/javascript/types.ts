@@ -24,7 +24,6 @@ export type TSheetProperties = {
 }
 
 export type TInput = {
-    [key: string]: unknown
     id: string
     type: string
     x: number
@@ -32,63 +31,33 @@ export type TInput = {
     width: number
     height: number
     value: string
-    fontFamily: string
     textAlign: string
     color: string
     fontSize: number
-    image?: never
-    file?: never
-    image_url?: never
-    name?: never
-    fontUrl?: never
-    fontUrl_url?: never
+    fontFamily: string
     elementType: string
 }
 
 export type TImage = {
-    [key: string]: unknown
     id: string
-    type?: never
-    x?: number
-    y?: number
-    width?: number
-    height?: number
-    value?: never
-    fontFamily?: never
-    textAlign?: never
-    color?: never
-    fontSize?: never
-    image?: string | ArrayBuffer | null
+    x: number
+    y: number
+    width: number
+    height: number
+    image: string | ArrayBuffer | null
     file?: Blob | File
     image_url?: string | ArrayBuffer | null
-    name?: never
-    fontUrl?: never
-    fontUrl_url?: never
     elementType: string
 }
 
 export type TFont = {
-    [key: string]: unknown
-    id?: never
-    type?: string
-    x?: never
-    y?: never
-    width?: never
-    height?: never
-    value?: never
     fontFamily: string
-    textAlign?: never
-    color?: never
-    fontSize?: never
-    image?: never
-    file?: never
-    image_url?: never
     name: string
     fontUrl?: string | ArrayBuffer | null
     fontUrl_url?: string | ArrayBuffer | null
 }
 
-export type TElement = TInput | TImage
+export type TElement = TInput & TImage
 
 export type TElements = {
     id: string

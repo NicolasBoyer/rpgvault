@@ -5,7 +5,7 @@ import Sheet from './sheet.js'
 import { ElementResizer } from '../../classes/elementResizer.js'
 import { ElementManager } from '../../classes/elementManager.js'
 import Interface from './interface.js'
-import { HTMLElementEvent } from '../../types.js'
+import { HTMLElementEvent, TElement } from '../../types.js'
 import { EInterface } from '../../enum.js'
 
 /**
@@ -77,7 +77,7 @@ export default class View {
                                               Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
                                               @change="${(pEvent: HTMLElementEvent<HTMLTextAreaElement>): Promise<void> => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
                                               ?readonly="${States.editMode}"
-                                              @click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, pInput)}"
+                                              @click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, <TElement>pInput)}"
                                           >
 ${pInput.value}
                                           </textarea
@@ -93,12 +93,12 @@ ${pInput.value}
                                               Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
                                               @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
                                               ?readonly="${States.editMode}"
-                                              @click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, pInput)}"
+                                              @click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, <TElement>pInput)}"
                                           />
                                       `}
                                 ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedInfosElement?.id !== pInput.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
                             </label>
-                            ${ElementManager.selectedInfosElement?.id === pInput.id ? Interface.selectBlock(pInput) : ''}
+                            ${ElementManager.selectedInfosElement?.id === pInput.id ? Interface.selectBlock(<TElement>pInput) : ''}
                         `
                     )}
                     ${Datas.sheet.images?.map(
@@ -108,7 +108,7 @@ ${pInput.value}
                                 style="transform: translate(${<number>pImage.x * Sheet.ratio}px, ${<number>pImage.y * Sheet.ratio}px);width: ${<number>pImage.width * Sheet.ratio}px;height: ${<number>pImage.height * Sheet.ratio}px;"
                                 class="image ${ElementManager.selectedInfosElement?.id === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}"
                                 @click="${(pEvent: PointerEvent): void => {
-                                    if (States.editMode) ElementManager.select(pEvent, pImage)
+                                    if (States.editMode) ElementManager.select(pEvent, <TElement>pImage)
                                     else {
                                         if (!States.isZoomed) States.isZoomed = pImage.id
                                         else States.isZoomed = false
@@ -119,7 +119,7 @@ ${pInput.value}
                                 <div style="background-image: url(${pImage.image});"></div>
                                 ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedInfosElement?.id !== pImage.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
                             </div>
-                            ${ElementManager.selectedInfosElement?.id === pImage.id ? Interface.selectBlock(pImage) : ''}
+                            ${ElementManager.selectedInfosElement?.id === pImage.id ? Interface.selectBlock(<TElement>pImage) : ''}
                         `
                     )}
                 </div>
