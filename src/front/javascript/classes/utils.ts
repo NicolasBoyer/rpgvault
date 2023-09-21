@@ -94,14 +94,6 @@ export class Utils {
         ) // Trim - from end of text
     }
 
-    static replaceChildren(pElement: HTMLElement, ...pChildren: HTMLElement[]): void {
-        if (pElement.replaceChildren) return pElement.replaceChildren(...pChildren)
-        pElement.textContent = ''
-        for (const child of pChildren) {
-            pElement.appendChild(child)
-        }
-    }
-
     static urlToBase64(pUrl: string): Promise<string | ArrayBuffer | null> {
         // eslint-disable-next-line no-async-promise-executor
         return new Promise(async (resolve): Promise<void> => {

@@ -4,7 +4,6 @@ import { Caches } from '../classes/caches.js'
 import { TSheet } from '../types.js'
 
 // TODO système de folder ? A voir si besoin pas pour le moment
-// TODO Suppr comment + pass sur ipad
 // TODO permettre plusieurs utilisateurs
 // TODO image comme un lien en choix si pas de place
 // TODO parametre pour gérer zoom ou pas zoom
@@ -33,11 +32,9 @@ export default class Home extends HTMLElement {
     }
 
     private initParchment(): void {
-        // TODO marche toujours pas sur ipad essayer un document.body.style.height = `${window.innerHeight}px` sur le body ou enlever le position abs sur le parchment ou ajouter height sur section ?
         if (!document.querySelector('#parchment')) return
         const main = <HTMLElement>document.querySelector('#main')
         main.style.height = ''
-        document.body.style.height = ''
         const mainSize = main.getBoundingClientRect()
         if (mainSize.height <= window.innerHeight) {
             document.body.style.height = `${window.innerHeight}px`
