@@ -34,5 +34,4 @@ export class Caches {
     }
 }
 
-// eslint-disable-next-line func-call-spacing
 window.addEventListener('beforeunload', (): void => indexedDBCaches.forEach((dbName): Promise<void> => deleteDB(dbName)))
