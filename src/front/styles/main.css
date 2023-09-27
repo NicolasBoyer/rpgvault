@@ -17,7 +17,7 @@
 	--primary: #7F3300;
 	--primary-hover: #c79c82;
 	/*--form-element-border-color: #b9b2a2;*/
-	--primary-focus: none;
+	--primary-focus: #7F330020;
 	/*--background-secondary: #ffcf4f;*/
 	--modal-overlay-background-color: rgba(226,219,213,0.8);
 	--secondary: #786459;
@@ -169,6 +169,10 @@ fs-sheet .image > div {
 
 fs-sheet form {
 	display: contents;
+}
+
+fs-sheet > div > label > input:focus {
+    --box-shadow: none !important;
 }
 
 fs-sheet > div > label > input[type=number],

@@ -10,6 +10,13 @@ export class ShortcutManager {
         pElement?.addEventListener('keyup', this.keyUp)
     }
 
+    static reset(): void {
+        Object.values(this.shortCuts).forEach((pShortcut): void => {
+            pShortcut.element.addEventListener('keydown', this.keyDown)
+            pShortcut.element.addEventListener('keyup', this.keyUp)
+        })
+    }
+
     private static keyDown(pEvent: KeyboardEvent): void {
         if (Object.keys(ShortcutManager.shortCuts).some((pKey): boolean => pKey.split(',').includes(pEvent.key)) && States.editMode) {
             pEvent.preventDefault()

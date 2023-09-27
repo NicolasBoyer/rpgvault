@@ -46,6 +46,11 @@ export class ElementMover {
         }
     }
 
+    static reset(): void {
+        Object.keys(ElementMover.elements).forEach((pSelectorId): void => this.resetElement(pSelectorId))
+        document.body.removeEventListener('pointermove', this.pointerMove)
+    }
+
     private static async pointerDown(pEvent: PointerEvent): Promise<void> {
         ElementMover.isPointerDown = true
         document.body.classList.add('isMoving')

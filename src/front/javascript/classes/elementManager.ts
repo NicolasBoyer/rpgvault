@@ -14,64 +14,71 @@ export class ElementManager {
     static selectedInfosElement: TElement
 
     static init(): void {
-        ;(<TElement[]>Datas.sheet.inputs)?.concat(<TElement[]>Datas.sheet.images).forEach((pInfosElement: TElement): void => {
-            if (pInfosElement) {
-                const htmlElement: SHEETRPGElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
-                if (!htmlElement.getAttribute('data-initialized')) {
-                    ElementMover.init(
-                        htmlElement,
-                        {
-                            x: Sheet.containerLeft,
-                            y: Sheet.containerTop,
-                        },
-                        (pMousePosition): void => {
-                            if (pInfosElement.elementType === EElementType.input) {
-                                Datas.addInputValues(<TInput>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
+        if (States.editMode) {
+            ;(<TElement[]>Datas.sheet.inputs)?.concat(<TElement[]>Datas.sheet.images).forEach((pInfosElement: TElement): void => {
+                if (pInfosElement) {
+                    const htmlElement: SHEETRPGElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
+                    if (!htmlElement.getAttribute('data-initialized')) {
+                        ElementMover.init(
+                            htmlElement,
+                            {
+                                x: Sheet.containerLeft,
+                                y: Sheet.containerTop,
+                            },
+                            (pMousePosition): void => {
+                                if (pInfosElement.elementType === EElementType.input) {
+                                    Datas.addInputValues(<TInput>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
+                                }
+                                if (pInfosElement.elementType === EElementType.image) {
+                                    Datas.addImageValues(<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
+                                }
                             }
-                            if (pInfosElement.elementType === EElementType.image) {
-                                Datas.addImageValues(<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
+                        )
+                        ElementResizer.init(
+                            htmlElement,
+                            {
+                                x: Sheet.containerLeft,
+                                y: Sheet.containerTop,
+                            },
+                            (pMousePosition: TPosition): void => {
+                                if (pInfosElement.elementType === EElementType.input) {
+                                    Datas.addInputValues(
+                                        <TInput>pInfosElement,
+                                        'x',
+                                        Math.round(pMousePosition.x / Sheet.ratio),
+                                        'y',
+                                        Math.round(pMousePosition.y / Sheet.ratio),
+                                        'width',
+                                        Math.round(<number>pMousePosition.width / Sheet.ratio),
+                                        'height',
+                                        Math.round(<number>pMousePosition.height / Sheet.ratio)
+                                    )
+                                }
+                                if (pInfosElement.elementType === EElementType.image) {
+                                    Datas.addImageValues(
+                                        <TImage>pInfosElement,
+                                        'x',
+                                        Math.round(pMousePosition.x / Sheet.ratio),
+                                        'y',
+                                        Math.round(pMousePosition.y / Sheet.ratio),
+                                        'width',
+                                        Math.round(<number>pMousePosition.width / Sheet.ratio),
+                                        'height',
+                                        Math.round(<number>pMousePosition.height / Sheet.ratio)
+                                    )
+                                }
                             }
-                        }
-                    )
-                    ElementResizer.init(
-                        htmlElement,
-                        {
-                            x: Sheet.containerLeft,
-                            y: Sheet.containerTop,
-                        },
-                        (pMousePosition: TPosition): void => {
-                            if (pInfosElement.elementType === EElementType.input) {
-                                Datas.addInputValues(
-                                    <TInput>pInfosElement,
-                                    'x',
-                                    Math.round(pMousePosition.x / Sheet.ratio),
-                                    'y',
-                                    Math.round(pMousePosition.y / Sheet.ratio),
-                                    'width',
-                                    Math.round(<number>pMousePosition.width / Sheet.ratio),
-                                    'height',
-                                    Math.round(<number>pMousePosition.height / Sheet.ratio)
-                                )
-                            }
-                            if (pInfosElement.elementType === EElementType.image) {
-                                Datas.addImageValues(
-                                    <TImage>pInfosElement,
-                                    'x',
-                                    Math.round(pMousePosition.x / Sheet.ratio),
-                                    'y',
-                                    Math.round(pMousePosition.y / Sheet.ratio),
-                                    'width',
-                                    Math.round(<number>pMousePosition.width / Sheet.ratio),
-                                    'height',
-                                    Math.round(<number>pMousePosition.height / Sheet.ratio)
-                                )
-                            }
-                        }
-                    )
-                    htmlElement.setAttribute('data-initialized', 'true')
+                        )
+                        htmlElement.setAttribute('data-initialized', 'true')
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            document.querySelectorAll('[data-initialized]').forEach((pElement: Element): void => pElement.removeAttribute('data-initialized'))
+            ElementMover.reset()
+            ElementResizer.reset()
+            ShortcutManager.reset()
+        }
     }
 
     static delete(): void {

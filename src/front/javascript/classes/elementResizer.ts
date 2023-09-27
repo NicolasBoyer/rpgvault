@@ -48,6 +48,11 @@ export class ElementResizer {
         document.body.addEventListener('pointerup', this.pointerUp)
     }
 
+    static reset(): void {
+        document.body.removeEventListener('pointermove', this.pointerMove)
+        document.body.removeEventListener('pointerup', this.pointerUp)
+    }
+
     private static resetHandler(pElement: SHEETRPGElement): void {
         const boundingBox = pElement.getBoundingClientRect()
         const boxSize = 15
