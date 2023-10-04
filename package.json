@@ -8,7 +8,7 @@
     "dev:frontend": "vite",
     "dev:backend": "nodemon -w src/back -e ts -x \"ts-node --esm src/back/dev.ts\"",
     "dev": "cross-env NODE_ENV=dev concurrently 'npm:dev:frontend' 'npm:dev:backend'",
-    "start": "vite build & node --loader ts-node/esm src/back/prod.ts"
+    "start": "vite build & ts-node src/back/prod.ts"
   },
   "author": "Nicolas Boyer",
   "license": "ISC",
