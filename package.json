@@ -29,10 +29,10 @@
     "mongodb": "6.1.0",
     "nodemon": "3.0.1",
     "prettier": "3.0.3",
-    "vite": "4.4.10",
-    "ts-node": "10.9.1"
+    "vite": "4.4.10"
   },
   "dependencies": {
+  	"ts-node": "10.9.1",
     "html2canvas": "1.4.1",
     "idb": "7.1.1",
     "lit": "2.8.0",
