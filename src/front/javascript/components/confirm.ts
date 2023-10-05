@@ -45,6 +45,7 @@ export default class Confirm extends HTMLElement {
                         ${this.message}
                         <footer>
                             <a
+                                href="#"
                                 role="button"
                                 class="secondary"
                                 @click="${(pEvent: PointerEvent): void => {
@@ -55,6 +56,7 @@ export default class Confirm extends HTMLElement {
                                 >Cancel</a
                             >
                             <a
+                                href="#"
                                 role="button"
                                 @click="${(pEvent: PointerEvent): void => {
                                     pEvent.preventDefault()
