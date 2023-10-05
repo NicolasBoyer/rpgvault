@@ -1,5 +1,5 @@
-import {Utils} from './utils.js'
-import {mimetype, Server} from './server.js'
+import { Utils } from './utils.js'
+import { mimetype, Server } from './server.js'
 import Database from './database.js'
 import http from 'http'
 
@@ -11,9 +11,13 @@ export default class Routes {
 
         this.request(pServer, '/sheets/:id', 'sheet.html', 'sheet', '', true)
 
-        pServer.get('/app/routes.json', async (_req?: http.IncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            res?.end(JSON.stringify(this.routes))
-        }, mimetype.JSON)
+        pServer.get(
+            '/app/routes.json',
+            async (_req?: http.IncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+                res?.end(JSON.stringify(this.routes))
+            },
+            mimetype.JSON
+        )
 
         pServer.post('/db', async (_req?: http.IncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
             let body = ''
@@ -31,7 +35,7 @@ export default class Routes {
             _req?.on('end', async (): Promise<void> => {
                 const json = JSON.parse(body)
                 const credentials = `${json.id}:${json.password}`
-                if (await Database.auth(credentials)) res?.writeHead(200, {'Set-Cookie': `_ma=${Utils.crypt(credentials)}; expires=Tue, 19 Jan 2038 03:14:07 GMT`})
+                if (await Database.auth(credentials)) res?.writeHead(200, { 'Set-Cookie': `_ma=${Utils.crypt(credentials)}; expires=Tue, 19 Jan 2038 03:14:07 GMT` })
                 res?.end(JSON.stringify('{}'))
             })
         })
@@ -48,7 +52,7 @@ export default class Routes {
                 path: pPath,
                 className: pClassName,
                 title: pTitle,
-                label: pLabel
+                label: pLabel,
             })
         }
 
@@ -63,7 +67,7 @@ export default class Routes {
         })
 
         pServer.post(pPath, async (_req?: http.IncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            res?.end(JSON.stringify({text: await Utils.fragment(pFile), class: pClassName, title: pTitle}))
+            res?.end(JSON.stringify({ text: await Utils.fragment(pFile), class: pClassName, title: pTitle }))
         })
     }
 }
