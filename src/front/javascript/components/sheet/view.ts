@@ -7,6 +7,7 @@ import { ElementManager } from '../../classes/elementManager.js'
 import Interface from './interface.js'
 import { HTMLElementEvent, TElement } from '../../types.js'
 import { EInterface } from '../../enum.js'
+import Notepad from './notepad.js'
 
 /**
  * Fonctions de rendu du composant
@@ -57,13 +58,7 @@ export default class View {
                                   </svg>
                                   <span>Imprimer</span>
                               </button>
-                              ${States.notepadMode
-                                  ? html`
-                                        <article id="notepad" @click="${(pEvent: PointerEvent): void => pEvent.stopPropagation()}">
-                                            <textarea @change="${(pEvent: HTMLElementEvent<HTMLTextAreaElement>): Promise<void> => Datas.saveNotepad(pEvent.target.value)}">${Datas.sheet.notepad}</textarea>
-                                        </article>
-                                    `
-                                  : ''}
+                              ${States.notepadMode ? Notepad.render() : ''}
                           `}
                     ${Datas.sheet.inputs?.map(
                         (pInput): TemplateResult => html`
@@ -127,5 +122,6 @@ ${pInput.value}
             Sheet.element
         )
         ElementManager.init()
+        Notepad.init()
     }
 }

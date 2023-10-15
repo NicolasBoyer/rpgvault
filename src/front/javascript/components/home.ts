@@ -8,7 +8,6 @@ import { TSheet } from '../types.js'
 // TODO image comme un lien en choix si pas de place
 // TODO parametre pour gérer zoom ou pas zoom
 // TODO dupliquer avec aucun ékément avec aucun texte ?
-// TODO améliorer notepade avec des onglets
 // TODO anuler doit revenir en arrière sur les choix en réalité ajouter un historique
 // TODO ajouter possibilité de changer l'image
 // TODO Ajouter une grille ?
@@ -79,7 +78,7 @@ export default class Home extends HTMLElement {
                 </label>
             `,
             async (): Promise<void> => {
-                await this.saveSheet({ name })
+                await this.saveSheet({ name, notepad: [{ title: '', content: '' }] })
                 this.initParchment()
             }
         )

@@ -1,6 +1,6 @@
-import {Collection, MongoClient, ObjectId} from 'mongodb'
-import {Utils} from './utils.js'
-import {TSheet} from '../front/javascript/types.js'
+import { Collection, MongoClient, ObjectId } from 'mongodb'
+import { Utils } from './utils.js'
+import { TSheet } from '../front/javascript/types.js'
 
 /**
  * Permet la déclaration de la db (ici un fichier json) et de résoudre les requêtes passées dans la fonction request
@@ -43,90 +43,90 @@ export default class Database {
         const resolvers = {
             async getSheets(args?: Record<string, string>): Promise<TSheet | TSheet[]> {
                 let sheets = []
-                if (args?.slug) sheets.push(await Database.sheets.findOne({slug: args.slug}))
-                else if (args?.id) sheets.push(await Database.sheets.findOne({_id: new ObjectId(args.id)}))
+                if (args?.slug) sheets.push(await Database.sheets.findOne({ slug: args.slug }))
+                else if (args?.id) sheets.push(await Database.sheets.findOne({ _id: new ObjectId(args.id) }))
                 else sheets = await Database.sheets.find().toArray()
-                return sheets.length === 1 ? sheets[0] as unknown as TSheet : sheets as unknown as TSheet[]
+                return sheets.length === 1 ? (sheets[0] as unknown as TSheet) : (sheets as unknown as TSheet[])
             },
 
             async setSheet(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 const name = args.name
                 const update = args
                 if (!args.id) update.slug = Utils.slugify(name)
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$set: update}, {upsert: true})
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: update }, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async removeSheet(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.deleteOne({_id: new ObjectId(args.id)})
+                await Database.sheets.deleteOne({ _id: new ObjectId(args.id) })
                 return await resolvers.getSheets()
             },
 
             async setNotepad(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$set: {notepad: args.text}}, {upsert: true})
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { notepad: args.notepad } }, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async setBackgroundColor(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$set: {backgroundColor: args.color}}, {upsert: true})
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundColor: args.color } }, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async setBackgroundImage(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$set: {backgroundImage: args.image}}, {upsert: true})
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundImage: args.image } }, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async setFont(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$push: {fonts: {fontFamily: args.fontFamily, fontUrl: args.fontUrl}}})
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
                 return await resolvers.getSheets()
             },
 
             async setUIBlocksPosition(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isUIBlocksExists = (await resolvers.getSheets({id: args.id}) as TSheet).ui
+                const isUIBlocksExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).ui
                 const blockType = Object.keys(args)[0]
-                const update = !isUIBlocksExists ? {$set: {ui: args}} : blockType === 'editBlock' ? {$set: {'ui.editBlock': args[blockType]}} : {$set: {'ui.selectBlock': args[blockType]}}
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, update, {upsert: true})
+                const update = !isUIBlocksExists ? { $set: { ui: args } } : blockType === 'editBlock' ? { $set: { 'ui.editBlock': args[blockType] } } : { $set: { 'ui.selectBlock': args[blockType] } }
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, update, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async setUIBlocksInterface(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isUIBlocksExists = (await resolvers.getSheets({id: args.id}) as TSheet).ui
-                const update = !isUIBlocksExists ? {$set: {ui: args}} : {$set: {'ui.interface': args.interface}}
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, update, {upsert: true})
+                const isUIBlocksExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).ui
+                const update = !isUIBlocksExists ? { $set: { ui: args } } : { $set: { 'ui.interface': args.interface } }
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, update, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async deleteFont(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$pull: {fonts: {fontFamily: {$in: args.fonts}}}})
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { fonts: { fontFamily: { $in: args.fonts } } } })
                 return await resolvers.getSheets()
             },
 
             async setInput(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isInputExists = (await resolvers.getSheets({id: args.id}) as TSheet).inputs?.some((pInput): boolean => pInput.id === args.inputId)
-                const update = isInputExists ? {$set: {'inputs.$': args.input}} : {$push: {inputs: args.input}}
-                const filter = isInputExists ? {_id: new ObjectId(args.id), 'inputs.id': args.inputId} : {_id: new ObjectId(args.id)}
+                const isInputExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).inputs?.some((pInput): boolean => pInput.id === args.inputId)
+                const update = isInputExists ? { $set: { 'inputs.$': args.input } } : { $push: { inputs: args.input } }
+                const filter = isInputExists ? { _id: new ObjectId(args.id), 'inputs.id': args.inputId } : { _id: new ObjectId(args.id) }
                 await Database.sheets.updateOne(filter, update)
                 return await resolvers.getSheets()
             },
 
             async deleteInput(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$pull: {inputs: {id: args.inputId}}})
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { inputs: { id: args.inputId } } })
                 return await resolvers.getSheets()
             },
 
             async setImage(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isImageExists = (await resolvers.getSheets({id: args.id}) as TSheet).images?.some((pImage): boolean => pImage.id === args.imageId)
-                const update = isImageExists ? {$set: {'images.$': args.image}} : {$push: {images: args.image}}
-                const filter = isImageExists ? {_id: new ObjectId(args.id), 'images.id': args.imageId} : {_id: new ObjectId(args.id)}
+                const isImageExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).images?.some((pImage): boolean => pImage.id === args.imageId)
+                const update = isImageExists ? { $set: { 'images.$': args.image } } : { $push: { images: args.image } }
+                const filter = isImageExists ? { _id: new ObjectId(args.id), 'images.id': args.imageId } : { _id: new ObjectId(args.id) }
                 await Database.sheets.updateOne(filter, update)
                 return await resolvers.getSheets()
             },
 
             async deleteImage(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({_id: new ObjectId(args.id)}, {$pull: {images: {id: args.imageId}}})
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { images: { id: args.imageId } } })
                 return await resolvers.getSheets()
-            }
+            },
             // async getRecipes (args) {
             //	let recipes = []
             //	if (args?.slug) recipes.push(await Database.recipes.findOne({ slug: args.slug }))
@@ -298,14 +298,14 @@ export default class Database {
             for (const data of datas) {
                 const func = Object.keys(data)[0]
                 resolver = resolvers[func as keyof typeof resolver]
-                if (!resolver) return {error: `no resolver function for ${func}`}
-                resArr.push(<TSheet>(await resolver(Object.values(data)[0])))
+                if (!resolver) return { error: `no resolver function for ${func}` }
+                resArr.push(<TSheet>await resolver(Object.values(data)[0]))
             }
             return resArr
         }
         const func = Object.keys(datas)[0]
         resolver = resolvers[func as keyof typeof resolver]
-        if (!resolver) return {error: `no resolver function for ${func}`}
+        if (!resolver) return { error: `no resolver function for ${func}` }
         return await resolver(Object.values(datas)[0])
     }
 }

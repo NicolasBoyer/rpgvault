@@ -3,7 +3,7 @@ export type TSheet = {
     id?: string
     name: string
     slug?: string
-    notepad?: string
+    notepad?: TTab[]
     inputs?: TInput[]
     images?: TImage[]
     fonts?: TFont[]
@@ -13,12 +13,14 @@ export type TSheet = {
     ui?: Record<string, TPosition>
 }
 
+export type TTab = { title: string; content: string }
+
 export type TSheetProperties = {
     setBackgroundColor?: Record<string, string>
     setBackgroundImage?: Record<string, Blob | string>
     setFont?: TFont
     deleteFont?: Record<string, string[]>
-    setNotepad?: Record<string, string>
+    setNotepad?: Record<string, Record<string, string>[] | undefined>
     setUIBlocksPosition?: Record<string, TPosition>
     setUIBlocksInterface?: Record<string, string>
 }

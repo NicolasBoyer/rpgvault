@@ -15,6 +15,7 @@
 	/*--h5-color: #625841;*/
 	/*--h6-color: #6d624d;*/
 	--primary: #7F3300;
+	--inv-primary: #f9f5f2;
 	--primary-hover: #c79c82;
 	/*--form-element-border-color: #b9b2a2;*/
 	--primary-focus: #7F330020;
@@ -634,12 +635,14 @@ fs-sheet .notepadMode article#notepad {
 	left: 1em;
 	top: 3em;
 	margin: 0;
-	z-index: 1000;
+	z-index: 998;
 	height: 90%;
 	right: 1em;
+	display: flex;
+	flex-direction: column;
 }
 
-fs-sheet .notepadMode article#notepad > textarea {
+fs-sheet .notepadMode article#notepad textarea {
 	padding: 1em;
 	border: 0;
 	margin: 0;
@@ -651,11 +654,107 @@ fs-sheet .notepadMode article#notepad > textarea {
 	height: 100%;
 	font-family: 'Satisfy', cursive;
 	font-size: 1.3em;
-	color: #5f7ba5;
+	color: var(--secondary);
 }
 
-fs-sheet .notepadMode article#notepad > textarea:hover {
+fs-sheet .notepadMode article#notepad textarea:hover {
 	overflow: auto;
+}
+
+fs-sheet .notepadMode article#notepad button.addTab span {
+	display: none;
+}
+
+fs-sheet .notepadMode article#notepad button.addTab {
+    border: none;
+    padding: 0.3em 0.5em;
+    border-radius: 50px;
+    display: flex;
+    height: 38px;
+    align-items: center;
+}
+
+fs-sheet .notepadMode article#notepad button.addTab:hover {
+	background: var(--inv-primary);
+	filter: brightness(0.9);
+}
+
+fs-sheet .notepadMode article#notepad nav ul {
+	margin: 0;
+}
+
+fs-sheet .notepadMode article#notepad nav ul li {
+	height: 87px;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+fs-sheet .notepadMode article#notepad [role=tabpanel] {
+	height: inherit;
+}
+
+fs-sheet .notepadMode article#notepad [role=tab] {
+	padding: var(--nav-link-spacing-vertical) calc(var(--nav-link-spacing-horizontal)*1.5);
+	user-select: none;
+	color: var(--secondary);
+	transition: all .25s;
+	background: var(--inv-primary);;
+	margin: 0 1px;
+	border-radius: 0.3em 0.3em 0 0;
+	height: 50px;
+	min-width: 65px;
+	max-width: 9em;
+}
+
+fs-sheet .notepadMode article#notepad [role=tab] input {
+    height: 100%;
+    width: 100%;
+}
+
+fs-sheet .notepadMode article#notepad [role=tab]:hover {
+	filter: brightness(0.9);
+}
+
+fs-sheet .notepadMode article#notepad [role=tab][aria-current] {
+	color: var(--contrast)!important;
+	border-color: var(--contrast);
+	border-radius: 0.3em 0.3em 0 0;
+	box-shadow: 0 -5px 7px var(--modal-overlay-background-color);
+	background: var(--primary-inverse);
+	margin: 0 1px;
+}
+
+fs-sheet .notepadMode article#notepad [role=tab][aria-current]:hover {
+	filter: none;
+	cursor: default;
+}
+
+fs-sheet .notepadMode article#notepad section {
+      height: 100%;
+      margin: 0;
+}
+
+fs-sheet .notepadMode article#notepad button.removeTab {
+      position: absolute;
+      background: transparent;
+      border: none;
+      color: var(--primary);
+	  padding: 0;
+	  width: 0.7em;
+	  height: 0.7em;
+	  display: flex;
+	  top: 1.85em;
+	  right: 0.7em;
+}
+
+fs-sheet .notepadMode article#notepad button.removeTab svg {
+	width: inherit;
+	height: inherit;
+}
+
+fs-sheet .notepadMode article#notepad button.removeTab span {
+      display: none;
 }
 
 /*** LOADER ***/

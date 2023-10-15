@@ -35,9 +35,14 @@ export default class Datas {
         await this.save(pInput)
     }
 
-    static async saveNotepad(text: string): Promise<void> {
-        this.sheet.notepad = text
-        this.sheetProperties = [{ setNotepad: { text } }]
+    static async saveNotepad(index: number, tab?: { title?: string; content?: string }): Promise<void> {
+        if (!this.sheet.notepad![index]) this.sheet.notepad![index] = { title: '', content: '' }
+        if (index && !tab) this.sheet.notepad = this.sheet.notepad!.filter((_pTab, pIndex): boolean => pIndex !== index)
+        if (tab) {
+            this.sheet.notepad![index].content = tab.content || this.sheet.notepad![index].content || ''
+            this.sheet.notepad![index].title = tab.title || this.sheet.notepad![index].title || ''
+        }
+        this.sheetProperties = [{ setNotepad: { notepad: this.sheet.notepad } }]
         await this.save()
     }
 
