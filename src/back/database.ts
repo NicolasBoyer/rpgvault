@@ -2,17 +2,18 @@ import { Collection, MongoClient, ObjectId } from 'mongodb'
 import { Utils } from './utils.js'
 import { TSheet } from '../front/javascript/types.js'
 
+let client: MongoClient
+
 /**
  * Permet la déclaration de la db (ici un fichier json) et de résoudre les requêtes passées dans la fonction request
  */
 export default class Database {
-    static client: MongoClient
     static sheets: Collection
 
     static async auth(credentials: string): Promise<boolean> {
         try {
             const splitCredentials = credentials.split(':')
-            this.client = await MongoClient.connect(`mongodb+srv://${splitCredentials[0]}:${encodeURIComponent(splitCredentials[1])}@cluster0.camsv.mongodb.net?retryWrites=true&w=majority`)
+            client = client || (await MongoClient.connect(`mongodb+srv://${splitCredentials[0]}:${encodeURIComponent(splitCredentials[1])}@cluster0.camsv.mongodb.net?retryWrites=true&w=majority`))
             return true
         } catch (e) {
             return false
@@ -20,7 +21,7 @@ export default class Database {
     }
 
     static init(): void {
-        const db = this.client?.db('sheetrpg')
+        const db = client?.db('sheetrpg')
         this.sheets = db.collection('nicolasboyer')
         // this.recipes = db.collection('recipes')
         // this.lists = db.collection('lists')
