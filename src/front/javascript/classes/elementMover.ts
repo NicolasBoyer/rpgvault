@@ -71,6 +71,7 @@ export class ElementMover {
             ElementMover.mouse.y = pEvent.pageY + window.scrollY - ElementMover.offsetPosition.y
             if (pEvent.pressure !== 0 && ElementMover.isPointerDown && !ElementResizer.isPointerDown) {
                 selectedElement.classList.add('hasMoved')
+                selectedElement.hasMoved = true
                 ElementMover.isMoving = true
                 selectedElement.style.transform = `translate(${ElementMover.mouse.x}px, ${ElementMover.mouse.y}px)`
             }

@@ -5,6 +5,7 @@ import { ElementMover } from '../../classes/elementMover.js'
 import { EInterface } from '../../enum.js'
 import { ElementManager } from '../../classes/elementManager.js'
 import { TElement } from '../../types.js'
+import { History } from '../../classes/history.js'
 
 /**
  * Fonctions relatives au statut du composant
@@ -27,6 +28,7 @@ export default class States {
         Datas.deletedImages = []
         Datas.sheetProperties = []
         ElementManager.selectedInfosElement = null as unknown as TElement
+        this.initHistory()
         View.render()
     }
 
@@ -39,5 +41,15 @@ export default class States {
         if (ElementResizer.isPointerDown || ElementMover.isPointerDown) return
         this.isEditBlockHidden = !pValue
         View.render()
+    }
+
+    static initHistory(): void {
+        if (!this.editMode) return
+        History.init(Datas.sheet)
+        document.body.addEventListener('historyChanged', (pEvent): void => {
+            const sheet = (pEvent as CustomEvent).detail
+            if (sheet) Datas.sheet = sheet
+            View.render()
+        })
     }
 }

@@ -12,6 +12,7 @@ import { TSheet } from '../types.js'
 // TODO ajouter possibilité de changer l'image
 // TODO Ajouter une grille ?
 // TODO ajouter masque mode cadre ?
+// TODO Voir si normal que tout soit en statique
 export default class Home extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null

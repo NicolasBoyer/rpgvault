@@ -8,3 +8,8 @@ export enum EElementType {
     image = 'image',
     input = 'input',
 }
+
+export enum EHistoryPosition {
+    up = 'up',
+    down = 'down',
+}

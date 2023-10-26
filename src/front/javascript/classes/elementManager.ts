@@ -9,6 +9,7 @@ import { ElementMover } from './elementMover.js'
 import { ElementResizer } from './elementResizer.js'
 import { SHEETRPGElement, TElement, TImage, TInput, TPosition } from '../types.js'
 import { EElementType } from '../enum.js'
+import { History } from './history.js'
 
 export class ElementManager {
     static selectedInfosElement: TElement
@@ -32,6 +33,7 @@ export class ElementManager {
                                 if (pInfosElement.elementType === EElementType.image) {
                                     Datas.addImageValues(<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
                                 }
+                                History.set('move', Datas.sheet)
                             }
                         )
                         ElementResizer.init(
@@ -67,6 +69,7 @@ export class ElementManager {
                                         Math.round(<number>pMousePosition.height / Sheet.ratio)
                                     )
                                 }
+                                History.set('resize', Datas.sheet)
                             }
                         )
                         htmlElement.setAttribute('data-initialized', 'true')
@@ -94,6 +97,7 @@ export class ElementManager {
                 break
         }
         States.isSaved = false
+        History.set('delete', Datas.sheet)
         View.render()
     }
 
@@ -108,6 +112,7 @@ export class ElementManager {
                 break
         }
         this.select(pEvent, clone)
+        History.set('clone', Datas.sheet)
     }
 
     static copy(): void {
@@ -132,20 +137,29 @@ export class ElementManager {
                 break
         }
         this.select(pEvent, infosElement)
+        History.set('paste', Datas.sheet)
     }
 
     static select(pEvent: Event | null = null, pInfosElement: TElement | null = null): void {
         if (States.editMode) {
             if (pEvent) pEvent.stopPropagation()
+            if (this.selectedInfosElement) delete this.selectedInfosElement.selected
             this.selectedInfosElement = <TElement>pInfosElement
-            View.render()
+            let selectedElement: SHEETRPGElement | null = null
             if (pInfosElement) {
-                const selectedElement: HTMLElement = <HTMLElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
+                pInfosElement.selected = true
+                selectedElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
                 ShortcutManager.set(selectedElement, ['Control', 'd'], (pEvent: KeyboardEvent): Promise<void> => this.clone(pEvent))
                 ShortcutManager.set(selectedElement, ['Control', 'c'], (): void => this.copy())
                 ShortcutManager.set(document.body, ['Control', 'v'], (pEvent: KeyboardEvent): Promise<void> => this.paste(pEvent))
                 ShortcutManager.set(selectedElement, ['Delete'], (): void => this.delete())
             }
+            View.render()
+            console.log(this.selectedInfosElement)
+            // TODO à voir si je veux mettre en place la déselection dans l'historique
+            if (pEvent?.type === 'click' && selectedElement && !selectedElement.hasMoved) History.set('select', Datas.sheet)
+            if (selectedElement) selectedElement.hasMoved = false
+            console.log(History.get())
         }
     }
 }

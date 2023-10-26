@@ -38,6 +38,7 @@ export type TInput = {
     fontSize: number
     fontFamily: string
     elementType: string
+    selected?: boolean
 }
 
 export type TImage = {
@@ -50,6 +51,7 @@ export type TImage = {
     file?: Blob | File
     image_url?: string | ArrayBuffer | null
     elementType: string
+    selected?: boolean
 }
 
 export type TFont = {
@@ -83,8 +85,13 @@ export type SHEETRPGElement = HTMLElement & {
     moverCallback: (position: TPosition) => void
     resizerCallback: (position: TPosition) => void
     selector: HTMLElement
+    hasMoved?: boolean
 }
 
 export type HTMLElementEvent<T extends HTMLElement> = Event & {
     target: T
 }
+
+export type THistoryEntry = { name: string; refObject: Record<string, unknown> }
+
+export type THistory = THistoryEntry[]
