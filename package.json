@@ -16,26 +16,26 @@
   "author": "Nicolas Boyer",
   "license": "ISC",
   "devDependencies": {
-    "@types/livereload": "0.9.3",
-    "@types/node": "20.8.3",
-    "@typescript-eslint/eslint-plugin": "6.7.4",
-    "@typescript-eslint/parser": "6.7.4",
-    "concurrently": "8.2.1",
+    "@types/livereload": "0.9.5",
+    "@types/node": "20.9.0",
+    "@typescript-eslint/eslint-plugin": "6.11.0",
+    "@typescript-eslint/parser": "6.11.0",
+    "concurrently": "8.2.2",
     "cross-env": "7.0.3",
-    "eslint": "8.51.0",
+    "eslint": "8.53.0",
     "eslint-config-prettier": "9.0.0",
-    "eslint-plugin-import": "2.28.1",
+    "eslint-plugin-import": "2.29.0",
     "livereload": "0.9.3",
-    "mongodb": "6.1.0",
+    "mongodb": "6.2.0",
     "nodemon": "3.0.1",
-    "prettier": "3.0.3",
-    "vite": "4.4.11"
+    "prettier": "3.1.0",
+    "vite": "4.5.0"
   },
   "dependencies": {
   	"ts-node": "10.9.1",
     "html2canvas": "1.4.1",
     "idb": "7.1.1",
-    "lit": "2.8.0",
+    "lit": "3.0.2",
     "ws": "8.14.2"
   }
 }
