@@ -155,11 +155,8 @@ export class ElementManager {
                 ShortcutManager.set(selectedElement, ['Delete'], (): void => this.delete())
             }
             View.render()
-            console.log(this.selectedInfosElement)
-            // TODO à voir si je veux mettre en place la déselection dans l'historique
-            if (pEvent?.type === 'click' && selectedElement && !selectedElement.hasMoved) History.set('select', Datas.sheet)
+            if (pEvent?.type === 'click' && ((selectedElement && !selectedElement.hasMoved) || !selectedElement)) History.set('select', Datas.sheet)
             if (selectedElement) selectedElement.hasMoved = false
-            console.log(History.get())
         }
     }
 }

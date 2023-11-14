@@ -13,6 +13,7 @@ import { TSheet } from '../types.js'
 // TODO Ajouter une grille ?
 // TODO ajouter masque mode cadre ?
 // TODO Voir si normal que tout soit en statique
+// TODO système de calque ou d'index
 export default class Home extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null
