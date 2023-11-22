@@ -3,6 +3,7 @@ import States from './states.js'
 import View from './view.js'
 import { Caches } from '../../classes/caches.js'
 import { TImage, TInput, TSheet, TSheetProperties } from '../../types.js'
+import { History } from '../../classes/history.js'
 
 /**
  * Fonctions permettant de gérer les données.
@@ -150,6 +151,7 @@ export default class Datas {
             this.sheetProperties = []
             this.isSaving = false
             States.isSaved = true
+            History.setSavedPosition()
         }
     }
 

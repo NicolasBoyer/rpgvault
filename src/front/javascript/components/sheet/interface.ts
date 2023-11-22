@@ -11,6 +11,7 @@ import { HTMLElementEvent, SHEETRPGElement, TElement, TFont, TInput, TPosition }
 import View from './view.js'
 import { ShortcutManager } from '../../classes/shortcutManager.js'
 import { EInterface } from '../../enum.js'
+import { History } from '../../classes/history.js'
 
 /**
  * Contient toutes les fonctions relatives à l'interface et son rendu
@@ -101,6 +102,7 @@ export default class Interface {
                 <div class="validBlock">
                     <button
                         @click="${(): void => {
+                            History.reset()
                             States.displayEditMode(false)
                         }}"
                     >

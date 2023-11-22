@@ -52,6 +52,15 @@ export default class View {
                               >
                                   Bloc notes
                               </button>
+                              <button
+                                  class="notepad contrast ${States.notepadMode && 'selected'}"
+                                  @click="${(pEvent: PointerEvent): void => {
+                                      pEvent.stopPropagation()
+                                      States.displayNotepadMode(!States.notepadMode)
+                                  }}"
+                              >
+                                  Historique
+                              </button>
                               <button class="print contrast" @click="${(): Promise<void> => Sheet.printScreen()}">
                                   <svg class="print">
                                       <use href="#print"></use>
