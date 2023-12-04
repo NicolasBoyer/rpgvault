@@ -45,10 +45,10 @@ export default class States {
 
     static initHistory(): void {
         if (!this.editMode) return
-        History.init(Datas.sheet)
-        document.body.addEventListener('historyChanged', (pEvent): void => {
-            const sheet = (pEvent as CustomEvent).detail
-            if (sheet) Datas.sheet = sheet
+        History.init()
+        document.body.addEventListener('historyChanged', (): void => {
+            // const sheet = (pEvent as CustomEvent).detail
+            // if (sheet) Datas.sheet = sheet
             View.render()
         })
     }

@@ -28,12 +28,13 @@ export class ElementManager {
                             },
                             (pMousePosition): void => {
                                 if (pInfosElement.elementType === EElementType.input) {
+                                    History.set('move', 'Déplacement d\'un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, <TInput>pInfosElement, 'x', pInfosElement.x, 'y', pInfosElement.y)
                                     Datas.addInputValues(<TInput>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
                                 }
                                 if (pInfosElement.elementType === EElementType.image) {
                                     Datas.addImageValues(<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
                                 }
-                                History.set('move', Datas.sheet)
+                                // History.set('move', Datas.sheet)
                             }
                         )
                         ElementResizer.init(
@@ -69,7 +70,7 @@ export class ElementManager {
                                         Math.round(<number>pMousePosition.height / Sheet.ratio)
                                     )
                                 }
-                                History.set('resize', Datas.sheet)
+                                // History.set('resize', Datas.sheet)
                             }
                         )
                         htmlElement.setAttribute('data-initialized', 'true')
@@ -97,7 +98,7 @@ export class ElementManager {
                 break
         }
         States.isSaved = false
-        History.set('delete', Datas.sheet)
+        // History.set('delete', Datas.sheet)
         View.render()
     }
 
@@ -112,7 +113,7 @@ export class ElementManager {
                 break
         }
         this.select(pEvent, clone)
-        History.set('clone', Datas.sheet)
+        // History.set('clone', Datas.sheet)
     }
 
     static copy(): void {
@@ -137,7 +138,7 @@ export class ElementManager {
                 break
         }
         this.select(pEvent, infosElement)
-        History.set('paste', Datas.sheet)
+        // History.set('paste', Datas.sheet)
     }
 
     static select(pEvent: Event | null = null, pInfosElement: TElement | null = null): void {
@@ -155,7 +156,7 @@ export class ElementManager {
                 ShortcutManager.set(selectedElement, ['Delete'], (): void => this.delete())
             }
             View.render()
-            if (pEvent?.type === 'click' && ((selectedElement && !selectedElement.hasMoved) || !selectedElement)) History.set('select', Datas.sheet)
+            // if (pEvent?.type === 'click' && ((selectedElement && !selectedElement.hasMoved) || !selectedElement)) History.set('select', Datas.sheet)
             if (selectedElement) selectedElement.hasMoved = false
         }
     }

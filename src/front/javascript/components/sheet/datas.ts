@@ -151,7 +151,7 @@ export default class Datas {
             this.sheetProperties = []
             this.isSaving = false
             States.isSaved = true
-            History.setSavedPosition()
+            History.resetSavedPosition()
         }
     }
 

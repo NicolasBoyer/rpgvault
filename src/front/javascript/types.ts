@@ -92,6 +92,11 @@ export type HTMLElementEvent<T extends HTMLElement> = Event & {
     target: T
 }
 
-export type THistoryEntry = { name: string; refObject: Record<string, unknown> }
+export type THistoryEntry = {
+    name: string
+    title: string
+    action: (...args: unknown[]) => void
+    args: unknown[]
+}
 
 export type THistory = THistoryEntry[]
