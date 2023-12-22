@@ -33,7 +33,6 @@ export class History {
     static reset(): void {
         const position = this.position < this.savedPosition ? this.position : this.savedPosition
         for (let i = position; i < (<THistory>this.get()).length; i++) {
-            // TODO enregistrement devrait désélectionner et ne plus enregistré dans le json la sélection + finir mise en place des execute dans le manager
             if (this.position < this.savedPosition) this.redo()
             else this.undo()
         }

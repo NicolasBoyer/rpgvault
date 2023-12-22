@@ -116,7 +116,7 @@ export class ElementManager {
                 History.execute(
                     'deleteInput',
                     'Suppression d\'un input',
-                    this.#delete.bind(this) as unknown as (...args: unknown[]) => void,
+                    this.delete.bind(this) as unknown as (...args: unknown[]) => void,
                     [<TInput>infosElement],
                     ((): void => {
                         Datas.addInputValues(<TInput>infosElement)
@@ -129,7 +129,7 @@ export class ElementManager {
                 History.execute(
                     'deleteImage',
                     'Suppression d\'une image',
-                    this.#delete.bind(this) as unknown as (...args: unknown[]) => void,
+                    this.delete.bind(this) as unknown as (...args: unknown[]) => void,
                     [<TImage>infosElement],
                     ((): void => {
                         Datas.addImageValues(<TImage>infosElement)
@@ -147,12 +147,12 @@ export class ElementManager {
         const clone: TElement = { ...this.selectedInfosElement, id: Utils.generateId().toString(), elementType: this.selectedInfosElement.elementType }
         switch (this.selectedInfosElement.elementType) {
             case EElementType.input:
-                History.execute('cloneInput', 'Duplication d\'un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TInput>clone], this.#delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                History.execute('cloneInput', 'Duplication d\'un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TInput>clone], this.delete.bind(this) as unknown as (...args: unknown[]) => void, [
                     <TInput>clone,
                 ])
                 break
             case EElementType.image:
-                History.execute('cloneImage', 'Duplication d\'une image', Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TImage>clone], this.#delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                History.execute('cloneImage', 'Duplication d\'une image', Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TImage>clone], this.delete.bind(this) as unknown as (...args: unknown[]) => void, [
                     <TImage>clone,
                 ])
                 break
@@ -175,12 +175,12 @@ export class ElementManager {
         }
         switch (this.selectedInfosElement.elementType) {
             case EElementType.input:
-                History.execute('pasteInput', 'Colle un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TInput>infosElement], this.#delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                History.execute('pasteInput', 'Colle un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TInput>infosElement], this.delete.bind(this) as unknown as (...args: unknown[]) => void, [
                     <TInput>infosElement,
                 ])
                 break
             case EElementType.image:
-                History.execute('pasteImage', 'Colle une image', Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TImage>infosElement], this.#delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                History.execute('pasteImage', 'Colle une image', Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TImage>infosElement], this.delete.bind(this) as unknown as (...args: unknown[]) => void, [
                     <TImage>infosElement,
                 ])
                 break
@@ -204,7 +204,7 @@ export class ElementManager {
         }
     }
 
-    static #delete(pInfosElement: TElement): void {
+    private static delete(pInfosElement: TElement): void {
         const selectedInfosElementId = pInfosElement.id
         switch (pInfosElement.elementType) {
             case EElementType.input:
