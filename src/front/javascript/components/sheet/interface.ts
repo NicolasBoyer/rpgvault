@@ -153,7 +153,7 @@ export default class Interface {
                     class="deleteInput"
                     @click="${(pEvent: PointerEvent): void => {
                         pEvent.preventDefault()
-                        ElementManager.delete()
+                        ElementManager.deleteWithHistory()
                     }}"
                     title="Supprimer (Suppr)"
                 >

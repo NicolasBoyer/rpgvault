@@ -12,6 +12,7 @@ import { EElementType } from '../enum.js'
 import { History } from './history.js'
 
 export class ElementManager {
+    // TODO peut etre réviser ce code pour etre sur qu'il est bien
     static selectedInfosElement: TElement
 
     static init(): void {
@@ -19,33 +20,48 @@ export class ElementManager {
             ;(<TElement[]>Datas.sheet.inputs)?.concat(<TElement[]>Datas.sheet.images).forEach((pInfosElement: TElement): void => {
                 if (pInfosElement) {
                     const htmlElement: SHEETRPGElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
-                    if (!htmlElement.getAttribute('data-initialized')) {
-                        ElementMover.init(
-                            htmlElement,
-                            {
-                                x: Sheet.containerLeft,
-                                y: Sheet.containerTop,
-                            },
-                            (pMousePosition): void => {
-                                if (pInfosElement.elementType === EElementType.input) {
-                                    History.set('move', 'Déplacement d\'un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, <TInput>pInfosElement, 'x', pInfosElement.x, 'y', pInfosElement.y)
-                                    Datas.addInputValues(<TInput>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
-                                }
-                                if (pInfosElement.elementType === EElementType.image) {
-                                    Datas.addImageValues(<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio))
-                                }
-                                // History.set('move', Datas.sheet)
+                    ElementMover.init(
+                        htmlElement,
+                        {
+                            x: Sheet.containerLeft,
+                            y: Sheet.containerTop,
+                        },
+                        (pMousePosition): void => {
+                            if (pInfosElement.elementType === EElementType.input) {
+                                History.execute(
+                                    'moveInput',
+                                    'Déplacement d\'un input',
+                                    Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                    [<TInput>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)],
+                                    Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                    [<TInput>pInfosElement, 'x', pInfosElement.x, 'y', pInfosElement.y]
+                                )
                             }
-                        )
-                        ElementResizer.init(
-                            htmlElement,
-                            {
-                                x: Sheet.containerLeft,
-                                y: Sheet.containerTop,
-                            },
-                            (pMousePosition: TPosition): void => {
-                                if (pInfosElement.elementType === EElementType.input) {
-                                    Datas.addInputValues(
+                            if (pInfosElement.elementType === EElementType.image) {
+                                History.execute(
+                                    'moveImage',
+                                    'Déplacement d\'une image',
+                                    Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                    [<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)],
+                                    Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                    [<TImage>pInfosElement, 'x', pInfosElement.x, 'y', pInfosElement.y]
+                                )
+                            }
+                        }
+                    )
+                    ElementResizer.init(
+                        htmlElement,
+                        {
+                            x: Sheet.containerLeft,
+                            y: Sheet.containerTop,
+                        },
+                        (pMousePosition: TPosition): void => {
+                            if (pInfosElement.elementType === EElementType.input) {
+                                History.execute(
+                                    'resizeInput',
+                                    'Redimensionnement d\'un input',
+                                    Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                    [
                                         <TInput>pInfosElement,
                                         'x',
                                         Math.round(pMousePosition.x / Sheet.ratio),
@@ -54,11 +70,18 @@ export class ElementManager {
                                         'width',
                                         Math.round(<number>pMousePosition.width / Sheet.ratio),
                                         'height',
-                                        Math.round(<number>pMousePosition.height / Sheet.ratio)
-                                    )
-                                }
-                                if (pInfosElement.elementType === EElementType.image) {
-                                    Datas.addImageValues(
+                                        Math.round(<number>pMousePosition.height / Sheet.ratio),
+                                    ],
+                                    Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                    [<TInput>pInfosElement, 'x', pInfosElement.x, 'y', pInfosElement.y, 'width', pInfosElement.width, 'height', pInfosElement.height]
+                                )
+                            }
+                            if (pInfosElement.elementType === EElementType.image) {
+                                History.execute(
+                                    'resizeImage',
+                                    'Redimensionnement d\'une image',
+                                    Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                    [
                                         <TImage>pInfosElement,
                                         'x',
                                         Math.round(pMousePosition.x / Sheet.ratio),
@@ -67,14 +90,14 @@ export class ElementManager {
                                         'width',
                                         Math.round(<number>pMousePosition.width / Sheet.ratio),
                                         'height',
-                                        Math.round(<number>pMousePosition.height / Sheet.ratio)
-                                    )
-                                }
-                                // History.set('resize', Datas.sheet)
+                                        Math.round(<number>pMousePosition.height / Sheet.ratio),
+                                    ],
+                                    Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                    [<TImage>pInfosElement, 'x', pInfosElement.x, 'y', pInfosElement.y, 'width', pInfosElement.width, 'height', pInfosElement.height]
+                                )
                             }
-                        )
-                        htmlElement.setAttribute('data-initialized', 'true')
-                    }
+                        }
+                    )
                 }
             })
         } else {
@@ -85,20 +108,38 @@ export class ElementManager {
         }
     }
 
-    static delete(): void {
-        const selectedInfosElementId = this.selectedInfosElement.id
-        switch (this.selectedInfosElement.elementType) {
+    static deleteWithHistory(pInfosElement: TElement | null = null): void {
+        const infosElement = pInfosElement || this.selectedInfosElement
+        const selectedInfosElementId = infosElement.id
+        switch (infosElement.elementType) {
             case EElementType.input:
-                Datas.sheet.inputs = Datas.sheet.inputs?.filter((input: TInput): boolean => input.id !== selectedInfosElementId)
-                Datas.deletedInputs.push(selectedInfosElementId)
+                History.execute(
+                    'deleteInput',
+                    'Suppression d\'un input',
+                    this.#delete.bind(this) as unknown as (...args: unknown[]) => void,
+                    [<TInput>infosElement],
+                    ((): void => {
+                        Datas.addInputValues(<TInput>infosElement)
+                        Datas.deletedInputs = Datas.deletedInputs.filter((inputId: string): boolean => inputId !== selectedInfosElementId)
+                    }) as unknown as (...args: unknown[]) => void,
+                    [<TInput>infosElement]
+                )
                 break
             case EElementType.image:
-                Datas.sheet.images = Datas.sheet.images?.filter((image: TImage): boolean => image.id !== selectedInfosElementId)
-                Datas.deletedImages.push(selectedInfosElementId)
+                History.execute(
+                    'deleteImage',
+                    'Suppression d\'une image',
+                    this.#delete.bind(this) as unknown as (...args: unknown[]) => void,
+                    [<TImage>infosElement],
+                    ((): void => {
+                        Datas.addImageValues(<TImage>infosElement)
+                        Datas.deletedImages = Datas.deletedImages.filter((imageId: string): boolean => imageId !== selectedInfosElementId)
+                    }) as unknown as (...args: unknown[]) => void,
+                    [<TImage>infosElement]
+                )
                 break
         }
         States.isSaved = false
-        // History.set('delete', Datas.sheet)
         View.render()
     }
 
@@ -106,14 +147,17 @@ export class ElementManager {
         const clone: TElement = { ...this.selectedInfosElement, id: Utils.generateId().toString(), elementType: this.selectedInfosElement.elementType }
         switch (this.selectedInfosElement.elementType) {
             case EElementType.input:
-                Datas.addInputValues(<TInput>clone)
+                History.execute('cloneInput', 'Duplication d\'un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TInput>clone], this.#delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                    <TInput>clone,
+                ])
                 break
             case EElementType.image:
-                await Datas.addImageValues(<TImage>clone)
+                History.execute('cloneImage', 'Duplication d\'une image', Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TImage>clone], this.#delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                    <TImage>clone,
+                ])
                 break
         }
         this.select(pEvent, clone)
-        // History.set('clone', Datas.sheet)
     }
 
     static copy(): void {
@@ -131,33 +175,48 @@ export class ElementManager {
         }
         switch (this.selectedInfosElement.elementType) {
             case EElementType.input:
-                Datas.addInputValues(<TInput>infosElement)
+                History.execute('pasteInput', 'Colle un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TInput>infosElement], this.#delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                    <TInput>infosElement,
+                ])
                 break
             case EElementType.image:
-                await Datas.addImageValues(<TImage>infosElement)
+                History.execute('pasteImage', 'Colle une image', Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TImage>infosElement], this.#delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                    <TImage>infosElement,
+                ])
                 break
         }
         this.select(pEvent, infosElement)
-        // History.set('paste', Datas.sheet)
     }
 
     static select(pEvent: Event | null = null, pInfosElement: TElement | null = null): void {
         if (States.editMode) {
             if (pEvent) pEvent.stopPropagation()
-            if (this.selectedInfosElement) delete this.selectedInfosElement.selected
             this.selectedInfosElement = <TElement>pInfosElement
-            let selectedElement: SHEETRPGElement | null = null
             if (pInfosElement) {
-                pInfosElement.selected = true
-                selectedElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
+                const selectedElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
+                ElementResizer.resetHandler(selectedElement)
                 ShortcutManager.set(selectedElement, ['Control', 'd'], (pEvent: KeyboardEvent): Promise<void> => this.clone(pEvent))
                 ShortcutManager.set(selectedElement, ['Control', 'c'], (): void => this.copy())
                 ShortcutManager.set(document.body, ['Control', 'v'], (pEvent: KeyboardEvent): Promise<void> => this.paste(pEvent))
-                ShortcutManager.set(selectedElement, ['Delete'], (): void => this.delete())
+                ShortcutManager.set(selectedElement, ['Delete'], (): void => this.deleteWithHistory())
             }
             View.render()
-            // if (pEvent?.type === 'click' && ((selectedElement && !selectedElement.hasMoved) || !selectedElement)) History.set('select', Datas.sheet)
-            if (selectedElement) selectedElement.hasMoved = false
         }
+    }
+
+    static #delete(pInfosElement: TElement): void {
+        const selectedInfosElementId = pInfosElement.id
+        switch (pInfosElement.elementType) {
+            case EElementType.input:
+                Datas.sheet.inputs = Datas.sheet.inputs?.filter((input: TInput): boolean => input.id !== selectedInfosElementId)
+                Datas.deletedInputs.push(selectedInfosElementId)
+                break
+            case EElementType.image:
+                Datas.sheet.images = Datas.sheet.images?.filter((image: TImage): boolean => image.id !== selectedInfosElementId)
+                Datas.deletedImages.push(selectedInfosElementId)
+                break
+        }
+        States.isSaved = false
+        View.render()
     }
 }
