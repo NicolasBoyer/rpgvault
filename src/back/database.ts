@@ -79,6 +79,7 @@ export default class Database {
             },
 
             async setFont(args: Record<string, string>): Promise<TSheet | TSheet[]> {
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
                 await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
                 return await resolvers.getSheets()
             },
@@ -99,6 +100,7 @@ export default class Database {
             },
 
             async deleteFont(args: Record<string, string>): Promise<TSheet | TSheet[]> {
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
                 await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { fonts: { fontFamily: { $in: args.fonts } } } })
                 return await resolvers.getSheets()
             },
@@ -107,11 +109,13 @@ export default class Database {
                 const isInputExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).inputs?.some((pInput): boolean => pInput.id === args.inputId)
                 const update = isInputExists ? { $set: { 'inputs.$': args.input } } : { $push: { inputs: args.input } }
                 const filter = isInputExists ? { _id: new ObjectId(args.id), 'inputs.id': args.inputId } : { _id: new ObjectId(args.id) }
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
                 await Database.sheets.updateOne(filter, update)
                 return await resolvers.getSheets()
             },
 
             async deleteInput(args: Record<string, string>): Promise<TSheet | TSheet[]> {
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
                 await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { inputs: { id: args.inputId } } })
                 return await resolvers.getSheets()
             },
@@ -120,11 +124,13 @@ export default class Database {
                 const isImageExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).images?.some((pImage): boolean => pImage.id === args.imageId)
                 const update = isImageExists ? { $set: { 'images.$': args.image } } : { $push: { images: args.image } }
                 const filter = isImageExists ? { _id: new ObjectId(args.id), 'images.id': args.imageId } : { _id: new ObjectId(args.id) }
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
                 await Database.sheets.updateOne(filter, update)
                 return await resolvers.getSheets()
             },
 
             async deleteImage(args: Record<string, string>): Promise<TSheet | TSheet[]> {
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
                 await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { images: { id: args.imageId } } })
                 return await resolvers.getSheets()
             },
