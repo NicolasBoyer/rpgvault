@@ -1,3 +1,6 @@
+import http from 'http'
+import { JwtPayload } from 'jsonwebtoken'
+
 export type TSheet = {
     _id?: string
     id?: string
@@ -100,3 +103,31 @@ export type THistoryEntry = {
 }
 
 export type THistory = THistoryEntry[]
+
+export type TRoute = {
+    path: string
+    className: string
+    title: string
+    label: string
+}
+
+export type TIncomingMessage = http.IncomingMessage & {
+    params: Record<string, string>
+    user?: string | JwtPayload
+}
+
+export type TValidateReturn = {
+    success: boolean
+    message?: string
+    token?: string
+}
+
+export type TUser = {
+    _id: string
+    firstName: string
+    lastName: string
+    email: string
+    password: string
+    roles: { db: string; permissions: string[] }[]
+    userDbName: string
+}

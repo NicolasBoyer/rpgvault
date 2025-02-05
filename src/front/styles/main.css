@@ -628,6 +628,41 @@ body.home .title button svg {
 	display: grid;
 }
 
+/*** HISTORIQUE ***/
+article#historyBlock {
+	z-index: 1001;
+	min-width: 18em;
+	margin: auto;
+	padding: 0;
+}
+
+article#historyBlock > header {
+	padding: 0.5em;
+	font-size: 1.5em;
+	display: flex;
+	margin: 0;
+}
+
+article#historyBlock > main {
+	padding: 1em;
+	overflow: auto;
+	height: 20em;
+}
+
+article#historyBlock button {
+	background: none;
+    border: none;
+    color: var(--primary);
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+button.cancelable {
+	color: var(--form-element-disabled-background-color) !important;
+	font-style: italic;
+}
+
 /*** NOTEPAD ***/
 fs-sheet .notepadMode article#notepad {
 	padding: 0;

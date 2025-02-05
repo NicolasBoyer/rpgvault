@@ -7,7 +7,7 @@ import { ElementMover } from '../../classes/elementMover.js'
 import Input from './input.js'
 import Image from './image.js'
 import { elements } from '../../datas/elements.js'
-import { HTMLElementEvent, SHEETRPGElement, TElement, TFont, TInput, TPosition } from '../../types.js'
+import { HTMLElementEvent, SHEETRPGElement, TElement, TFont, THistory, TInput, TPosition } from '../../types.js'
 import View from './view.js'
 import { ShortcutManager } from '../../classes/shortcutManager.js'
 import { EInterface } from '../../enum.js'
@@ -97,8 +97,28 @@ export default class Interface {
                 <button class="contrast" @click="${(): void => Sheet.changeBackgroundColor()}">Couleur du fond</button>
                 <button class="contrast" @click="${(): void => Sheet.addFont()}">Ajouter une police</button>
                 <button class="contrast" @click="${(): void => Sheet.deleteFont()}">Supprimer une police</button>
-                <button class="contrast" @click="${(): void => Input.add()}">Ajouter un champ</button>
+                <button
+                    class="contrast"
+                    @click="${(): void => {
+                        // TODO ICI !!
+                        // History.execute('addInput', 'Ajouter un champ', Input.add.bind(this) as unknown as (...args: unknown[]) => void, [], ElementManager.delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                        //     <TInput>pInfosElement,
+                        // ])
+                        Input.add()
+                    }}"
+                >
+                    Ajouter un champ
+                </button>
                 <button class="contrast" @click="${(): void => Image.add()}">Ajouter une image</button>
+                <button
+                    class="contrast"
+                    @click="${(pEvent: PointerEvent): void => {
+                        pEvent.stopPropagation()
+                        States.displayHistory(!States.isHistoryBlockHidden)
+                    }}"
+                >
+                    Historique
+                </button>
                 <div class="validBlock">
                     <button
                         @click="${(): void => {
@@ -177,13 +197,50 @@ export default class Interface {
                                 type="${pEntry.type}"
                                 name="${pEntry.name}"
                                 value="${pEntry.value}"
-                                @input="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => Datas.addInputValues(<TInput>pInfosElement, pEntry.id, pEvent.target.value)}"
+                                @input="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
+                                    History.execute(
+                                        pEntry.id,
+                                        `${pEntry.name} - ${pEvent.target.value}`,
+                                        Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                        [<TInput>pInfosElement, pEntry.id, pEvent.target.value],
+                                        Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
+                                        [<TInput>pInfosElement, pEntry.id, pInfosElement[pEntry.id as keyof TElement]]
+                                    )
+                                    View.render()
+                                }}"
                                 options="${JSON.stringify(pEntry.options)}"
                             ></fs-label>
                         `
                     )}
             </article>
         `
+    }
+
+    static historyBlock(): TemplateResult {
+        setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.historyBlock')))
+        this.scrollHistoryBlockToBottom(<Element>document.querySelector('#historyBlock > main'))
+        const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.historyBlock
+        return html`
+            <article
+                .hidden="${States.isHistoryBlockHidden}"
+                class="historyBlock${hasMoved ? ' hasMoved' : ''}"
+                id="historyBlock"
+                style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.historyBlock.x}px, ${Datas.sheet.ui?.historyBlock.y}px);` : ''}"
+            >
+                <header>Historique</header>
+                <main>
+                    ${(<THistory>History.get())?.map((pHistoryEntry, pIndex): TemplateResult => {
+                        return html`<div>
+                            <button class="${History.position < pIndex + 1 ? 'cancelable' : ''}" @click="${(): void => History.navigateFromPositionTo(pIndex + 1)}">${pHistoryEntry.title}</button>
+                        </div>`
+                    })}
+                </main>
+            </article>
+        `
+    }
+
+    private static scrollHistoryBlockToBottom(pElement: Element): void {
+        setTimeout((): void => pElement.scrollTo(0, <number>pElement.scrollHeight))
     }
 
     private static initializeMove(pElement: SHEETRPGElement): void {

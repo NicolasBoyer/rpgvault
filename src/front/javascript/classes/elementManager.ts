@@ -204,7 +204,7 @@ export class ElementManager {
         }
     }
 
-    private static delete(pInfosElement: TElement): void {
+    static delete(pInfosElement: TElement): void {
         const selectedInfosElementId = pInfosElement.id
         switch (pInfosElement.elementType) {
             case EElementType.input:

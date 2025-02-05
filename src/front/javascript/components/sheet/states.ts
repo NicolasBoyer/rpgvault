@@ -16,6 +16,7 @@ export default class States {
     static isEditBlockHidden: boolean
     static interface = EInterface.hover
     static isSaved = true
+    static isHistoryBlockHidden = true
     static isDrawing: boolean = false
     static isZoomed: string | boolean = false
 
@@ -28,12 +29,18 @@ export default class States {
         Datas.deletedImages = []
         Datas.sheetProperties = []
         ElementManager.selectedInfosElement = null as unknown as TElement
+        this.isHistoryBlockHidden = true
         this.initHistory()
         View.render()
     }
 
     static displayNotepadMode(pValue: boolean): void {
         this.notepadMode = pValue
+        View.render()
+    }
+
+    static displayHistory(pValue: boolean): void {
+        this.isHistoryBlockHidden = pValue
         View.render()
     }
 

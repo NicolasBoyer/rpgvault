@@ -52,15 +52,6 @@ export default class View {
                               >
                                   Bloc notes
                               </button>
-                              <button
-                                  class="notepad contrast ${States.notepadMode && 'selected'}"
-                                  @click="${(pEvent: PointerEvent): void => {
-                                      pEvent.stopPropagation()
-                                      States.displayNotepadMode(!States.notepadMode)
-                                  }}"
-                              >
-                                  Historique
-                              </button>
                               <button class="print contrast" @click="${(): Promise<void> => Sheet.printScreen()}">
                                   <svg class="print">
                                       <use href="#print"></use>
@@ -69,6 +60,7 @@ export default class View {
                               </button>
                               ${States.notepadMode ? Notepad.render() : ''}
                           `}
+                    ${!States.isHistoryBlockHidden ? Interface.historyBlock() : ''}
                     ${Datas.sheet.inputs?.map(
                         (pInput): TemplateResult => html`
                             <label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${ElementManager.selectedInfosElement?.id === pInput.id ? 'selected' : ''}">

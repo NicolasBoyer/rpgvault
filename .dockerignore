@@ -1,0 +1,6 @@
+node_modules
+.git
+.idea
+eslint.config.mjs
+README.md
+*.lock

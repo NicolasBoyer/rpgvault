@@ -1,17 +1,14 @@
 import http from 'http'
 import fs from 'fs'
 import { Utils } from './utils.js'
-import { WebSocketServer } from 'ws'
-import Database from './database.js'
+import WebSocket, { WebSocketServer } from 'ws'
+import { TIncomingMessage } from '../front/javascript/types.js'
+import jwt from 'jsonwebtoken'
+import { SECRET_KEY } from './config.js'
 
 type TMethod = {
     path: string
     callback: (_req?: http.IncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) => void
-    type: symbol
-}
-
-type TIncomingMessage = http.IncomingMessage & {
-    params: Record<string, string>
 }
 
 const GET: TMethod[] = []
@@ -60,39 +57,41 @@ export const mimetype = Object.freeze({
 export class Server {
     constructor(pPort = 8000) {
         const server = http.createServer(async (req, res): Promise<void> => {
-            const response = async (pMethod: TMethod[]): Promise<void> => {
+            const response = async (pMethod: TMethod[]): Promise<boolean> => {
                 for (const pRoute of pMethod) {
                     const pathArr = pRoute.path.split('/')
                     const urlArr = req.url?.split('/')
                     let id = ''
                     if (pathArr.length === urlArr?.length) {
                         const indexId = pathArr.findIndex((pPath: string): boolean => pPath.includes(':'))
-                        if (
-                            indexId &&
-                            pathArr.filter((_pPath: string, pIndex: number): boolean => pIndex !== indexId).every((pPath: string, pIndex: number): boolean => pPath === urlArr.filter((_pPath, pIndex): boolean => pIndex !== indexId)[pIndex])
-                        )
+                        if (urlArr[indexId]?.includes(pathArr[indexId]?.split(':')[0])) {
                             id = urlArr[indexId]
+                            // Gestion du token de requestPassword -> token
+                            const search = id?.split('?')[1]
+                            if (search) {
+                                const splitSearch = search.split('=')
+                                id = splitSearch[0] === 'token' ? splitSearch[1] : ''
+                            }
+                        }
                     }
                     if (req.url === pRoute.path || id) {
                         if (id) {
                             ;(req as TIncomingMessage).params = {}
                             ;(req as TIncomingMessage).params.id = id
                         }
-                        switch (pRoute.type) {
-                            case mimetype.HTML:
-                                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
-                                break
-                            case mimetype.JSON:
-                                res.writeHead(200, { 'Content-Type': 'application/json' })
-                                break
-                        }
-                        // webSocketServer.emit('connection', 'blop')
+                        // switch (pRoute.type) {
+                        //     case mimetype.HTML:
+                        //         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
+                        //         break
+                        //     case mimetype.JSON:
+                        //         res.writeHead(200, { 'Content-Type': 'application/json' })
+                        //         break
+                        // }
                         pRoute.callback(req, res)
-                        return
+                        return true
                     }
                 }
-                res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' })
-                res.end(await Utils.page('404.html', 'notFound', '404 : Page non trouvée'))
+                return false
             }
             if (req.method === 'GET') {
                 const url = Utils.fromFront(<string>req.url)
@@ -103,37 +102,64 @@ export class Server {
                         return
                     }
                 }
-                if (req.url?.includes('/')) {
-                    const credentials = req.headers?.cookie?.split('; ').filter((cookie): boolean => cookie.includes('_ma'))[0]
-                    if (!credentials || !(await Database.auth(<string>Utils.decrypt(credentials?.split('=')[1])))) {
-                        res.writeHead(401, { 'Content-Type': 'text/html; charset=utf-8' })
-                        res.end(await Utils.page('login.html', 'login', 'Connexion à la BDD'))
-                        return
-                    }
-                    Database.init()
+                if (!(await response(GET))) {
+                    res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' })
+                    res.end(await Utils.page({ className: 'notFound', templateHtml: '404.html' }))
                 }
-
-                response(GET)
             }
-            if (req.method === 'POST') response(POST)
+            if (req.method === 'POST') {
+                if (!(await response(POST))) {
+                    res.writeHead(404, { 'Content-Type': 'application/json' })
+                    res.end(JSON.stringify({ url: '404' }))
+                }
+            }
         })
         const webSocketServer = new WebSocketServer({ server })
-        webSocketServer.on('connection', (ws): void => {
-            ws.on('message', (data): void => {
-                webSocketServer.clients.forEach((client): void => {
-                    // Si le client n'est pas le sender, on envoie les datas
-                    if (client !== ws) client.send(data)
+        const userConnections: { [userId: string]: WebSocket[] } = {}
+        webSocketServer.on('connection', async (ws: WebSocket, req): Promise<void> => {
+            const token = req.headers.cookie?.split(';').find((c): boolean => c.trim().startsWith('fsTk='))
+            if (!token) {
+                ws.close(1008, 'Authentication token required')
+                return
+            }
+
+            try {
+                const decoded = jwt.verify(token.split('=')[1], SECRET_KEY)
+                const userId = (decoded as { email: string }).email
+                if (!userConnections[userId]) {
+                    userConnections[userId] = []
+                }
+                userConnections[userId].push(ws)
+                console.log(`User ${userId} connected`)
+                console.log(`Current connections for user ${userId}:`, userConnections[userId]?.length || 0)
+
+                ws.on('message', (message): void => {
+                    console.log(`Received message from user ${userId}: ${message}`)
+                    userConnections[userId].forEach((client): void => {
+                        if (client.readyState === WebSocket.OPEN) {
+                            client.send(message)
+                        }
+                    })
                 })
-            })
+
+                ws.on('close', (): void => {
+                    console.log(`User ${userId} disconnected`)
+                    userConnections[userId] = userConnections[userId].filter((client): boolean => client !== ws)
+                    console.log(`Current connections for user ${userId}:`, userConnections[userId]?.length || 0)
+                })
+            } catch (error) {
+                console.error('Invalid authentication token:', error)
+                ws.close(1008, 'Invalid authentication token')
+            }
         })
         server.listen(pPort)
     }
 
-    get(pPath: string, pCallback: () => void, pType = mimetype.HTML): void {
-        GET.push({ path: pPath, callback: pCallback, type: pType })
+    get(pPath: string, pCallback: () => void): void {
+        GET.push({ path: pPath, callback: pCallback })
     }
 
-    post(pPath: string, pCallback: () => void, pType = mimetype.JSON): void {
-        POST.push({ path: pPath, callback: pCallback, type: pType })
+    post(pPath: string, pCallback: () => void): void {
+        POST.push({ path: pPath, callback: pCallback })
     }
 }

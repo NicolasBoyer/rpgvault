@@ -3,13 +3,13 @@ import { ShortcutManager } from './shortcutManager.js'
 import { ElementManager } from './elementManager.js'
 
 export class History {
-    private static position: number = 0
-    private static savedPosition: number = 0
+    static position: number = 1
+    private static savedPosition: number = 1
     private static undoQueue: THistory
     private static redoQueue: THistory
 
     static init(): void {
-        this.undoQueue = []
+        this.undoQueue = [{ name: 'open', title: 'Ouverture de l\'éditeur', action: (): void => {}, args: [] }]
         this.redoQueue = []
         ShortcutManager.set(document.body, ['Control', 'z'], (): void => this.undo())
         ShortcutManager.set(document.body, ['Control', 'y'], (): void => this.redo())
@@ -23,6 +23,7 @@ export class History {
     }
 
     static get(name?: string): THistory | THistoryEntry | undefined {
+        // TODO get by name ne peut pas fonctionner
         return name ? this.undoQueue.find((pEntry): boolean => pEntry.name === name) : this.undoQueue
     }
 
@@ -38,6 +39,13 @@ export class History {
         }
     }
 
+    static navigateFromPositionTo(position: number): void {
+        while (this.position !== position) {
+            if (this.position > position) this.undo()
+            if (this.position < position) this.redo()
+        }
+    }
+
     private static resetQueue(history: THistory, entry: THistoryEntry): void {
         while (history[this.position]) {
             history.splice(this.position, 1)
@@ -46,7 +54,7 @@ export class History {
     }
 
     private static undo(): void {
-        if (this.position === 0) return
+        if (this.position <= 1) return
         this.position--
         const entry = this.undoQueue[this.position]
         entry.action(...entry.args)
@@ -56,9 +64,9 @@ export class History {
     private static redo(): void {
         if (this.position >= this.redoQueue.length) return
         const entry = this.redoQueue[this.position]
-        entry.action(...entry.args)
         this.position++
+        entry.action(...entry.args)
     }
 
-    // TODO histo bloc note + delete merde + bloc histo + test annule après un save IMPORTANT
+    // TODO histo bloc note + delete merde + bloc histo + test annule après un save IMPORTANT + histo quand écrit texte dans la fenetre edition + icone dans fenetre histo et style dans histo
 }
