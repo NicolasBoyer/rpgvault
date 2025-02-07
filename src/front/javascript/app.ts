@@ -1,10 +1,12 @@
+import '@picocss/pico'
+import '../styles/main.css'
 import { Utils } from './classes/utils.js'
 import Loader from './components/loader.js'
 import Sheet from './components/sheet/sheet.js'
 import Confirm from './components/confirm.js'
 import Login from './components/login.js'
 import Label from './components/label.js'
-import Home from './components/home.js'
+import Sheets from './components/sheets.js'
 import Link from './components/link.js'
 import ResetPassword from './components/resetPassword.js'
 import LoggedUser from './components/loggedUser.js'
@@ -39,25 +41,25 @@ class App {
 }
 
 new App()
-customElements.define('fs-loader', Loader)
-// customElements.define('fs-header', Header)
-// customElements.define('fs-toast', Toast)
-customElements.define('fs-confirm', Confirm)
-customElements.define('fs-home', Home)
-customElements.define('fs-sheet', Sheet)
-customElements.define('fs-label', Label)
-// customElements.define('fs-propose', Propose)
-// customElements.define('fs-recipes', Recipes)
-// customElements.define('fs-recipe', Recipe)
-// customElements.define('fs-lists', Lists)
-// customElements.define('fs-ingredients', Ingredients)
-// customElements.define('fs-categories', Categories)
-customElements.define('fs-login', Login)
-// customElements.define('fs-loading-block', LoadingBlock)
-// customElements.define('fs-animated-section', AnimatedSection)
-// customElements.define('fs-dishes', Dishes)
-customElements.define('fs-link', Link)
-customElements.define('fs-logged-user', LoggedUser)
-customElements.define('fs-reset-password', ResetPassword)
-customElements.define('fs-signup', Register)
-// customElements.define('fs-menu', Menu)
+customElements.define('rv-loader', Loader)
+// customElements.define('rv-header', Header)
+// customElements.define('rv-toast', Toast)
+customElements.define('rv-confirm', Confirm)
+customElements.define('rv-sheets', Sheets)
+customElements.define('rv-sheet', Sheet)
+customElements.define('rv-label', Label)
+// customElements.define('rv-propose', Propose)
+// customElements.define('rv-recipes', Recipes)
+// customElements.define('rv-recipe', Recipe)
+// customElements.define('rv-lists', Lists)
+// customElements.define('rv-ingredients', Ingredients)
+// customElements.define('rv-categories', Categories)
+customElements.define('rv-login', Login)
+// customElements.define('rv-loading-block', LoadingBlock)
+// customElements.define('rv-animated-section', AnimatedSection)
+// customElements.define('rv-dishes', Dishes)
+customElements.define('rv-link', Link)
+customElements.define('rv-logged-user', LoggedUser)
+customElements.define('rv-reset-password', ResetPassword)
+customElements.define('rv-signup', Register)
+// customElements.define('rv-menu', Menu)

@@ -53,7 +53,7 @@ export default class Routes {
         })
 
         // PRIVATE
-        this.request(pServer, '/sheet', 'home.html', 'home', '', true)
+        this.request(pServer, '/sheets', 'sheets.html', 'sheets', '', true)
 
         this.request(pServer, '/sheets/:id', 'sheet.html', 'sheet', '', true)
 

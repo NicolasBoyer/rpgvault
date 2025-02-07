@@ -24,7 +24,7 @@ export default class Datas {
         const splitUrl = location.pathname.split('/')
         const sheets = <TSheet[]>((await Caches.get('sheets')) || (await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })))
         Caches.set(true, 'sheets', sheets)
-        this.sheet = <TSheet>sheets.find((pSheet): boolean => pSheet.slug === splitUrl[splitUrl.length - 1])
+        this.sheet = sheets.length ? <TSheet>sheets.find((pSheet): boolean => pSheet.slug === splitUrl[splitUrl.length - 1]) : (sheets as unknown as TSheet)
         // TODO si pas de sheet retourner une 404
         this.id = <string>this.sheet._id
         this.sheet = <TSheet>((await Caches.get(this.id)) || this.sheet)

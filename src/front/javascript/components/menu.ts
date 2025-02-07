@@ -73,9 +73,9 @@ export default class Menu extends HTMLElement {
                         ${this.links.map(
                             (pLink): TemplateResult => html`
                                 <li data-selected="${pLink.path === location.pathname}" @click="${(): void => this.displayMenu()}">
-                                    <fs-link href="${pLink.path}" role="button">
+                                    <rv-link href="${pLink.path}" role="button">
                                         <span>${pLink.label}</span>
-                                    </fs-link>
+                                    </rv-link>
                                 </li>
                             `
                         )}

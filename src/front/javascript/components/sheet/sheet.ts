@@ -191,15 +191,15 @@ export default class Sheet extends HTMLElement {
     }
 
     static async printScreen(): Promise<void> {
-        const canvasSize = document.querySelector('fs-sheet > div')?.getBoundingClientRect()
+        const canvasSize = document.querySelector('rv-sheet > div')?.getBoundingClientRect()
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        html2canvas(<SHEETRPGElement>document.querySelector('fs-sheet'), {
+        html2canvas(<SHEETRPGElement>document.querySelector('rv-sheet'), {
             width: canvasSize?.width,
             height: canvasSize?.height,
             x: canvasSize?.x,
             y: canvasSize?.y,
-            ignoreElements: (element: Element): boolean => element.tagName === 'BUTTON' || element.tagName === 'FS-LINK',
+            ignoreElements: (element: Element): boolean => element.tagName === 'BUTTON' || element.tagName === 'rv-LINK',
             onclone: (clonedDocument: Document): void => {
                 Array.from(clonedDocument.querySelectorAll('textarea')).forEach((textArea): void => {
                     const div = clonedDocument.createElement('div')

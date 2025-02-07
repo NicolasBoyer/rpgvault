@@ -36,12 +36,12 @@ export default class View {
                     ${States.editMode
                         ? Interface.editBlock()
                         : html`
-                              <fs-link role="button" class="home contrast" href="/">
+                              <rv-link role="button" class="home contrast" href="/">
                                   <svg class="home">
                                       <use href="#home"></use>
                                   </svg>
                                   <span>Accueil</span>
-                              </fs-link>
+                              </rv-link>
                               <button class="edit contrast" @click="${(): void => States.displayEditMode(true)}">Éditer</button>
                               <button
                                   class="notepad contrast ${States.notepadMode && 'selected'}"

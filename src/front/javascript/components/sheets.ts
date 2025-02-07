@@ -14,7 +14,7 @@ import { TSheet } from '../types.js'
 // TODO ajouter masque mode cadre ?
 // TODO Voir si normal que tout soit en statique
 // TODO système de calque ou d'index
-export default class Home extends HTMLElement {
+export default class Sheets extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null
 
@@ -183,9 +183,9 @@ export default class Home extends HTMLElement {
                                                             </button>
                                                         `
                                                       : html`
-                                                            <fs-link role="link" href="/sheets/${pSheet.slug}" @click="${(): void => this.resetHeight()}">
+                                                            <rv-link role="link" href="/sheets/${pSheet.slug}" @click="${(): void => this.resetHeight()}">
                                                                 <span>${name}</span>
-                                                            </fs-link>
+                                                            </rv-link>
                                                             <button type="button" class="clone" @click="${(): void => this.clone(id)}">
                                                                 <svg class="clone">
                                                                     <use href="#documents"></use>

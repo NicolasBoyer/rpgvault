@@ -136,7 +136,7 @@ export default class Interface {
                         }}"
                     >
                         Enregistrer et fermer
-                        <fs-loader ?visible="${Datas.isSaving}"></fs-loader>
+                        <rv-loader ?visible="${Datas.isSaving}"></rv-loader>
                     </button>
                 </div>
             </article>
@@ -192,7 +192,7 @@ export default class Interface {
                     .filter((pEntry): unknown => pInfosElement.type || (pInfosElement.image && pInfosElement[pEntry.id as keyof TElement]))
                     .map(
                         (pEntry): TemplateResult => html`
-                            <fs-label
+                            <rv-label
                                 id="${pEntry.id}"
                                 type="${pEntry.type}"
                                 name="${pEntry.name}"
@@ -209,7 +209,7 @@ export default class Interface {
                                     View.render()
                                 }}"
                                 options="${JSON.stringify(pEntry.options)}"
-                            ></fs-label>
+                            ></rv-label>
                         `
                     )}
             </article>
