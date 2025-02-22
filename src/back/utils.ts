@@ -24,6 +24,7 @@ export class Utils {
         // TODO ici toujours en cours
         template = replaceTagAndGetHtml(template, '§§header§§', options.header !== '' ? await fs.readFile(fromFragments('header.html'), 'utf8') : options.header)
         template = replaceTagAndGetHtml(template, '§§footer§§', options.footer !== '' ? await fs.readFile(fromFragments('footer.html'), 'utf8') : options.footer)
+        // TODO theme à finir
         template = replaceTagAndGetHtml(template, '§§theme§§', options.theme || 'dark')
         if (process.env.NODE_ENV === 'dev') {
             template = replaceTagAndGetHtml(
