@@ -14,6 +14,7 @@ import { TSheet } from '../types.js'
 // TODO ajouter masque mode cadre ?
 // TODO Voir si normal que tout soit en statique
 // TODO système de calque ou d'index
+// TODO Avatar
 export default class Sheets extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null
@@ -25,23 +26,9 @@ export default class Sheets extends HTMLElement {
         Caches.set(true, 'sheets', this.sheets)
         this.sheets = Array.isArray(this.sheets) ? this.sheets : Object.keys(this.sheets).length ? [this.sheets] : []
         this.render()
-        window.addEventListener('resize', (): void => this.initParchment())
         setTimeout((): void => {
-            this.initParchment()
             Utils.loader(false)
         })
-    }
-
-    private initParchment(): void {
-        if (!document.querySelector('#parchment')) return
-        const main = <HTMLElement>document.querySelector('#main')
-        main.style.height = ''
-        const mainSize = main.getBoundingClientRect()
-        if (mainSize.height <= window.innerHeight) {
-            document.body.style.height = `${window.innerHeight}px`
-            main.style.height = `${document.body.getBoundingClientRect().height - mainSize.top - parseInt(getComputedStyle(main).marginBottom)}px`
-        }
-        this.render()
     }
 
     private async saveSheet(sheet: TSheet): Promise<void> {
@@ -68,7 +55,7 @@ export default class Sheets extends HTMLElement {
         Utils.confirm(
             html`
                 <label for="name">
-                    <span>Choisissez un nom</span>
+                    <h2>Choisissez un nom</h2>
                     <input
                         type="text"
                         id="name"
@@ -81,7 +68,6 @@ export default class Sheets extends HTMLElement {
             `,
             async (): Promise<void> => {
                 await this.saveSheet({ name, notepad: [{ title: '', content: '' }] })
-                this.initParchment()
             }
         )
     }
@@ -89,9 +75,9 @@ export default class Sheets extends HTMLElement {
     private removeSheet(id: string): void {
         Utils.confirm(html`<h3>Voulez-vous vraiment supprimer ?</h3>`, async (): Promise<void> => {
             this.sheets = (await Utils.request('/db', 'POST', { body: `{ "removeSheet": { "id": "${id}" } }` })) as TSheet[]
+            this.sheets = Array.isArray(this.sheets) ? this.sheets : [this.sheets]
             Caches.set(true, 'sheets', this.sheets)
             this.resetMode()
-            this.initParchment()
             Utils.toast('success', 'Feuille de personnage supprimée')
         })
     }
@@ -101,7 +87,7 @@ export default class Sheets extends HTMLElement {
         Utils.confirm(
             html`
                 <label for="name">
-                    <span>Dupliquer la feuille de personnage</span>
+                    <h2>Dupliquer la feuille de personnage</h2>
                     <input
                         type="text"
                         id="name"
@@ -119,7 +105,6 @@ export default class Sheets extends HTMLElement {
                 delete sheet._id
                 delete sheet.id
                 await this.saveSheet(sheet)
-                this.initParchment()
             }
         )
     }
@@ -129,95 +114,148 @@ export default class Sheets extends HTMLElement {
         this.render()
     }
 
-    private resetHeight(): void {
-        ;(document.querySelector('#main') as HTMLElement).style.height = ''
-        document.body.style.height = ''
-    }
-
     private render(): void {
         render(
             html`
                 <div class="title">
-                    <h2>Vos feuilles de personnage</h2>
+                    <h2>Forge de personnage</h2>
                     <button type="button" class="add" @click="${(): void => this.addSheet()}">
                         <svg class="add">
-                            <use href="#document"></use>
+                            <use href="#add"></use>
                         </svg>
-                        <span>Ajouter une feuille</span>
+                        <span>Ajouter un personnage</span>
                     </button>
                 </div>
-                <aside>
-                    <nav>
-                        <ul>
-                            ${!this.sheets.length
-                                ? html`<li>Aucune feuille ...</li>`
-                                : this.sheets.map((pSheet): TemplateResult => {
-                                      const id = pSheet._id as string
-                                      const name = pSheet.name
-                                      return html`
-                                          <li>
-                                              <div class="characterSheets">
-                                                  ${this.editMode === id
-                                                      ? html`
-                                                            <input
-                                                                name="editSheet"
-                                                                required
-                                                                type="text"
-                                                                value="${name}"
-                                                                @keyup="${(pEvent: Event): void => {
-                                                                    if ((<KeyboardEvent>pEvent).key === 'Enter') this.editSheets(<PointerEvent>pEvent, id)
-                                                                    if ((<KeyboardEvent>pEvent).key === 'Escape') this.resetMode()
-                                                                }}"
-                                                            />
-                                                            <button class="valid" @click="${async (pEvent: PointerEvent): Promise<void> => await this.editSheets(pEvent, id)}">
-                                                                <svg class="valid">
-                                                                    <use href="#valid"></use>
-                                                                </svg>
-                                                                <span>Valider</span>
-                                                            </button>
-                                                            <button type="button" class="undo" @click="${(): void => this.resetMode()}">
-                                                                <svg class="undo">
-                                                                    <use href="#undo"></use>
-                                                                </svg>
-                                                                <span>Annuler</span>
-                                                            </button>
-                                                        `
-                                                      : html`
-                                                            <rv-link role="link" href="/sheets/${pSheet.slug}" @click="${(): void => this.resetHeight()}">
-                                                                <span>${name}</span>
-                                                            </rv-link>
-                                                            <button type="button" class="clone" @click="${(): void => this.clone(id)}">
-                                                                <svg class="clone">
-                                                                    <use href="#documents"></use>
-                                                                </svg>
-                                                                <span>Dupliquer</span>
-                                                            </button>
-                                                            <button
-                                                                class="edit"
-                                                                @click="${(): void => {
-                                                                    this.editMode = id
-                                                                    this.render()
-                                                                }}"
-                                                            >
-                                                                <svg class="edit">
-                                                                    <use href="#pencil"></use>
-                                                                </svg>
-                                                                <span>Modifier</span>
-                                                            </button>
-                                                            <button type="button" class="remove" @click="${(): void => this.removeSheet(id)}">
-                                                                <svg class="remove">
-                                                                    <use href="#bin"></use>
-                                                                </svg>
-                                                                <span>Supprimer</span>
-                                                            </button>
-                                                        `}
+                <div>
+                    <ul>
+                        ${!this.sheets.length
+                            ? html`<li>Aucun personnage ...</li>`
+                            : this.sheets.map((pSheet): TemplateResult => {
+                                  const id = pSheet._id as string
+                                  const name = pSheet.name
+                                  return html`
+                                      <li>
+                                          <rv-link role='link' href='/sheets/${pSheet.slug}'">
+                                              <article>
+                                                  ${
+                                                      this.editMode === id
+                                                          ? html`
+                                                                <fieldset role="group">
+                                                                    <input
+                                                                        name="editSheet"
+                                                                        required
+                                                                        type="text"
+                                                                        value="${name}"
+                                                                        @click="${(event: PointerEvent): void => event.stopPropagation()}"
+                                                                        @keyup="${(event: Event): void => {
+                                                                            if ((<KeyboardEvent>event).key === 'Enter') this.editSheets(<PointerEvent>event, id)
+                                                                            if ((<KeyboardEvent>event).key === 'Escape') this.resetMode()
+                                                                        }}"
+                                                                    />
+                                                                    <button
+                                                                        class="valid"
+                                                                        @click="${async (event: PointerEvent): Promise<void> => {
+                                                                            event.stopPropagation()
+                                                                            await this.editSheets(event, id)
+                                                                        }}"
+                                                                    >
+                                                                        <svg class="valid">
+                                                                            <use href="#valid"></use>
+                                                                        </svg>
+                                                                        <span>Valider</span>
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="undo"
+                                                                        @click="${(event: PointerEvent): void => {
+                                                                            event.stopPropagation()
+                                                                            this.resetMode()
+                                                                        }}"
+                                                                    >
+                                                                        <svg class="undo">
+                                                                            <use href="#undo"></use>
+                                                                        </svg>
+                                                                        <span>Annuler</span>
+                                                                    </button>
+                                                                </fieldset>
+                                                            `
+                                                          : html`
+                                                                <div class="title">
+                                                                    <h3>${name}</h3>
+                                                                    <button
+                                                                        class="edit outline"
+                                                                        @click="${(event: PointerEvent): void => {
+                                                                            event.stopPropagation()
+                                                                            this.editMode = id
+                                                                            this.render()
+                                                                        }}"
+                                                                    >
+                                                                        <svg class="edit">
+                                                                            <use href="#pencil"></use>
+                                                                        </svg>
+                                                                        <span>Modifier</span>
+                                                                    </button>
+                                                                </div>
+                                                            `
+                                                  }
+                                                  <div class='abstract'>Test de texte <button
+                                                                        class='edit outline'
+                                                                        @click='${(event: PointerEvent): void => {
+                                                                            event.stopPropagation()
+                                                                            this.editMode = id
+                                                                            this.render()
+                                                                        }}'
+                                                                    >
+                                                                        <svg class='edit'>
+                                                                            <use href='#pencil'></use>
+                                                                        </svg>
+                                                                        <span>Modifier</span>
+                                                                    </button></div>
+                                                  <div class='illustration'>
+                                                      <img src='assets/characterSheet.jpg' alt='' />
+                                                      <button
+                                                                        class='edit outline'
+                                                                        @click='${(event: PointerEvent): void => {
+                                                                            event.stopPropagation()
+                                                                            this.editMode = id
+                                                                            this.render()
+                                                                        }}'
+                                                                    >
+                                                                        <svg class='edit'>
+                                                                            <use href='#pencil'></use>
+                                                                        </svg>
+                                                                        <span>Modifier</span>
+                                                                    </button>
+                                                  </div>
+                                              </article>
+                                              <div class='buttons'>
+                                                  <button
+                                                      type='button'
+                                                      class='outline clone'
+                                                      @click='${(event: PointerEvent): void => {
+                                                          event.stopPropagation()
+                                                          this.clone(id)
+                                                      }}'
+                                                  >
+                                                      <span>Dupliquer</span>
+                                                  </button>
+                                                  <button
+                                                      type='button'
+                                                      class='outline remove'
+                                                      @click='${(event: PointerEvent): void => {
+                                                          event.stopPropagation()
+                                                          this.removeSheet(id)
+                                                      }}'
+                                                  >
+                                                      <span>Supprimer</span>
+                                                  </button>
                                               </div>
-                                          </li>
-                                      `
-                                  })}
-                        </ul>
-                    </nav>
-                </aside>
+                                          </rv-link>
+                                      </li>
+                                  `
+                              })}
+                    </ul>
+                </div>
             `,
             this
         )

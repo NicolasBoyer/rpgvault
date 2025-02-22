@@ -6,7 +6,7 @@ import { Caches } from '../classes/caches.js'
 export default class Login extends HTMLElement {
     async connectedCallback(): Promise<void> {
         document.body.addEventListener('currentUserAvailable', async (): Promise<void> => {
-            location.href = 'app'
+            location.href = '/'
         })
         await Caches.clear()
         this.render()
@@ -36,7 +36,7 @@ export default class Login extends HTMLElement {
                         role="link"
                         @click="${(): void => {
                             Utils.confirm(
-                                html` <h4>Mot de passe perdu</h4>
+                                html` <h2>Mot de passe perdu</h2>
                                     <form>
                                         <label>
                                             <span>Email</span>
@@ -61,9 +61,6 @@ export default class Login extends HTMLElement {
                     <button type="submit">
                         <span>Envoyer</span>
                     </button>
-                    <a href="/register" role="button">
-                        <span>Inscrivez-vous</span>
-                    </a>
                 </form>
             `,
             this

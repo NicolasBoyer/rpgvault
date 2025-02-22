@@ -53,9 +53,9 @@ export default class Routes {
         })
 
         // PRIVATE
-        this.request(pServer, '/sheets', 'sheets.html', 'sheets', '', true)
+        this.request({ pServer, path: '/sheets', file: 'sheets.html', className: 'sheets' })
 
-        this.request(pServer, '/sheets/:id', 'sheet.html', 'sheet', '', true)
+        this.request({ pServer, path: '/sheets/:id', file: 'sheet.html', className: 'sheet', header: '', footer: '', theme: 'light' })
 
         pServer.get('/routes.json', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
             if (await Auth.authenticateToken(_req!, res!)) res?.end(JSON.stringify(this.routes))
@@ -143,28 +143,62 @@ export default class Routes {
      * GET : retourne une page html
      * POST : retourne un JSON contenant un fragment html, une classe et un titre
      */
-    private request(pServer: Server, path: string, file: string, className: string, title: string, addSlashOnUrl: boolean, label = ''): void {
-        if (label) {
+    private request(options: { pServer: Server; path: string; file: string; templateHtml?: string; className: string; title?: string; addSlashOnUrl?: boolean; label?: string; header?: string; footer?: string; theme?: string }): void {
+        const templateHtml = options.templateHtml || 'page.html'
+        const addSlashOnUrl = options.addSlashOnUrl === null ? true : options.addSlashOnUrl
+        if (options.label) {
             this.routes.push({
-                path,
-                className,
-                title,
-                label,
+                path: options.path,
+                className: options.className,
+                title: options.title || '',
+                label: options.label,
             })
         }
 
         if (addSlashOnUrl) {
-            pServer.get(`${path}/`, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-                if (await Auth.authenticateToken(_req!, res!)) res?.end(await Utils.page({ file, className, title }))
+            options.pServer.get(`${options.path}/`, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+                if (await Auth.authenticateToken(_req!, res!))
+                    res?.end(
+                        await Utils.page({
+                            file: options.file,
+                            className: options.className,
+                            title: options.title,
+                            templateHtml,
+                            header: options.header,
+                            footer: options.footer,
+                            theme: options.theme,
+                        })
+                    )
             })
         }
 
-        pServer.get(path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (await Auth.authenticateToken(_req!, res!)) res?.end(await Utils.page({ file, className, title }))
+        options.pServer.get(options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            if (await Auth.authenticateToken(_req!, res!))
+                res?.end(
+                    await Utils.page({
+                        file: options.file,
+                        className: options.className,
+                        title: options.title,
+                        templateHtml,
+                        header: options.header,
+                        footer: options.footer,
+                        theme: options.theme,
+                    })
+                )
         })
 
-        pServer.post(path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (await Auth.authenticateToken(_req!, res!)) res?.end(JSON.stringify({ text: await Utils.fragment(file), class: className, title }))
+        options.pServer.post(options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            if (await Auth.authenticateToken(_req!, res!))
+                res?.end(
+                    JSON.stringify({
+                        header: options.header || (await Utils.fragment('header.html')),
+                        footer: options.footer || (await Utils.fragment('footer.html')),
+                        theme: options.theme || 'dark',
+                        text: await Utils.fragment(options.file),
+                        class: options.className,
+                        title: options.title,
+                    })
+                )
         })
     }
 }

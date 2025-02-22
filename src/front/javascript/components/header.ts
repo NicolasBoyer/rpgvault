@@ -1,11 +1,6 @@
 import { html, render } from 'lit'
 
 export default class Header extends HTMLElement {
-    constructor() {
-        super()
-        this.render()
-    }
-
     get src(): string | null {
         return this.getAttribute('src')
     }
@@ -15,20 +10,21 @@ export default class Header extends HTMLElement {
     }
 
     connectedCallback(): void {
-        const image = this.querySelector('img') as HTMLImageElement
-        image.style.transform = `translate3d(0, ${window.scrollY}px, 0)`
-        window.addEventListener('scroll', (): void => {
-            image.style.transform = `translate3d(0, ${window.scrollY * 0.5}px, 0)`
-            if (window.scrollY >= this.getBoundingClientRect().height) this.firstElementChild?.classList.add('titles')
-            else this.firstElementChild?.classList.remove('titles')
-        })
+        if (!document.body.classList.contains('home')) {
+            return
+        }
+        this.render()
     }
 
     private render(): void {
         render(
             html`
-                <div class="image">
-                    <img alt="${this.alt}" src="${this.src}" />
+                <div>
+                    <div class="mainTitle">RPGVault</div>
+                    <div class="tagline">Déverrouillez, Créez, Conquérez. Votre boîte à outils ultime pour des aventures épiques.</div>
+                    <div class="image">
+                        <img alt="${this.alt}" src="${this.src}" />
+                    </div>
                 </div>
             `,
             this

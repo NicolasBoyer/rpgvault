@@ -1,4 +1,5 @@
 import '@picocss/pico'
+import '@picocss/pico/css/pico.indigo.css'
 import '../styles/main.css'
 import { Utils } from './classes/utils.js'
 import Loader from './components/loader.js'
@@ -11,6 +12,8 @@ import Link from './components/link.js'
 import ResetPassword from './components/resetPassword.js'
 import LoggedUser from './components/loggedUser.js'
 import Register from './components/register.js'
+import Header from './components/header.js'
+import Home from './components/home.js'
 
 class App {
     constructor() {
@@ -42,7 +45,8 @@ class App {
 
 new App()
 customElements.define('rv-loader', Loader)
-// customElements.define('rv-header', Header)
+customElements.define('rv-header', Header)
+customElements.define('rv-home', Home)
 // customElements.define('rv-toast', Toast)
 customElements.define('rv-confirm', Confirm)
 customElements.define('rv-sheets', Sheets)

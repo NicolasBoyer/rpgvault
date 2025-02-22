@@ -46,7 +46,7 @@ export default class Register extends HTMLElement {
                         <input name="passwordBis" required type="password" />
                     </label>
                     <button type="submit">
-                        <span>S'inscrire</span>
+                        <span>S'enregistrer</span>
                     </button>
                 </form>
             `,

@@ -14,12 +14,17 @@ export class Utils {
         return fromSrc(`front${pFile}`)
     }
 
-    static async page(options: { file?: string; className: string; title?: string; templateHtml?: string; errorMessage?: string }): Promise<string> {
+    static async page(options: { file?: string; className: string; title?: string; templateHtml?: string; errorMessage?: string; header?: string; footer?: string; theme?: string }): Promise<string> {
+        // const header = options.header === '' ?
         const fragment = options.file && (await fs.readFile(fromFragments(options.file), 'utf8'))
         let template = await fs.readFile(fromTemplate(options.templateHtml || 'page.html'), 'utf8')
         template = replaceTagAndGetHtml(template, '§§title§§', `<div class='subtitle' data-replaced-title>${options.title}</div>`)
         if (options.className) template = replaceTagAndGetHtml(template, '§§className§§', options.className)
         template = replaceTagAndGetHtml(template, '§§errorMessage§§', `<div class='error'>${options.errorMessage || ''}</div>`)
+        // TODO ici toujours en cours
+        template = replaceTagAndGetHtml(template, '§§header§§', options.header !== '' ? await fs.readFile(fromFragments('header.html'), 'utf8') : options.header)
+        template = replaceTagAndGetHtml(template, '§§footer§§', options.footer !== '' ? await fs.readFile(fromFragments('footer.html'), 'utf8') : options.footer)
+        template = replaceTagAndGetHtml(template, '§§theme§§', options.theme || 'dark')
         if (process.env.NODE_ENV === 'dev') {
             template = replaceTagAndGetHtml(
                 template,

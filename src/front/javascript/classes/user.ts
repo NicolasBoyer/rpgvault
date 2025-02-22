@@ -20,24 +20,25 @@ export class User {
 
     static getAccount(): void {
         Utils.confirm(
-            html` <form>
-                <label>
-                    <span>Identifiant</span>
-                    <input name="email" type="email" value="${User.currentUser?.email}" />
-                </label>
-                <label>
-                    <span>Prénom</span>
-                    <input name="firstName" type="text" value="${User.currentUser?.firstName}" />
-                </label>
-                <label>
-                    <span>Nom</span>
-                    <input name="lastName" type="text" value="${User.currentUser?.lastName}" />
-                </label>
-                <label>
-                    <span>Mot de passe</span>
-                    <input name="password" type="password" />
-                </label>
-            </form>`,
+            html` <h2>Mon compte</h2>
+                <form>
+                    <label>
+                        <span>Identifiant</span>
+                        <input name="email" type="email" value="${User.currentUser?.email}" />
+                    </label>
+                    <label>
+                        <span>Prénom</span>
+                        <input name="firstName" type="text" value="${User.currentUser?.firstName}" />
+                    </label>
+                    <label>
+                        <span>Nom</span>
+                        <input name="lastName" type="text" value="${User.currentUser?.lastName}" />
+                    </label>
+                    <label>
+                        <span>Mot de passe</span>
+                        <input name="password" type="password" />
+                    </label>
+                </form>`,
             async (): Promise<void> => {
                 const accountEntries = Object.fromEntries(new FormData(document.querySelector('rv-confirm form') as HTMLFormElement).entries())
                 const userRequest: { setUser: Record<string, string> } = { setUser: {} }

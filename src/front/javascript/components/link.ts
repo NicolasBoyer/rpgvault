@@ -27,7 +27,16 @@ export default class Link extends HTMLElement {
 }
 
 const REPLACEZONE = (pFragment: Record<string, string>): void => {
-    ;(<HTMLElement>document.querySelector('[data-replaced-zone]')).replaceChildren(document.createRange().createContextualFragment(pFragment.text))
+    const replacedZone = <HTMLElement>document.querySelector('[data-replaced-zone]')
+    const headerBlock = <HTMLElement>document.querySelector('body > rv-header')
+    const header = document.createRange().createContextualFragment(pFragment.header)
+    const footerBlock = <HTMLElement>document.querySelector('body > footer')
+    const footer = document.createRange().createContextualFragment(pFragment.footer)
+    if (headerBlock) headerBlock.replaceWith(header)
+    else replacedZone.before(header)
+    replacedZone.replaceChildren(document.createRange().createContextualFragment(pFragment.text))
+    if (footerBlock) footerBlock.replaceWith(footer)
+    else replacedZone.after(footer)
     document.body.className = pFragment.class
     const title = document.querySelector('[data-replaced-title]')
     if (title) title.innerHTML = pFragment.title
