@@ -145,6 +145,8 @@ export default class Routes {
      */
     private request(options: { pServer: Server; path: string; file: string; templateHtml?: string; className: string; title?: string; addSlashOnUrl?: boolean; label?: string; header?: string; footer?: string; theme?: string }): void {
         const templateHtml = options.templateHtml || 'page.html'
+        const header = options.header === '' ? options.header : 'header.html'
+        const footer = options.footer === '' ? options.footer : 'footer.html'
         const addSlashOnUrl = options.addSlashOnUrl === null ? true : options.addSlashOnUrl
         if (options.label) {
             this.routes.push({
@@ -191,8 +193,8 @@ export default class Routes {
             if (await Auth.authenticateToken(_req!, res!))
                 res?.end(
                     JSON.stringify({
-                        header: options.header || (await Utils.fragment('header.html')),
-                        footer: options.footer || (await Utils.fragment('footer.html')),
+                        header: await Utils.fragment(header),
+                        footer: await Utils.fragment(footer),
                         theme: options.theme || 'dark',
                         text: await Utils.fragment(options.file),
                         class: options.className,

@@ -21,9 +21,9 @@ export class Utils {
         template = replaceTagAndGetHtml(template, '§§title§§', `<div class='subtitle' data-replaced-title>${options.title}</div>`)
         if (options.className) template = replaceTagAndGetHtml(template, '§§className§§', options.className)
         template = replaceTagAndGetHtml(template, '§§errorMessage§§', `<div class='error'>${options.errorMessage || ''}</div>`)
-        // TODO ici toujours en cours
-        template = replaceTagAndGetHtml(template, '§§header§§', options.header !== '' ? await fs.readFile(fromFragments('header.html'), 'utf8') : options.header)
-        template = replaceTagAndGetHtml(template, '§§footer§§', options.footer !== '' ? await fs.readFile(fromFragments('footer.html'), 'utf8') : options.footer)
+        // TODO ici toujours en cours header footer theme
+        template = replaceTagAndGetHtml(template, '§§header§§', options.header === '' ? options.header : await fs.readFile(fromFragments('header.html'), 'utf8'))
+        template = replaceTagAndGetHtml(template, '§§footer§§', options.footer === '' ? options.footer : await fs.readFile(fromFragments('footer.html'), 'utf8'))
         // TODO theme à finir
         template = replaceTagAndGetHtml(template, '§§theme§§', options.theme || 'dark')
         if (process.env.NODE_ENV === 'dev') {
