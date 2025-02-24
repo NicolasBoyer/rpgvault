@@ -144,9 +144,6 @@ export default class Routes {
      * POST : retourne un JSON contenant un fragment html, une classe et un titre
      */
     private request(options: { pServer: Server; path: string; file: string; templateHtml?: string; className: string; title?: string; addSlashOnUrl?: boolean; label?: string; header?: string; footer?: string; theme?: string }): void {
-        const templateHtml = options.templateHtml || 'page.html'
-        const header = options.header === '' ? options.header : 'header.html'
-        const footer = options.footer === '' ? options.footer : 'footer.html'
         const addSlashOnUrl = options.addSlashOnUrl === null ? true : options.addSlashOnUrl
         if (options.label) {
             this.routes.push({
@@ -157,31 +154,14 @@ export default class Routes {
             })
         }
 
-        if (addSlashOnUrl) {
-            options.pServer.get(`${options.path}/`, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-                if (await Auth.authenticateToken(_req!, res!))
-                    res?.end(
-                        await Utils.page({
-                            file: options.file,
-                            className: options.className,
-                            title: options.title,
-                            templateHtml,
-                            header: options.header,
-                            footer: options.footer,
-                            theme: options.theme,
-                        })
-                    )
-            })
-        }
-
-        options.pServer.get(options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+        options.pServer.get(addSlashOnUrl ? `${options.path}/` : options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
             if (await Auth.authenticateToken(_req!, res!))
                 res?.end(
                     await Utils.page({
                         file: options.file,
                         className: options.className,
                         title: options.title,
-                        templateHtml,
+                        templateHtml: options.templateHtml,
                         header: options.header,
                         footer: options.footer,
                         theme: options.theme,
@@ -193,8 +173,8 @@ export default class Routes {
             if (await Auth.authenticateToken(_req!, res!))
                 res?.end(
                     JSON.stringify({
-                        header: await Utils.fragment(header),
-                        footer: await Utils.fragment(footer),
+                        header: options.header === '' ? '' : await Utils.fragment(options.header || 'header.html'),
+                        footer: options.header === '' ? '' : await Utils.fragment(options.footer || 'footer.html'),
                         theme: options.theme || 'dark',
                         text: await Utils.fragment(options.file),
                         class: options.className,

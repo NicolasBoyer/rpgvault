@@ -38,6 +38,7 @@ const REPLACEZONE = (pFragment: Record<string, string>): void => {
     if (footerBlock) footerBlock.replaceWith(footer)
     else replacedZone.after(footer)
     document.body.className = pFragment.class
+    document.documentElement.setAttribute('data-theme', pFragment.theme)
     const title = document.querySelector('[data-replaced-title]')
     if (title) title.innerHTML = pFragment.title
 }
