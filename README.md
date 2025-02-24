@@ -9,6 +9,7 @@ Que vous soyez **MJ** ou **joueur**, facilitez la gestion de vos parties et acc�
 - **Stockez vos notes de scénario et aides de jeu** en toute sécurité.  
 - **Organisez et partagez vos visuels** (cartes, PNJ, créatures, objets…).  
 - **Collaborez avec votre groupe** pour des parties fluides et immersives.  
+- **Forger le pacte social** pour des aventures harmonieuses.  
 
 Rejoignez **RPGVault** et donnez vie à vos aventures sans jamais rien perdre ! 🏹✨
 
