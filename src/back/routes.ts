@@ -144,7 +144,6 @@ export default class Routes {
      * POST : retourne un JSON contenant un fragment html, une classe et un titre
      */
     private request(options: { pServer: Server; path: string; file: string; templateHtml?: string; className: string; title?: string; addSlashOnUrl?: boolean; label?: string; header?: string; footer?: string; theme?: string }): void {
-        console.log(options.header)
         const addSlashOnUrl = options.addSlashOnUrl === null ? true : options.addSlashOnUrl
         if (options.label) {
             this.routes.push({
