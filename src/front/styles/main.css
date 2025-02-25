@@ -32,6 +32,43 @@
 	/*--background-color-loader: rgb(237 240 243 / 60%);*/
 }
 
+[data-theme=light], :root:not([data-theme=dark]) {
+	/*--pico-background-color: #000000;
+	--pico-secondary-background: #171a1f;
+	--pico-card-background-color: #171a1f;
+    --pico-color: #ffffff;
+	--pico-primary: #636AE8;
+	*/
+	--inv-primary: #f9f5f2;
+	--pico-primary: #636AE8;
+	--pico-primary-background: #636AE8;
+	--pico-primary-background-select: #a9ade8;
+	--pico-primary-border: #1d2128;
+	--pico-contrast-border: #1d2128;
+	--pico-contrast-background: #1d2128;
+	--pico-font-size: 14px;
+	--pico-max-width: 1440px;
+	--error-color: #c62828;
+	--resize-handler-color: #c62828;
+	--resize-handler-background: #ddd2cfc7;
+	--read-only-input-background: #c0c0c05e;
+	--read-only-input-color: silver;
+	--read-only-input-background-selected: #ab8c8c5e;
+	--pico-form-element-background-color: #ffffff;
+	--notepad-tab-background: #c2c2c9;
+    /*--pico-background-color: #ffffff;
+	--pico-secondary-background: #a7bee3;
+	--pico-card-background-color: #a8b8da;
+    --pico-color: #000000;
+	--pico-primary: #bfc2e3;
+	--pico-secondary: #d4dbec;
+	--pico-primary-background: #c8c9e1;
+	--pico-primary-border: #1d2128;
+	--pico-font-size: 14px;
+	--pico-max-width: 1440px;
+	--error-color: #c62828;*/
+}
+
 /** HTML */
 body {
 	font-family: "Inter", serif;
@@ -594,6 +631,8 @@ rv-sheet > div > label > textarea {
     text-align: center;
     line-height: 1;
     font-family: sans-serif;
+    --pico-background-color: transparent !important;
+	--pico-border-color: transparent !important;
 }
 
 rv-sheet > div > label > input[type=text],
@@ -640,7 +679,7 @@ rv-sheet > div > label article select {
 }
 
 rv-sheet > div > label article select {
-    padding: 0rem 1rem;
+    padding: 0 1rem;
 }
 
 rv-sheet > div > label > input[type=number]::-webkit-inner-spin-button {
@@ -653,20 +692,20 @@ rv-sheet > div > label > input[type=number] {
 
 rv-sheet > div > label > input[readonly],
 rv-sheet > div > label > textarea[readonly] {
-  border: 1px solid silver !important;
+  border: 1px solid var(--read-only-input-color);
   cursor: default;
-  background: #c0c0c05e !important;
+  background: var(--read-only-input-background);
 }
 
 rv-sheet > div > label.selected input[readonly],
 rv-sheet > div > label.selected > textarea[readonly],
 rv-sheet> div > div.selected {
-	box-shadow: 0 0 0 1px #bf1919;
+	box-shadow: 0 0 0 1px var(--error-color);
 }
 
 rv-sheet > div > label.selected input[readonly],
 rv-sheet > div > label.selected > textarea[readonly] {
-	background: #ab8c8c5e !important;
+	background: var(--read-only-input-background-selected);
 }
 
 rv-sheet > div > label.selected,
@@ -682,7 +721,7 @@ rv-sheet button.print {
 	margin: 0.5em 0 0.5em 0.5em;
 	padding: 0.3em 0.8em;
 	opacity: 0.4;
-	transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition), opacity var(--transition);
+	transition: background-color var(--pico-transition),border-color var(--pico-transition),color var(--pico-transition),box-shadow var(--pico-transition), opacity var(--pico-transition);
 	display: inline-block;
 	height: fit-content;
 	z-index: 1000;
@@ -707,7 +746,7 @@ rv-sheet button.notepad.selected {
 }
 
 rv-sheet .editMode {
-	box-shadow: inset 0 0 0 5px #bf1919;
+	box-shadow: inset 0 0 0 5px var(--error-color);
 }
 
 article ul li {
@@ -738,13 +777,14 @@ article.selectBlock.hasMoved {
 .hover article.editBlock,
 .hover article.selectBlock {
 	opacity: 0;
-	transition: opacity var(--transition);
+	transition: opacity var(--pico-transition);
 }
 
 article.editBlock {
 	left: 5px;
 	display: flex;
 	flex-direction: column;
+	gap: var(--pico-spacing);
 }
 
 article.selectBlock {
@@ -754,7 +794,7 @@ article.selectBlock {
 .hover article.editBlock:hover,
 .hover article.selectBlock:hover {
 	opacity: 1;
-	transition: opacity var(--transition);
+	transition: opacity var(--pico-transition);
 }
 
 /* TODO A remettre */
@@ -767,7 +807,7 @@ article.selectBlock {
 /*}*/
 
 article.editBlock > div.viewBlock {
-	margin-bottom: var(--spacing);
+	margin-bottom: var(--pico-spacing);
 	display: flex;
 	gap: 0.3em;
 }
@@ -796,9 +836,9 @@ article.editBlock button.save {
 }
 
 .viewBlock > a.selected {
-   --box-shadow: inset 0 1px 5px rgb(0 0 0 / 75%), 0 1px 1px rgb(255 255 255 / 35%);
-   border: 0;
-   --background-color: var(--primary-hover);
+   --pico-box-shadow: inset 0 1px 5px rgb(0 0 0 / 75%), 0 1px 1px rgb(255 255 255 / 35%);
+   --pico-border-color: var(--pico-primary-background-select);
+   --pico-background-color: var(--pico-primary-background-select);
 }
 
 rv-sheet article label > span {
@@ -819,12 +859,12 @@ rv-sheet article label > select {
 }
 
 rv-sheet article rv-label {
-	margin-top: var(--spacing);
+	margin-top: var(--pico-spacing);
 	display: block;
 }
 
 .rectangle {
-    border: 2px solid #bf1919;
+    border: 2px solid var(--error-color);
     position: absolute;
     border-radius: 0.3em;
 }
@@ -836,7 +876,7 @@ rv-sheet > div.editMode > div.image {
 }
 
 rv-sheet > div > div.image {
-	transition: all var(--transition);
+	transition: all var(--pico-transition);
 	cursor: pointer;
 }
 
@@ -847,7 +887,7 @@ rv-sheet > div > div.image.isZoomed {
 	width: 100% !important;
 	height: 100% !important;
 	background-color: #00000073;
-	transition: all var(--transition);
+	transition: all var(--pico-transition);
 }
 
 a.cloneInput,
@@ -872,8 +912,8 @@ article input[type=color] {
 
 /*** RESIZER ***/
 .resizeHandler {
-	border: 2px solid #bf1919;
-	background: #ddd2cfc7;
+	border: 2px solid var(--resize-handler-color);
+	background: var(--resize-handler-background);
 	position: absolute;
 }
 
@@ -921,13 +961,14 @@ article#historyBlock > main {
 article#historyBlock button {
 	background: none;
     border: none;
-    color: var(--primary);
+    color: var(--pico-primary);
     margin: 0;
     padding: 0;
     text-align: left;
 }
 
 button.cancelable {
+	/* TODO */
 	color: var(--form-element-disabled-background-color) !important;
 	font-style: italic;
 }
@@ -958,7 +999,7 @@ rv-sheet .notepadMode article#notepad textarea {
 	height: 100%;
 	font-family: 'Satisfy', cursive;
 	font-size: 1.3em;
-	color: var(--secondary);
+	color: var(--pico-secondary);
 }
 
 rv-sheet .notepadMode article#notepad textarea:hover {
@@ -974,7 +1015,7 @@ rv-sheet .notepadMode article#notepad button.addTab {
     padding: 0.3em 0.5em;
     border-radius: 50px;
     display: flex;
-    height: 38px;
+    height: 33px;
     align-items: center;
 }
 
@@ -999,16 +1040,19 @@ rv-sheet .notepadMode article#notepad [role=tabpanel] {
 }
 
 rv-sheet .notepadMode article#notepad [role=tab] {
-	padding: var(--nav-link-spacing-vertical) calc(var(--nav-link-spacing-horizontal)*1.5);
+	padding: var(--pico-nav-link-spacing-vertical) calc(var(--pico-nav-link-spacing-horizontal)*1.5);
 	user-select: none;
-	color: var(--secondary);
+	color: var(--pico-secondary);
 	transition: all .25s;
-	background: var(--inv-primary);;
 	margin: 0 1px;
 	border-radius: 0.3em 0.3em 0 0;
 	height: 50px;
 	min-width: 65px;
 	max-width: 9em;
+	display: flex;
+	justify-content: center;
+	background: var(--inv-primary);
+	align-items: center;
 }
 
 rv-sheet .notepadMode article#notepad [role=tab] input {
@@ -1017,15 +1061,17 @@ rv-sheet .notepadMode article#notepad [role=tab] input {
 }
 
 rv-sheet .notepadMode article#notepad [role=tab]:hover {
-	filter: brightness(0.9);
+	background: var(--notepad-tab-background);
+    --pico-text-decoration: none;
+    color: var(--pico-contrast);
 }
 
 rv-sheet .notepadMode article#notepad [role=tab][aria-current] {
-	color: var(--contrast)!important;
-	border-color: var(--contrast);
+	color: var(--pico-contrast);
+	border-color: var(--pico-contrast);
 	border-radius: 0.3em 0.3em 0 0;
-	box-shadow: 0 -5px 7px var(--modal-overlay-background-color);
-	background: var(--primary-inverse);
+	box-shadow: 0 -5px 7px var(--pico-modal-overlay-background-color);
+	background: var(--pico-primary-inverse);
 	margin: 0 1px;
 }
 
@@ -1043,12 +1089,12 @@ rv-sheet .notepadMode article#notepad button.removeTab {
       position: absolute;
       background: transparent;
       border: none;
-      color: var(--primary);
+      color: var(--pico-primary);
 	  padding: 0;
 	  width: 0.7em;
 	  height: 0.7em;
 	  display: flex;
-	  top: 1.85em;
+	  top: 1.5em;
 	  right: 0.7em;
 }
 
@@ -1068,9 +1114,8 @@ rv-loader {
 	justify-content: center;
 	align-items: center;
 	height: 100%;
-	background: #fff;
+	background: #ffffff;
 	width: 100%;
-	border-radius: var(--border-radius);
 	top: 0;
 	left: 0;
 	z-index: 1000;
@@ -1080,7 +1125,7 @@ rv-loader {
 	width: 50px;
 	height: 50px;
 	border: 8px solid;
-	border-color: var(--primary-hover) transparent var(--primary) transparent;
+	border-color: var(--pico-primary-background-select) transparent var(--pico-primary) transparent;
 	border-radius: 50%;
 	animation: spin-anim 1.2s linear infinite;
 }
