@@ -36,13 +36,17 @@ export default class View {
                     ${States.editMode
                         ? Interface.editBlock()
                         : html`
-                              <rv-link role="button" class="home contrast" href="/">
-                                  <svg class="home">
-                                      <use href="#home"></use>
+                              <rv-link role="button" class="burger contrast" href="/">
+                                  <svg class="burger">
+                                      <use href="#burger"></use>
                                   </svg>
                                   <span>Accueil</span>
                               </rv-link>
-                              <button class="edit contrast" @click="${(): void => States.displayEditMode(true)}">Éditer</button>
+                              <button class="edit contrast" @click="${(): void => States.displayEditMode(true)}">
+                                  <svg class="edit">
+                                      <use href="#edit"></use></svg
+                                  ><span>Éditer</span>
+                              </button>
                               <button
                                   class="notepad contrast ${States.notepadMode && 'selected'}"
                                   @click="${(pEvent: PointerEvent): void => {

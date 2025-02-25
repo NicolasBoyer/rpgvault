@@ -715,7 +715,7 @@ rv-sheet> div > div.selected {
 
 rv-sheet button.edit,
 rv-sheet button.notepad,
-rv-sheet rv-link.home,
+rv-sheet rv-link.burger,
 rv-sheet button.print {
 	width: fit-content;
 	margin: 0.5em 0 0.5em 0.5em;
@@ -732,14 +732,15 @@ rv-sheet button.print {
 	margin-right: 0.5em;
 }
 
-rv-sheet rv-link.home > span,
-rv-sheet button.print > span {
+rv-sheet rv-link.burger > span,
+rv-sheet button.print > span,
+rv-sheet button.edit > span {
 	display: none;
 }
 
 rv-sheet button.edit:hover,
 rv-sheet button.notepad:hover,
-rv-sheet rv-link.home:hover,
+rv-sheet rv-link.burger:hover,
 rv-sheet button.print:hover,
 rv-sheet button.notepad.selected {
 	opacity: 1;
@@ -968,8 +969,7 @@ article#historyBlock button {
 }
 
 button.cancelable {
-	/* TODO */
-	color: var(--form-element-disabled-background-color) !important;
+	color: var(--pico-form-element-selected-background-color) !important;
 	font-style: italic;
 }
 
@@ -1122,8 +1122,8 @@ rv-loader {
 }
 
 .spinner {
-	width: 50px;
-	height: 50px;
+	width: 35px;
+	height: 35px;
 	border: 8px solid;
 	border-color: var(--pico-primary-background-select) transparent var(--pico-primary) transparent;
 	border-radius: 50%;
