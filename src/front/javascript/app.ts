@@ -14,6 +14,7 @@ import LoggedUser from './components/loggedUser.js'
 import Register from './components/register.js'
 import Header from './components/header.js'
 import Home from './components/home.js'
+import Menu from './components/menu.js'
 
 class App {
     constructor() {
@@ -66,4 +67,4 @@ customElements.define('rv-link', Link)
 customElements.define('rv-logged-user', LoggedUser)
 customElements.define('rv-reset-password', ResetPassword)
 customElements.define('rv-signup', Register)
-// customElements.define('rv-menu', Menu)
+customElements.define('rv-menu', Menu)

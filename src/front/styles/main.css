@@ -225,13 +225,14 @@ rv-home article .abstract {
 	opacity: 0.9;
 }
 
-rv-home > ul > li > a,
-rv-home > ul > li > a:hover {
+rv-home > ul > li > rv-link,
+rv-home > ul > li > rv-link:hover {
 	--pico-color: var(--pico-color) !important;
 	text-decoration: none;
+	cursor: pointer;
 }
 
-rv-home > ul > li > a:hover article {
+rv-home > ul > li > rv-link:hover article {
 	outline: 2px solid;
 }
 
@@ -715,7 +716,7 @@ rv-sheet> div > div.selected {
 
 rv-sheet button.edit,
 rv-sheet button.notepad,
-rv-sheet rv-link.burger,
+rv-sheet button.burger,
 rv-sheet button.print {
 	width: fit-content;
 	margin: 0.5em 0 0.5em 0.5em;
@@ -732,7 +733,7 @@ rv-sheet button.print {
 	margin-right: 0.5em;
 }
 
-rv-sheet rv-link.burger > span,
+rv-sheet button.burger > span,
 rv-sheet button.print > span,
 rv-sheet button.edit > span {
 	display: none;
@@ -740,9 +741,10 @@ rv-sheet button.edit > span {
 
 rv-sheet button.edit:hover,
 rv-sheet button.notepad:hover,
-rv-sheet rv-link.burger:hover,
+rv-sheet button.burger:hover,
 rv-sheet button.print:hover,
-rv-sheet button.notepad.selected {
+rv-sheet button.notepad.selected,
+rv-sheet button.burger.selected {
 	opacity: 1;
 }
 

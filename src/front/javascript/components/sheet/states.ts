@@ -13,6 +13,7 @@ import { History } from '../../classes/history.js'
 export default class States {
     static editMode: boolean
     static notepadMode: boolean
+    static mainMenuOpened: boolean
     static isEditBlockHidden: boolean
     static interface = EInterface.hover
     static isSaved = true
@@ -36,6 +37,11 @@ export default class States {
 
     static displayNotepadMode(pValue: boolean): void {
         this.notepadMode = pValue
+        View.render()
+    }
+
+    static displayMainMenu(pValue: boolean): void {
+        this.mainMenuOpened = pValue
         View.render()
     }
 

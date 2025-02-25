@@ -53,7 +53,7 @@ export default class Routes {
         })
 
         // PRIVATE
-        this.request({ pServer, path: '/sheets', file: 'sheets.html', className: 'sheets' })
+        this.request({ pServer, path: '/sheets', file: 'sheets.html', className: 'sheets', label: 'Forge de personnage', header: '' })
 
         this.request({ pServer, path: '/sheets/:id', file: 'sheet.html', className: 'sheet', header: '', footer: '', theme: 'light' })
 
@@ -144,6 +144,7 @@ export default class Routes {
      * POST : retourne un JSON contenant un fragment html, une classe et un titre
      */
     private request(options: { pServer: Server; path: string; file: string; templateHtml?: string; className: string; title?: string; addSlashOnUrl?: boolean; label?: string; header?: string; footer?: string; theme?: string }): void {
+        console.log(options.header)
         const addSlashOnUrl = options.addSlashOnUrl === null ? true : options.addSlashOnUrl
         if (options.label) {
             this.routes.push({
@@ -174,7 +175,7 @@ export default class Routes {
                 res?.end(
                     JSON.stringify({
                         header: options.header === '' ? '' : await Utils.fragment(options.header || 'header.html'),
-                        footer: options.header === '' ? '' : await Utils.fragment(options.footer || 'footer.html'),
+                        footer: options.footer === '' ? '' : await Utils.fragment(options.footer || 'footer.html'),
                         theme: options.theme || 'dark',
                         text: await Utils.fragment(options.file),
                         class: options.className,

@@ -53,7 +53,7 @@ export default class Home extends HTMLElement {
                     ${this.datas.map(
                         (card): TemplateResult =>
                             html`<li>
-                                <a href="${card.uri}">
+                                <rv-link href="${card.uri}">
                                     <article>
                                         <div class="illustration">
                                             <img src="${card.illustration}" alt="" />
@@ -67,7 +67,7 @@ export default class Home extends HTMLElement {
                                             </svg>
                                         </div>
                                     </article>
-                                </a>
+                                </rv-link>
                             </li>`
                     )}
                 </ul>
