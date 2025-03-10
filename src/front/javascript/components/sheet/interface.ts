@@ -7,7 +7,7 @@ import { ElementMover } from '../../classes/elementMover.js'
 import Input from './input.js'
 import Image from './image.js'
 import { elements } from '../../datas/elements.js'
-import { HTMLElementEvent, SHEETRPGElement, TElement, TFont, THistory, TInput, TPosition } from '../../types.js'
+import { HTMLElementEvent, RPGVAULTElement, TElement, TFont, THistory, TInput, TPosition } from '../../types.js'
 import View from './view.js'
 import { ShortcutManager } from '../../classes/shortcutManager.js'
 import { EInterface } from '../../enum.js'
@@ -83,7 +83,7 @@ export default class Interface {
     }
 
     static editBlock(): TemplateResult {
-        setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.editBlock')))
+        setTimeout((): void => this.initializeMove(<RPGVAULTElement>document.querySelector('.editBlock')))
         const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.editBlock
         return html`
             <article
@@ -144,7 +144,7 @@ export default class Interface {
     }
 
     static selectBlock(pInfosElement: TElement): TemplateResult {
-        setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.selectBlock')))
+        setTimeout((): void => this.initializeMove(<RPGVAULTElement>document.querySelector('.selectBlock')))
         const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.selectBlock
         return html`
             <article
@@ -217,7 +217,7 @@ export default class Interface {
     }
 
     static historyBlock(): TemplateResult {
-        setTimeout((): void => this.initializeMove(<SHEETRPGElement>document.querySelector('.historyBlock')))
+        setTimeout((): void => this.initializeMove(<RPGVAULTElement>document.querySelector('.historyBlock')))
         this.scrollHistoryBlockToBottom(<Element>document.querySelector('#historyBlock > main'))
         const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.historyBlock
         return html`
@@ -243,7 +243,7 @@ export default class Interface {
         setTimeout((): void => pElement.scrollTo(0, <number>pElement.scrollHeight))
     }
 
-    private static initializeMove(pElement: SHEETRPGElement): void {
+    private static initializeMove(pElement: RPGVAULTElement): void {
         ShortcutManager.set(document.body, ['Tab'], (): void => {
             if (States.interface === EInterface.hover) this.changeInterface(EInterface.movable)
             else if (States.interface === EInterface.movable) this.changeInterface(EInterface.hidden)

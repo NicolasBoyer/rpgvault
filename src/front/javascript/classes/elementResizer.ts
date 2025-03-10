@@ -1,4 +1,4 @@
-import { SHEETRPGElement, TPosition } from '../types.js'
+import { RPGVAULTElement, TPosition } from '../types.js'
 
 type Mouse = {
     x: number
@@ -13,7 +13,7 @@ export class ElementResizer {
     static isPointerDown = false
     static boxPositions = [{ class: 'leftTop' }, { class: 'leftCenter' }, { class: 'leftBottom' }, { class: 'centerTop' }, { class: 'centerBottom' }, { class: 'rightTop' }, { class: 'rightCenter' }, { class: 'rightBottom' }]
     private static mouse: Mouse
-    private static elements: Record<string, SHEETRPGElement> = {}
+    private static elements: Record<string, RPGVAULTElement> = {}
     private static offsetPosition: TPosition
     private static selectedSelectorId: string
     private static leftHorizontalMove: boolean
@@ -23,7 +23,7 @@ export class ElementResizer {
     private static width: number
     private static height: number
 
-    static init(pElement: SHEETRPGElement, pOffset: TPosition, pCallback: (position: TPosition) => void): void {
+    static init(pElement: RPGVAULTElement, pOffset: TPosition, pCallback: (position: TPosition) => void): void {
         pElement.selector = pElement.querySelector('input, textarea') || pElement
         this.elements[pElement.selector.id] = pElement
         this.offsetPosition = pOffset
@@ -53,7 +53,7 @@ export class ElementResizer {
         document.body.removeEventListener('pointerup', this.pointerUp)
     }
 
-    static resetHandler(pElement: SHEETRPGElement): void {
+    static resetHandler(pElement: RPGVAULTElement): void {
         const boundingBox = pElement.getBoundingClientRect()
         const boxSize = 15
         const boxPositions = [

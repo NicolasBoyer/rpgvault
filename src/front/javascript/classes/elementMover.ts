@@ -1,18 +1,18 @@
 import { ShortcutManager } from './shortcutManager.js'
 import { ElementResizer } from './elementResizer.js'
-import { SHEETRPGElement, TPosition } from '../types.js'
+import { RPGVAULTElement, TPosition } from '../types.js'
 import States from '../components/sheet/states.js'
 import { ElementManager } from './elementManager.js'
 
 export class ElementMover {
     static isPointerDown = false
     private static mouse: TPosition
-    private static elements: Record<string, SHEETRPGElement> = {}
+    private static elements: Record<string, RPGVAULTElement> = {}
     private static selectedSelectorId: string
     private static offsetPosition: TPosition
     private static isMoving = false
 
-    static init(pElement: SHEETRPGElement, pOffset: TPosition, pCallback: (position: TPosition) => void, pSelector: HTMLElement | null = null): void {
+    static init(pElement: RPGVAULTElement, pOffset: TPosition, pCallback: (position: TPosition) => void, pSelector: HTMLElement | null = null): void {
         const selector = pSelector || pElement.querySelector('input, textarea') || pElement
         this.elements[selector.id] = pElement
         this.offsetPosition = pOffset

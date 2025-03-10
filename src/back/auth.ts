@@ -8,7 +8,7 @@ import { Utils } from './utils.js'
 import Mailer from './mailer.js'
 import argon2 from 'argon2'
 
-export default class Auth {
+export default class Auth { 
     private static tokenBlacklist: Set<string> = new Set()
 
     static async createUser(email: string, firstName: string, lastName: string, password: string, passwordBis: string): Promise<TValidateReturn> {

@@ -7,7 +7,7 @@ import View from '../components/sheet/view.js'
 import { Caches } from './caches.js'
 import { ElementMover } from './elementMover.js'
 import { ElementResizer } from './elementResizer.js'
-import { SHEETRPGElement, TElement, TImage, TInput, TPosition } from '../types.js'
+import { RPGVAULTElement, TElement, TImage, TInput, TPosition } from '../types.js'
 import { EElementType } from '../enum.js'
 import { History } from './history.js'
 
@@ -19,7 +19,7 @@ export class ElementManager {
         if (States.editMode) {
             ;(<TElement[]>Datas.sheet.inputs)?.concat(<TElement[]>Datas.sheet.images).forEach((pInfosElement: TElement): void => {
                 if (pInfosElement) {
-                    const htmlElement: SHEETRPGElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
+                    const htmlElement: RPGVAULTElement = <RPGVAULTElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
                     ElementMover.init(
                         htmlElement,
                         {
@@ -193,7 +193,7 @@ export class ElementManager {
             if (pEvent) pEvent.stopPropagation()
             this.selectedInfosElement = <TElement>pInfosElement
             if (pInfosElement) {
-                const selectedElement = <SHEETRPGElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
+                const selectedElement = <RPGVAULTElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
                 ElementResizer.resetHandler(selectedElement)
                 ShortcutManager.set(selectedElement, ['Control', 'd'], (pEvent: KeyboardEvent): Promise<void> => this.clone(pEvent))
                 ShortcutManager.set(selectedElement, ['Control', 'c'], (): void => this.copy())

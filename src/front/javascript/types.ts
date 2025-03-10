@@ -84,7 +84,7 @@ export type TPosition = {
     height?: number
 }
 
-export type SHEETRPGElement = HTMLElement & {
+export type RPGVAULTElement = HTMLElement & {
     moverCallback: (position: TPosition) => void
     resizerCallback: (position: TPosition) => void
     selector: HTMLElement

@@ -4,7 +4,7 @@ import { Utils } from '../../classes/utils.js'
 import { html, TemplateResult } from 'lit'
 import { ShortcutManager } from '../../classes/shortcutManager.js'
 import States from './states.js'
-import { HTMLElementEvent, SHEETRPGElement, TFont } from '../../types.js'
+import { HTMLElementEvent, RPGVAULTElement, TFont } from '../../types.js'
 import html2canvas from 'html2canvas'
 // import {html2canvas} from 'html2canvas'
 
@@ -194,7 +194,7 @@ export default class Sheet extends HTMLElement {
         const canvasSize = document.querySelector('rv-sheet > div')?.getBoundingClientRect()
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        html2canvas(<SHEETRPGElement>document.querySelector('rv-sheet'), {
+        html2canvas(<RPGVAULTElement>document.querySelector('rv-sheet'), {
             width: canvasSize?.width,
             height: canvasSize?.height,
             x: canvasSize?.x,
