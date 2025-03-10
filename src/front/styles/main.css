@@ -76,6 +76,10 @@ body {
 	margin: auto;
 }
 
+header  {
+	display: flex;
+}
+
 main {
 	padding-left: 1em !important;
 	padding-right: 1em !important;
@@ -87,13 +91,14 @@ h1 {
 	flex: 1;
 }
 
-h1 > a {
+h1 > rv-link {
 	text-decoration: none;
 	--pico-color: var(--pico-color);
 	font-size: 28px;
+	cursor: pointer;
 }
 
-h1 > a:hover {
+h1 > rv-link:hover {
 	--pico-color: var(--pico-color) !important;
 }
 
@@ -1107,6 +1112,21 @@ rv-sheet .notepadMode article#notepad button.removeTab svg {
 
 rv-sheet .notepadMode article#notepad button.removeTab span {
       display: none;
+}
+
+/*** MENU ***/
+rv-sheet rv-menu {
+    position: absolute;
+    top: 4em;
+    left: 0.5em;
+}
+
+rv-sheet rv-menu ul {
+	padding: 0;
+}
+
+rv-sheet rv-menu li {
+	list-style: none;
 }
 
 /*** LOADER ***/

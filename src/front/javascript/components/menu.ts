@@ -2,6 +2,7 @@ import { html, render, TemplateResult } from 'lit'
 import { TRoute } from '../types.js'
 import { Caches } from '../classes/caches.js'
 import { Utils } from '../classes/utils.js'
+import States from './sheet/states.js'
 
 export default class Menu extends HTMLElement {
     private links: TRoute[] = []
@@ -13,16 +14,16 @@ export default class Menu extends HTMLElement {
         this.style.display = 'none'
     }
 
-    connectedCallback(): void {
-        document.body.addEventListener('currentUserAvailable', async (): Promise<void> => {
-            this.links = ((await Caches.get('routes')) || (await Utils.request('/routes.json'))) as TRoute[] & { error: string }
-            if (!this.links || (this.links as unknown as { error: string }).error) return
-            await Caches.set(false, 'routes', this.links)
-            this.removeAttribute('style')
-            this.displayMenu()
-            window.addEventListener('resize', (): void => this.displayMenu())
-            window.addEventListener('popstate', (): void => this.render())
-        })
+    async connectedCallback(): Promise<void> {
+        // document.body.addEventListener('currentUserAvailable', async (): Promise<void> => {
+        this.links = ((await Caches.get('routes')) || (await Utils.request('/routes.json'))) as TRoute[] & { error: string }
+        if (!this.links || (this.links as unknown as { error: string }).error) return
+        await Caches.set(false, 'routes', this.links)
+        this.removeAttribute('style')
+        this.displayMenu()
+        window.addEventListener('resize', (): void => this.displayMenu())
+        window.addEventListener('popstate', (): void => this.render())
+        // })
     }
 
     private displayMenu(): void {
@@ -72,8 +73,14 @@ export default class Menu extends HTMLElement {
                     <ul>
                         ${this.links.map(
                             (pLink): TemplateResult => html`
-                                <li data-selected="${pLink.path === location.pathname}" @click="${(): void => this.displayMenu()}">
-                                    <rv-link href="${pLink.path}" role="button">
+                                <li
+                                    data-selected="${pLink.path === location.pathname}"
+                                    @click="${(): void => {
+                                        States.sheetMainMenuOpened = false
+                                        this.displayMenu()
+                                    }}"
+                                >
+                                    <rv-link href="${pLink.path}" role="button" class="contrast">
                                         <span>${pLink.label}</span>
                                     </rv-link>
                                 </li>

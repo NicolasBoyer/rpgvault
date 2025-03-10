@@ -13,7 +13,7 @@ import { History } from '../../classes/history.js'
 export default class States {
     static editMode: boolean
     static notepadMode: boolean
-    static mainMenuOpened: boolean
+    static sheetMainMenuOpened: boolean
     static isEditBlockHidden: boolean
     static interface = EInterface.hover
     static isSaved = true
@@ -22,6 +22,7 @@ export default class States {
     static isZoomed: string | boolean = false
 
     static displayEditMode(pValue: boolean): void {
+        this.displaySheetMainMenu(false)
         this.editMode = pValue
         this.notepadMode = this.notepadMode && !pValue
         Datas.changedInputs = []
@@ -36,12 +37,13 @@ export default class States {
     }
 
     static displayNotepadMode(pValue: boolean): void {
+        this.displaySheetMainMenu(false)
         this.notepadMode = pValue
         View.render()
     }
 
-    static displayMainMenu(pValue: boolean): void {
-        this.mainMenuOpened = pValue
+    static displaySheetMainMenu(pValue: boolean): void {
+        this.sheetMainMenuOpened = pValue
         View.render()
     }
 

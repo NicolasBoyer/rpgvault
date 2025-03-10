@@ -27,8 +27,18 @@ export default class Link extends HTMLElement {
 }
 
 const REPLACEZONE = (pFragment: Record<string, string>): void => {
+    // TODO info supplémentaire indiquant de pas utiliser replacedzone ?
+    // TODO sans doute revoir pour passer plusieurs zones à replace
+    // if (!pFragment.text) {
+    //     document.replaceChild(new DOMParser().parseFromString(pFragment.document, 'text/html').documentElement, document.documentElement)
+    //     return
+    // }
     const replacedZone = <HTMLElement>document.querySelector('[data-replaced-zone]')
-    const headerBlock = <HTMLElement>document.querySelector('body > rv-header')
+    // if (!replacedZone) {
+    //     document.replaceChild(new DOMParser().parseFromString(pFragment.document, 'text/html').documentElement, document.documentElement)
+    //     replacedZone = <HTMLElement>document.querySelector('[data-replaced-zone]')
+    // }
+    const headerBlock = <HTMLElement>document.querySelector('body > #header')
     const header = document.createRange().createContextualFragment(pFragment.header)
     const footerBlock = <HTMLElement>document.querySelector('body > footer')
     const footer = document.createRange().createContextualFragment(pFragment.footer)

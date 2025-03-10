@@ -12,7 +12,7 @@ enum TWindowSize {
     re,
 }
 
-class error404 {
+export default class Error404 extends HTMLElement {
     private BLACKLISTED_KEY = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Alt', 'CapsLock', 'Control', 'Shift', 'Tab', 'Escape', 'NumLock']
     private COMMANDS: TCommands = {
         help: 'La page que vous souhaitez visiter n\'existe pas, ou elle a peut-être été supprimée, ou une mauvaise adresse a été saisie. Pour voir les commandes, entrez le mot <span class="red"> commands</span>',
@@ -28,6 +28,7 @@ class error404 {
     private str = ''
 
     constructor() {
+        super()
         this.keyboard.focus()
         if (screen.width < 991) this.keyboard.addEventListener('keyup', (event: KeyboardEvent): void => this.evalKey(event))
         else document.addEventListener('keypress', (event: KeyboardEvent): void => this.evalKey(event))
@@ -41,13 +42,15 @@ class error404 {
         event.preventDefault()
         switch (windowSize) {
             case TWindowSize.max:
-                document.body.className = document.body.className !== 'max' ? 'max' : ''
+                if (!document.body.classList.contains('max')) document.body.classList.add('max')
+                else document.body.classList.remove('max')
                 break
             case TWindowSize.min:
-                document.body.className = document.body.className === 'max' ? 'max min' : 'min'
+                if (document.body.classList.contains('max')) document.body.classList.add('min')
+                else document.body.classList.add('min')
                 break
             case TWindowSize.re:
-                document.body.className = document.body.className === 'max min' ? 'max' : ''
+                document.body.classList.remove('min')
                 break
         }
     }
@@ -72,7 +75,7 @@ class error404 {
         } else {
             output = this.COMMANDS[input as keyof TCommands]
         }
-        this.terminalOutput.innerHTML = `${this.terminalOutput.innerHTML}<p class="out_code">${output}</p>`
+        this.terminalOutput.innerHTML = `${this.terminalOutput.innerHTML}<p class='out_code'>${output}</p>`
         this.terminal.scrollTop = this.terminalOutput.scrollHeight
     }
 
@@ -106,5 +109,3 @@ class error404 {
         }
     }
 }
-
-new error404()

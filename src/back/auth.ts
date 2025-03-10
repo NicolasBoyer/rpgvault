@@ -126,14 +126,15 @@ export default class Auth {
         }
     }
 
-    static async authenticateToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>): Promise<TIncomingMessage | boolean> {
-        const token = await this.getToken(req, res)
+    // TODO ICI
+    static async authenticateToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, isPostHtmlResponse?: boolean): Promise<TIncomingMessage | boolean> {
+        const token = await this.getToken(req, res, isPostHtmlResponse)
         if (!token) {
             return false
         }
         const jwtToken = token.split('=')[1]
         if (this.isTokenBlacklisted(jwtToken)) {
-            await this.loginResponse(req, res, 403, 'Le token a été invalidé')
+            await this.loginResponse(req, res, 403, 'Le token a été invalidé', true, isPostHtmlResponse)
             return false
         }
 
@@ -142,7 +143,7 @@ export default class Auth {
             req.user = user
             isTokenValid = err || !this.authorizeRole(req.user as TUser, 'author') ? false : req
         })
-        if (!isTokenValid) await this.loginResponse(req, res, 403, 'Le token est invalide')
+        if (!isTokenValid) await this.loginResponse(req, res, 403, 'Le token est invalide', true, isPostHtmlResponse)
         if (req.user) {
             await Database.initUserDbAndCollections((req.user as TUser)._id)
         }
@@ -158,16 +159,16 @@ export default class Auth {
         this.tokenBlacklist.add(token)
     }
 
-    static async getToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>): Promise<string | false> {
+    static async getToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, isPostHtmlResponse?: boolean): Promise<string | false> {
         const cookies = req.headers.cookie
         if (!cookies) {
-            await this.loginResponse(req, res, 401, 'Aucun cookie fourni', false)
+            await this.loginResponse(req, res, 401, 'Aucun cookie fourni', false, isPostHtmlResponse)
             return false
         }
 
         const token = cookies.split(';').find((c): boolean => c.trim().startsWith('fsTk='))
         if (!token) {
-            await this.loginResponse(req, res, 401, 'Aucun token dans les cookies', false)
+            await this.loginResponse(req, res, 401, 'Aucun token dans les cookies', false, isPostHtmlResponse)
             return false
         }
         return token
@@ -199,8 +200,21 @@ export default class Auth {
         return this.tokenBlacklist.has(token)
     }
 
-    private static async loginResponse(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, code: number, message: string, isMessageInHtml: boolean = true): Promise<void> {
-        if (req.headers['sec-fetch-mode'] === 'cors') {
+    private static async loginResponse(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, code: number, message: string, isMessageInHtml: boolean = true, isPostHtmlResponse?: boolean): Promise<void> {
+        if (isPostHtmlResponse === true) {
+            // TODO améliorer en remontant partout la même login
+            res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
+            res.end(
+                JSON.stringify({
+                    header: await Utils.fragment('header.html'),
+                    footer: await Utils.fragment('footer.html'),
+                    theme: 'dark',
+                    text: await Utils.fragment('login.html'),
+                    class: 'login',
+                    title: 'Login',
+                })
+            )
+        } else if (req.headers['sec-fetch-mode'] === 'cors') {
             res.writeHead(code, { 'Content-Type': 'application/json' })
             res.end(JSON.stringify({ error: true, message }))
         } else {

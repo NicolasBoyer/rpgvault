@@ -10,9 +10,6 @@ export default class Header extends HTMLElement {
     }
 
     connectedCallback(): void {
-        if (!document.body.classList.contains('home')) {
-            return
-        }
         this.render()
     }
 

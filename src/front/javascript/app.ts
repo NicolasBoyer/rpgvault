@@ -15,6 +15,7 @@ import Register from './components/register.js'
 import Header from './components/header.js'
 import Home from './components/home.js'
 import Menu from './components/menu.js'
+import Error404 from './components/404.js'
 
 class App {
     constructor() {
@@ -68,3 +69,4 @@ customElements.define('rv-logged-user', LoggedUser)
 customElements.define('rv-reset-password', ResetPassword)
 customElements.define('rv-signup', Register)
 customElements.define('rv-menu', Menu)
+customElements.define('rv-error-404', Error404)

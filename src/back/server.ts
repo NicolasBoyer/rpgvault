@@ -104,13 +104,13 @@ export class Server {
                 }
                 if (!(await response(GET))) {
                     res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' })
-                    res.end(await Utils.page({ className: 'notFound', templateHtml: '404.html' }))
+                    res.end(await Utils.page({ className: 'notFound', file: '404.html', footer: '', header: '', title: 'RPGVault - 404 : Page non trouvée' }))
                 }
             }
             if (req.method === 'POST') {
                 if (!(await response(POST))) {
                     res.writeHead(404, { 'Content-Type': 'application/json' })
-                    res.end(JSON.stringify({ url: '404' }))
+                    res.end(JSON.stringify({ text: await Utils.page({ className: 'notFound', file: '404.html' }) }))
                 }
             }
         })

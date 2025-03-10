@@ -38,10 +38,10 @@ export default class View {
                         : html`
                               <button
                                   role="button"
-                                  class="burger contrast ${States.mainMenuOpened && 'selected'}"
+                                  class="burger contrast ${States.sheetMainMenuOpened && 'selected'}"
                                   @click="${(pEvent: PointerEvent): void => {
                                       pEvent.stopPropagation()
-                                      States.displayMainMenu(!States.mainMenuOpened)
+                                      States.displaySheetMainMenu(!States.sheetMainMenuOpened)
                                   }}"
                               >
                                   <svg class="burger">
@@ -49,7 +49,7 @@ export default class View {
                                   </svg>
                                   <span>Accueil</span>
                               </button>
-                              ${States.mainMenuOpened ? html`<rv-menu />` : ''}
+                              ${States.sheetMainMenuOpened ? html`<rv-menu />` : ''}
                               <button class="edit contrast" @click="${(): void => States.displayEditMode(true)}">
                                   <svg class="edit">
                                       <use href="#edit"></use></svg

@@ -10,9 +10,7 @@ export default class Routes {
 
     constructor(pServer: Server) {
         // PUBLIC
-        pServer.get('/', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            res?.end(await Utils.page({ file: 'home.html', className: 'home', templateHtml: 'page.html' }))
-        })
+        this.request({ pServer, path: '/', file: 'home.html', className: 'home', header: 'homeHeader.html', isPublic: true })
 
         pServer.get('/register', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
             res?.end(await Utils.page({ file: 'register.html', className: 'register', title: 'Inscription' }))
@@ -53,7 +51,7 @@ export default class Routes {
         })
 
         // PRIVATE
-        this.request({ pServer, path: '/sheets', file: 'sheets.html', className: 'sheets', label: 'Forge de personnage', header: '' })
+        this.request({ pServer, path: '/sheets', file: 'sheets.html', className: 'sheets', label: 'Forge de personnage' })
 
         this.request({ pServer, path: '/sheets/:id', file: 'sheet.html', className: 'sheet', header: '', footer: '', theme: 'light' })
 
@@ -143,7 +141,20 @@ export default class Routes {
      * GET : retourne une page html
      * POST : retourne un JSON contenant un fragment html, une classe et un titre
      */
-    private request(options: { pServer: Server; path: string; file: string; templateHtml?: string; className: string; title?: string; addSlashOnUrl?: boolean; label?: string; header?: string; footer?: string; theme?: string }): void {
+    private request(options: {
+        pServer: Server
+        path: string
+        file: string
+        templateHtml?: string
+        className: string
+        title?: string
+        addSlashOnUrl?: boolean
+        label?: string
+        header?: string
+        footer?: string
+        theme?: string
+        isPublic?: boolean
+    }): void {
         const addSlashOnUrl = options.addSlashOnUrl === null ? true : options.addSlashOnUrl
         if (options.label) {
             this.routes.push({
@@ -155,7 +166,7 @@ export default class Routes {
         }
 
         options.pServer.get(addSlashOnUrl ? `${options.path}/` : options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (await Auth.authenticateToken(_req!, res!))
+            if (options.isPublic || (await Auth.authenticateToken(_req!, res!)))
                 res?.end(
                     await Utils.page({
                         file: options.file,
@@ -170,7 +181,7 @@ export default class Routes {
         })
 
         options.pServer.post(options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (await Auth.authenticateToken(_req!, res!))
+            if (options.isPublic || (await Auth.authenticateToken(_req!, res!, true))) {
                 res?.end(
                     JSON.stringify({
                         header: options.header === '' ? '' : await Utils.fragment(options.header || 'header.html'),
@@ -179,8 +190,10 @@ export default class Routes {
                         text: await Utils.fragment(options.file),
                         class: options.className,
                         title: options.title,
+                        // templateHtml: await Utils.page({ templateHtml: options.templateHtml || 'page.html' }),
                     })
                 )
+            }
         })
     }
 }
