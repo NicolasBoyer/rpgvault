@@ -10,7 +10,7 @@ export default class Routes {
 
     constructor(pServer: Server) {
         // PUBLIC
-        this.request({ pServer, path: '/', file: 'home.html', className: 'home', header: 'homeHeader.html', isPublic: true })
+        this.request({ pServer, path: '/', file: 'home.html', className: 'home', header: 'homeHeader.html', isPublic: true, label: 'Accueil' })
 
         pServer.get('/register', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
             res?.end(await Utils.page({ file: 'register.html', className: 'register', title: 'Inscription' }))

@@ -1117,7 +1117,7 @@ rv-sheet .notepadMode article#notepad button.removeTab span {
 /*** MENU ***/
 rv-sheet rv-menu {
     position: absolute;
-    top: 4em;
+    top: 3.1em;
     left: 0.5em;
 }
 
@@ -1127,6 +1127,10 @@ rv-sheet rv-menu ul {
 
 rv-sheet rv-menu li {
 	list-style: none;
+}
+
+rv-sheet rv-menu li rv-link {
+	display: inline-block;
 }
 
 /*** LOADER ***/
