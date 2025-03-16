@@ -117,7 +117,7 @@ export class Server {
         const webSocketServer = new WebSocketServer({ server })
         const userConnections: { [userId: string]: WebSocket[] } = {}
         webSocketServer.on('connection', async (ws: WebSocket, req): Promise<void> => {
-            const token = req.headers.cookie?.split(';').find((c): boolean => c.trim().startsWith('fsTk='))
+            const token = req.headers.cookie?.split(';').find((c): boolean => c.trim().startsWith('rvTk='))
             if (!token) {
                 ws.close(1008, 'Authentication token required')
                 return

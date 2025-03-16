@@ -8,7 +8,7 @@ import { Utils } from './utils.js'
 import Mailer from './mailer.js'
 import argon2 from 'argon2'
 
-export default class Auth { 
+export default class Auth {
     private static tokenBlacklist: Set<string> = new Set()
 
     static async createUser(email: string, firstName: string, lastName: string, password: string, passwordBis: string): Promise<TValidateReturn> {
@@ -18,7 +18,7 @@ export default class Auth {
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(email)) {
-            return { success: false, message: 'Format d\'email invalide' }
+            return { success: false, message: "Format d'email invalide" }
         }
 
         if (password !== passwordBis) {
@@ -34,7 +34,7 @@ export default class Auth {
         try {
             const existingUser = await db.collection('users').findOne({ email })
             if (existingUser) {
-                return { success: false, message: 'L\'utilisateur existe déjà' }
+                return { success: false, message: "L'utilisateur existe déjà" }
             }
             const _id = new ObjectId()
             const userDbName = `${DB_NAME}_${_id}`
@@ -53,7 +53,7 @@ export default class Auth {
             const userDb = client.db(userDbName)
             await userDb.createCollection('sheets')
 
-            return { success: true, message: 'L\'utilisateur a été créé avec succès' }
+            return { success: true, message: "L'utilisateur a été créé avec succès" }
         } catch (err) {
             console.error(err)
             return { success: false, message: 'Erreur serveur' }
@@ -166,7 +166,7 @@ export default class Auth {
             return false
         }
 
-        const token = cookies.split(';').find((c): boolean => c.trim().startsWith('fsTk='))
+        const token = cookies.split(';').find((c): boolean => c.trim().startsWith('rvTk='))
         if (!token) {
             await this.loginResponse(req, res, 401, 'Aucun token dans les cookies', false, isPostHtmlResponse)
             return false
