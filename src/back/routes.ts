@@ -4,6 +4,7 @@ import Database from './database.js'
 import http from 'http'
 import { TIncomingMessage, TUser } from '../front/javascript/types.js'
 import Auth from './auth.js'
+import { EErrorResponse } from '../front/javascript/enum.js'
 
 export default class Routes {
     routes: Record<string, string>[] = []
@@ -60,7 +61,7 @@ export default class Routes {
         })
 
         pServer.get('/currentUser', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (await Auth.authenticateToken(_req!, res!)) {
+            if (await Auth.authenticateToken(_req!, res!, EErrorResponse.getJson)) {
                 res!.writeHead(200, { 'Content-Type': 'application/json' })
                 const currentUser = (await Database.request({ getUser: (_req!.user as TUser)._id })) as unknown as TUser
                 res!.end(JSON.stringify({ _id: currentUser._id, firstName: currentUser.firstName, lastName: currentUser.lastName, email: currentUser.email }))
@@ -181,7 +182,7 @@ export default class Routes {
         })
 
         options.pServer.post(options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (options.isPublic || (await Auth.authenticateToken(_req!, res!, true))) {
+            if (options.isPublic || (await Auth.authenticateToken(_req!, res!, EErrorResponse.postHtml))) {
                 res?.end(
                     JSON.stringify({
                         header: options.header === '' ? '' : await Utils.fragment(options.header || 'header.html'),

@@ -7,6 +7,7 @@ import { TIncomingMessage, TUser, TValidateReturn } from '../front/javascript/ty
 import { Utils } from './utils.js'
 import Mailer from './mailer.js'
 import argon2 from 'argon2'
+import { EErrorResponse } from '../front/javascript/enum.js'
 
 export default class Auth {
     private static tokenBlacklist: Set<string> = new Set()
@@ -126,15 +127,14 @@ export default class Auth {
         }
     }
 
-    // TODO ICI
-    static async authenticateToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, isPostHtmlResponse?: boolean): Promise<TIncomingMessage | boolean> {
-        const token = await this.getToken(req, res, isPostHtmlResponse)
+    static async authenticateToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, errorResponse = EErrorResponse.default): Promise<TIncomingMessage | boolean> {
+        const token = await this.getToken(req, res, errorResponse)
         if (!token) {
             return false
         }
         const jwtToken = token.split('=')[1]
         if (this.isTokenBlacklisted(jwtToken)) {
-            await this.loginResponse(req, res, 403, 'Le token a été invalidé', true, isPostHtmlResponse)
+            await this.errorResponse(res, 403, 'Le token a été invalidé', true, errorResponse)
             return false
         }
 
@@ -143,7 +143,7 @@ export default class Auth {
             req.user = user
             isTokenValid = err || !this.authorizeRole(req.user as TUser, 'author') ? false : req
         })
-        if (!isTokenValid) await this.loginResponse(req, res, 403, 'Le token est invalide', true, isPostHtmlResponse)
+        if (!isTokenValid) await this.errorResponse(res, 403, 'Le token est invalide', true, errorResponse)
         if (req.user) {
             await Database.initUserDbAndCollections((req.user as TUser)._id)
         }
@@ -159,16 +159,16 @@ export default class Auth {
         this.tokenBlacklist.add(token)
     }
 
-    static async getToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, isPostHtmlResponse?: boolean): Promise<string | false> {
+    static async getToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, errorResponse = EErrorResponse.default): Promise<string | false> {
         const cookies = req.headers.cookie
         if (!cookies) {
-            await this.loginResponse(req, res, 401, 'Aucun cookie fourni', false, isPostHtmlResponse)
+            await this.errorResponse(res, 401, 'Aucun cookie fourni', false, errorResponse)
             return false
         }
 
         const token = cookies.split(';').find((c): boolean => c.trim().startsWith('rvTk='))
         if (!token) {
-            await this.loginResponse(req, res, 401, 'Aucun token dans les cookies', false, isPostHtmlResponse)
+            await this.errorResponse(res, 401, 'Aucun token dans les cookies', false, errorResponse)
             return false
         }
         return token
@@ -200,26 +200,55 @@ export default class Auth {
         return this.tokenBlacklist.has(token)
     }
 
-    private static async loginResponse(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, code: number, message: string, isMessageInHtml: boolean = true, isPostHtmlResponse?: boolean): Promise<void> {
-        if (isPostHtmlResponse === true) {
-            // TODO améliorer en remontant partout la même login
-            res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
-            res.end(
-                JSON.stringify({
-                    header: await Utils.fragment('header.html'),
-                    footer: await Utils.fragment('footer.html'),
-                    theme: 'dark',
-                    text: await Utils.fragment('login.html'),
-                    class: 'login',
-                    title: 'Login',
-                })
-            )
-        } else if (req.headers['sec-fetch-mode'] === 'cors') {
-            res.writeHead(code, { 'Content-Type': 'application/json' })
-            res.end(JSON.stringify({ error: true, message }))
-        } else {
-            res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
-            res.end(await Utils.page({ file: 'login.html', className: 'login', title: 'Connexion', errorMessage: isMessageInHtml ? message : '' }))
+    private static async errorResponse(res: http.ServerResponse<http.IncomingMessage>, code: number, message: string, isMessageInHtml: boolean = true, type: EErrorResponse): Promise<void> {
+        switch (type) {
+            // Sur click html pour injection
+            case EErrorResponse.postHtml:
+                res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
+                res.end(
+                    JSON.stringify({
+                        header: await Utils.fragment('header.html'),
+                        footer: await Utils.fragment('footer.html'),
+                        theme: 'dark',
+                        text: await Utils.fragment('login.html'),
+                        class: 'login',
+                        title: 'Login',
+                    })
+                )
+                break
+            // GET spécifique en json pour récupération erreur
+            case EErrorResponse.getJson:
+                res.writeHead(code, { 'Content-Type': 'application/json' })
+                res.end(JSON.stringify({ error: true, message }))
+                break
+            // GET en html sur F5 par exempl
+            case EErrorResponse.default:
+                res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
+                // TODO errormessage aussi sur le postHtml
+                res.end(await Utils.page({ file: 'login.html', className: 'login', title: 'Connexion', errorMessage: isMessageInHtml ? message : '' }))
+                break
         }
+        // if (isPostHtmlResponse === true) {
+        //     // TODO améliorer en remontant partout la même login
+        //     // TODO penser à mettre les css en plusieurs fichiers déclarer en import de chaque ts
+        //     // TODO suppression de lit ? de vite ?
+        //     res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
+        //     res.end(
+        //         JSON.stringify({
+        //             header: await Utils.fragment('header.html'),
+        //             footer: await Utils.fragment('footer.html'),
+        //             theme: 'dark',
+        //             text: await Utils.fragment('login.html'),
+        //             class: 'login',
+        //             title: 'Login',
+        //         })
+        //     )
+        // } else if (req.headers['sec-fetch-mode'] === 'cors') {
+        //     res.writeHead(code, { 'Content-Type': 'application/json' })
+        //     res.end(JSON.stringify({ error: true, message }))
+        // } else {
+        //     res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
+        //     res.end(await Utils.page({ file: 'login.html', className: 'login', title: 'Connexion', errorMessage: isMessageInHtml ? message : '' }))
+        // }
     }
 }

@@ -29,7 +29,7 @@ export class Utils {
     }
 
     static async request(pUrl: string, pMethod = 'GET', pOptions: Record<string, unknown> | null = {}, pReturnType = ''): Promise<string | number | Blob | Response | Record<string, unknown> | Record<string, unknown>[] | undefined> {
-        const response = await fetch(pUrl, { ...{ method: pMethod }, ...pOptions, mode: 'cors' })
+        const response = await fetch(pUrl, { ...{ method: pMethod }, ...pOptions })
         if (pReturnType === 'status' && pMethod === 'HEAD') return response.status
         switch (pReturnType) {
             case 'blob':
