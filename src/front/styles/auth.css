@@ -1,0 +1,47 @@
+form {
+	position: relative;
+}
+
+.passwordLost {
+    position: absolute;
+    right: 0;
+    border: none;
+    padding: 0;
+}
+
+.passwordLost:hover {
+	background: transparent;
+	text-decoration: none;
+}
+
+body.register,
+body.login {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.register main,
+.login main {
+    max-width: 900px;
+    flex: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.register main article,
+.login main article {
+	padding: 2.5em 3.5em;
+}
+
+.register main button[type="submit"],
+.login main button[type="submit"] {
+	margin-top: 1.5em;
+}
+
+.register main .error,
+.login main .error {
+	position: absolute;
+	margin-top: 9em;
+}

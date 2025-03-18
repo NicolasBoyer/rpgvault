@@ -110,7 +110,16 @@ export class Server {
             if (req.method === 'POST') {
                 if (!(await response(POST))) {
                     res.writeHead(404, { 'Content-Type': 'application/json' })
-                    res.end(JSON.stringify({ text: await Utils.page({ className: 'notFound', file: '404.html' }) }))
+                    res.end(
+                        JSON.stringify({
+                            header: '',
+                            footer: '',
+                            theme: 'dark',
+                            text: await Utils.fragment('404.html'),
+                            class: 'notFound',
+                            title: 'RPGVault - 404 : Page non trouvée',
+                        })
+                    )
                 }
             }
         })

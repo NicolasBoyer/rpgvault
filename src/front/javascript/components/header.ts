@@ -1,3 +1,4 @@
+import '../../styles/header.css'
 import { html, render } from 'lit'
 
 export default class Header extends HTMLElement {

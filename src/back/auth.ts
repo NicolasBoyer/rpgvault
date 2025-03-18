@@ -201,6 +201,11 @@ export default class Auth {
     }
 
     private static async errorResponse(res: http.ServerResponse<http.IncomingMessage>, code: number, message: string, isMessageInHtml: boolean = true, type: EErrorResponse): Promise<void> {
+        // TODO améliorer en remontant partout la même login
+        // TODO penser à mettre les css en plusieurs fichiers déclarer en import de chaque ts
+        // TODO suppression de lit ? de vite ?
+        // TODO revoir les authenticate et server + 404 pour etre sur que tout est bien
+        // TODO revoir la 404
         switch (type) {
             // Sur click html pour injection
             case EErrorResponse.postHtml:
@@ -221,34 +226,12 @@ export default class Auth {
                 res.writeHead(code, { 'Content-Type': 'application/json' })
                 res.end(JSON.stringify({ error: true, message }))
                 break
-            // GET en html sur F5 par exempl
+            // GET en html sur F5 par exemple
             case EErrorResponse.default:
                 res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
                 // TODO errormessage aussi sur le postHtml
                 res.end(await Utils.page({ file: 'login.html', className: 'login', title: 'Connexion', errorMessage: isMessageInHtml ? message : '' }))
                 break
         }
-        // if (isPostHtmlResponse === true) {
-        //     // TODO améliorer en remontant partout la même login
-        //     // TODO penser à mettre les css en plusieurs fichiers déclarer en import de chaque ts
-        //     // TODO suppression de lit ? de vite ?
-        //     res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
-        //     res.end(
-        //         JSON.stringify({
-        //             header: await Utils.fragment('header.html'),
-        //             footer: await Utils.fragment('footer.html'),
-        //             theme: 'dark',
-        //             text: await Utils.fragment('login.html'),
-        //             class: 'login',
-        //             title: 'Login',
-        //         })
-        //     )
-        // } else if (req.headers['sec-fetch-mode'] === 'cors') {
-        //     res.writeHead(code, { 'Content-Type': 'application/json' })
-        //     res.end(JSON.stringify({ error: true, message }))
-        // } else {
-        //     res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
-        //     res.end(await Utils.page({ file: 'login.html', className: 'login', title: 'Connexion', errorMessage: isMessageInHtml ? message : '' }))
-        // }
     }
 }

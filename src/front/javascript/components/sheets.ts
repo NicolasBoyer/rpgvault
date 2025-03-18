@@ -1,3 +1,4 @@
+import '../../styles/sheets.css'
 import { Utils } from '../classes/utils.js'
 import { html, render, TemplateResult } from 'lit'
 import { Caches } from '../classes/caches.js'

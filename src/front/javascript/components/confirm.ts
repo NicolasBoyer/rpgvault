@@ -1,3 +1,4 @@
+import '../../styles/confirm.css'
 import { html, render } from 'lit'
 
 export default class Confirm extends HTMLElement {

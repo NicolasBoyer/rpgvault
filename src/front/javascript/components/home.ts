@@ -1,3 +1,4 @@
+import '../../styles/home.css'
 import { html, render, TemplateResult } from 'lit'
 
 export default class Home extends HTMLElement {

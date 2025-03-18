@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Marcellus+SC&display=swap');
+
+[data-theme=dark] {
+    --pico-background-color: #000000;
+	--pico-secondary-background: #171a1f;
+	--pico-card-background-color: #171a1f;
+    --pico-color: #ffffff;
+	--pico-primary: #636AE8;
+	--pico-secondary: #9095a0;
+	--pico-primary-background: #636AE8;
+	--pico-primary-border: #1d2128;
+	--pico-font-size: 14px;
+	--pico-max-width: 1440px;
+	--error-color: #c62828;
+	/*--color: #ffffff;*/
+	/*--h1-color: #32241b;*/
+	/*--h2-color: #413226;*/
+	/*--h3-color: #493f2c;*/
+	/*--h4-color: #564a37;*/
+	/*--h5-color: #625841;*/
+	/*--h6-color: #6d624d;*/
+	/*--primary: #7F3300;*/
+	/*--inv-primary: #f9f5f2;*/
+	/*--primary-hover: #c79c82;*/
+	/*--form-element-border-color: #b9b2a2;*/
+	/*--primary-focus: #7F330020;*/
+	/*--background-secondary: #ffcf4f;*/
+	/*--modal-overlay-background-color: rgba(226,219,213,0.8);*/
+	/*--secondary: #786459;*/
+	/*--secondary-hover: #624e41;*/
+	/*--tooltip-background-color: #805d00;*/
+	/*--background-color-loader: rgb(237 240 243 / 60%);*/
+}
+
+[data-theme=light], :root:not([data-theme=dark]) {
+	/*--pico-background-color: #000000;
+	--pico-secondary-background: #171a1f;
+	--pico-card-background-color: #171a1f;
+    --pico-color: #ffffff;
+	--pico-primary: #636AE8;
+	*/
+	--inv-primary: #f9f5f2;
+	--pico-primary: #636AE8;
+	--pico-primary-background: #636AE8;
+	--pico-primary-background-select: #a9ade8;
+	--pico-primary-border: #1d2128;
+	--pico-contrast-border: #1d2128;
+	--pico-contrast-background: #1d2128;
+	--pico-font-size: 14px;
+	--pico-max-width: 1440px;
+	--error-color: #c62828;
+	--resize-handler-color: #c62828;
+	--resize-handler-background: #ddd2cfc7;
+	--read-only-input-background: #c0c0c05e;
+	--read-only-input-color: silver;
+	--read-only-input-background-selected: #ab8c8c5e;
+	--pico-form-element-background-color: #ffffff;
+	--notepad-tab-background: #c2c2c9;
+    /*--pico-background-color: #ffffff;
+	--pico-secondary-background: #a7bee3;
+	--pico-card-background-color: #a8b8da;
+    --pico-color: #000000;
+	--pico-primary: #bfc2e3;
+	--pico-secondary: #d4dbec;
+	--pico-primary-background: #c8c9e1;
+	--pico-primary-border: #1d2128;
+	--pico-font-size: 14px;
+	--pico-max-width: 1440px;
+	--error-color: #c62828;*/
+}

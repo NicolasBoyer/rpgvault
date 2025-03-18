@@ -1,0 +1,30 @@
+rv-loader {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	background: #ffffff;
+	width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+}
+
+.spinner {
+	width: 35px;
+	height: 35px;
+	border: 8px solid;
+	border-color: var(--pico-primary-background-select) transparent var(--pico-primary) transparent;
+	border-radius: 50%;
+	animation: spin-anim 1.2s linear infinite;
+}
+
+@keyframes spin-anim {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

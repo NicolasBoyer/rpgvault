@@ -1,3 +1,4 @@
+import '../../styles/auth.css'
 import { html, render } from 'lit'
 import { Utils } from '../classes/utils.js'
 import { TValidateReturn } from '../types.js'

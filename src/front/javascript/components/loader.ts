@@ -1,3 +1,4 @@
+import '../../styles/loader.css'
 import { html, render } from 'lit'
 
 export default class Loader extends HTMLElement {

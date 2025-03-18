@@ -1,0 +1,35 @@
+rv-header > div:first-child {
+	padding: 1em;
+	position: sticky;
+	top: 0;
+	z-index: 3;
+	background: var(--pico-background-color);
+	display: flex;
+	align-items: center;
+}
+
+.home rv-header > div:last-child {
+	height: 640px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+	padding-top: 11.2em;
+}
+
+rv-header .mainTitle {
+	font-family: "Marcellus SC", serif;
+	font-size: 64px;
+	z-index: 2;
+}
+
+rv-header .tagline {
+	font-size: 24px;
+	z-index: 2;
+}
+
+rv-header .image {
+    position: absolute;
+    top: 0;
+	opacity: 0.7;
+}

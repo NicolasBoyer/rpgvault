@@ -1,5 +1,6 @@
 import '@picocss/pico'
 import '@picocss/pico/css/pico.indigo.css'
+import '../styles/variables.css'
 import '../styles/main.css'
 import { Utils } from './classes/utils.js'
 import Loader from './components/loader.js'

@@ -1,0 +1,149 @@
+body.sheets {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.sheets main {
+    flex: auto;
+}
+
+rv-sheets h2 {
+	margin: 0;
+}
+
+rv-sheets > .title {
+	display: flex;
+	align-items: center;
+	gap: 1em;
+	margin-left: 3em;
+}
+
+rv-sheets > div:last-child {
+	margin: 0 5em;
+}
+
+rv-sheets > .title button {
+	border-radius: 50%;
+}
+
+rv-sheets > .title button svg {
+	height: 2em;
+	width: 2em;
+}
+
+rv-sheets > .title button {
+	width: 3em;
+	height: 3em;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+}
+
+rv-sheets > .title button > span {
+	display: none;
+}
+
+rv-sheets ul {
+	display: grid;
+    grid-template-columns: 1fr 1fr;
+	gap: 1.5em;
+    margin: 3em 0 0 0;
+    padding: 0;
+}
+
+rv-sheets li {
+	list-style: none;
+}
+
+rv-sheets li > rv-link {
+	cursor: pointer;
+	display: block;
+	--pico-color: var(--pico-color) !important;
+	position: relative;
+}
+
+rv-sheets article {
+	height: 15em;
+	border-radius: 0.5em;
+	padding: 1.5em;
+	position: relative;
+}
+
+rv-sheets li > rv-link:hover {
+	text-decoration: none;
+}
+
+rv-sheets li > rv-link:hover article {
+	outline: 2px solid;
+}
+
+rv-sheets .buttons {
+	position: absolute;
+	bottom: 0;
+	left: 1em;
+}
+
+rv-sheets .buttons button.remove {
+	--pico-color: var(--error-color);
+	--pico-border-color: var(--error-color);
+}
+
+rv-sheets article > .title {
+	display: flex;
+	align-items: center;
+	gap: 1em;
+}
+
+rv-sheets article > .title button {
+	padding: 0;
+	position: relative;
+	top: -2px;
+}
+
+rv-sheets article > .title h3 {
+	margin: 0;
+}
+
+rv-sheets article fieldset {
+	width: auto !important;
+}
+
+rv-sheets article input {
+	font-size: 1.5em;
+	width: 11.7em !important;
+}
+
+rv-sheets article .illustration {
+	position: absolute;
+	top: 1.3em;
+	right: 1.3em;
+}
+
+rv-sheets article .illustration img {
+	border-radius: 0.5em;
+}
+
+rv-sheets article .illustration button {
+	right: 0;
+	position: absolute;
+}
+
+rv-sheets article .abstract {
+	margin-top: 1em;
+     color: var(--pico-secondary);
+}
+
+rv-sheets .edit,
+rv-sheets .undo,
+rv-sheets .valid {
+	border: none;
+}
+
+rv-sheets .edit span,
+rv-sheets .undo span,
+rv-sheets .valid span {
+	display: none;
+}

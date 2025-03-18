@@ -1,3 +1,5 @@
+import '../../styles/404.css'
+
 type TCommands = {
     help: string
     exit: string
@@ -17,14 +19,14 @@ export default class Error404 extends HTMLElement {
     private COMMANDS: TCommands = {
         help: 'La page que vous souhaitez visiter n\'existe pas, ou elle a peut-être été supprimée, ou une mauvaise adresse a été saisie. Pour voir les commandes, entrez le mot <span class="red"> commands</span>',
         exit: '',
-        report: '<span class=\'green\'>\n' + 'Ce rapport de page a été envoyé avec succès au support.</span>',
+        report: "<span class='green'>\n" + 'Ce rapport de page a été envoyé avec succès au support.</span>',
         commands: 'Liste des commandes : <span class="red"> help</span>, <span class="red"> report</span>, <span class="red"> exit</span>, <span class="red"> clear</span>\n',
         clear: '',
     }
-    private userInput = document.getElementById('userInput') as HTMLElement
-    private terminalOutput = document.getElementById('code') as HTMLElement
-    private terminal = document.getElementById('Terminal') as HTMLElement
-    private keyboard = document.getElementById('Keyboard') as HTMLElement
+    private userInput = this.querySelector('#userInput') as HTMLElement
+    private terminalOutput = this.querySelector('#code') as HTMLElement
+    private terminal = this.querySelector('#Terminal') as HTMLElement
+    private keyboard = this.querySelector('#Keyboard') as HTMLElement
     private str = ''
 
     constructor() {
@@ -33,9 +35,9 @@ export default class Error404 extends HTMLElement {
         if (screen.width < 991) this.keyboard.addEventListener('keyup', (event: KeyboardEvent): void => this.evalKey(event))
         else document.addEventListener('keypress', (event: KeyboardEvent): void => this.evalKey(event))
         document.addEventListener('keydown', (event: KeyboardEvent): void => this.removeEntry(event))
-        ;(document.getElementById('min') as HTMLElement).addEventListener('click', (event): void => this.interact(event, TWindowSize.min))
-        ;(document.getElementById('max') as HTMLElement).addEventListener('click', (event): void => this.interact(event, TWindowSize.max))
-        ;((document.getElementById('min_app') as HTMLElement).querySelector('a') as HTMLElement).addEventListener('click', (event): void => this.interact(event, TWindowSize.re))
+        ;(this.querySelector('#min') as HTMLElement).addEventListener('click', (event): void => this.interact(event, TWindowSize.min))
+        ;(this.querySelector('#max') as HTMLElement).addEventListener('click', (event): void => this.interact(event, TWindowSize.max))
+        ;((this.querySelector('#min_app') as HTMLElement).querySelector('a') as HTMLElement).addEventListener('click', (event): void => this.interact(event, TWindowSize.re))
     }
 
     private interact(event: MouseEvent, windowSize: TWindowSize): void {
@@ -61,7 +63,7 @@ export default class Error404 extends HTMLElement {
             return
         }
         if (!Object.keys(this.COMMANDS).includes(input)) {
-            output = '<p>La commande saisie n\'est pas correcte</p>'
+            output = "<p>La commande saisie n'est pas correcte</p>"
         } else if (input === 'clear') {
             this.terminalOutput.innerHTML = ''
             return

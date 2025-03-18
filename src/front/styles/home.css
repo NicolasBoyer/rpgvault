@@ -1,0 +1,77 @@
+.home main h2{
+    font-size: 64px;
+    text-align: center;
+    margin: 0.7em;
+}
+
+rv-home ul {
+	display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+	gap: 1em 2em;
+    margin: 0 8em;
+    padding: 0;
+}
+
+rv-home li {
+	list-style: none;
+}
+
+rv-home li a:last-child {
+	grid-column-start: 2;
+}
+
+rv-home article {
+	height: 32em;
+	border-radius: 0.5em;
+	padding: 2em 1.5em;
+	position: relative;
+}
+
+rv-home article .illustration {
+	text-align: center;
+}
+
+rv-home article .illustration img{
+	border-radius: 0.5em;
+}
+
+rv-home article .title {
+	font-size: 24px;
+	margin-top: 1.5em;
+	font-weight: bold;
+}
+
+rv-home article .tagline {
+	margin-top: 1em;
+	color: var(--pico-secondary);
+}
+
+rv-home article .abstract {
+	margin-top: 1em;
+	opacity: 0.9;
+}
+
+rv-home > ul > li > rv-link,
+rv-home > ul > li > rv-link:hover {
+	--pico-color: var(--pico-color) !important;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+rv-home > ul > li > rv-link:hover article {
+	outline: 2px solid;
+}
+
+rv-home .arrow {
+    height: 44px;
+    width: 44px;
+    color: var(--pico-primary);
+    border: 1px solid;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	position: absolute;
+	right: 2em;
+	bottom: 2em;
+}

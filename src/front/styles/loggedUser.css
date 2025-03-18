@@ -1,0 +1,74 @@
+rv-logged-user {
+	display: flex;
+}
+
+a[role=button] {
+    padding: 0.5em 2em;
+	margin-left: 1em;
+	gap: 0.3em;
+}
+
+a.signup {
+	color: var(--pico-primary);
+	border: 1px solid var(--pico-primary);
+	background-color: var(--pico-color);
+}
+
+a.signup:hover {
+	color: var(--pico-color);
+	background-color: var(--pico-primary);
+}
+
+svg {
+	width: 1em;
+	height: 1em;
+}
+
+details {
+	margin: 0;
+}
+
+summary {
+	--pico-border-radius: 50%;
+	height: 2.7em !important;
+	color: var(--pico-color) !important;
+	padding: 0.7em !important;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+details.dropdown summary::after {
+	background: none;
+	display: contents;
+}
+
+summary svg {
+	height: 1.5em;
+	width: 1.5em;
+}
+
+details.dropdown summary+ul {
+	right: 0 !important;
+	left: unset !important;
+}
+
+details.dropdown button {
+	--pico-color: var(--pico-color);
+	width: 100%;
+	text-align: left;
+}
+
+details.dropdown button.logout {
+	--pico-color: var(--error-color);
+}
+
+details.dropdown button:hover {
+	--pico-primary-hover: var(--pico-color);
+	text-decoration: none;
+}
+
+details.dropdown button.logout:hover {
+	background: var(--error-color);
+	border-color: var(--error-color);
+}

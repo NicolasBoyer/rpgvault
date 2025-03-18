@@ -1,3 +1,4 @@
+import '../../../styles/sheet.css'
 import Datas from './datas.js'
 import View from './view.js'
 import { Utils } from '../../classes/utils.js'
