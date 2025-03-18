@@ -17,5 +17,5 @@ export enum EHistoryPosition {
 export enum EErrorResponse {
     postHtml = 'postHtml',
     getJson = 'getJson',
-    default = 'default',
+    getHtml = 'getHtml',
 }

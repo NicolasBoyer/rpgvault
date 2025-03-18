@@ -13,13 +13,9 @@ export default class Routes {
         // PUBLIC
         this.request({ pServer, path: '/', file: 'home.html', className: 'home', header: 'homeHeader.html', isPublic: true, label: 'Accueil' })
 
-        pServer.get('/register', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            res?.end(await Utils.page({ file: 'register.html', className: 'register', title: 'Inscription' }))
-        })
+        this.request({ pServer, path: '/register', file: 'register.html', className: 'register', isPublic: true, title: 'Inscription' })
 
-        pServer.get('/login', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            res?.end(await Utils.page({ file: 'login.html', className: 'login', title: 'Connexion' }))
-        })
+        this.request({ pServer, path: '/login', file: 'login.html', className: 'login', isPublic: true, title: 'Connexion' })
 
         pServer.get('/resetPassword?token=:id', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
             res?.end(await Utils.page({ file: 'resetPassword.html', className: 'resetPassword', title: 'Réinitialisation du mot de passe' }))
@@ -57,7 +53,7 @@ export default class Routes {
         this.request({ pServer, path: '/sheets/:id', file: 'sheet.html', className: 'sheet', header: '', footer: '', theme: 'light' })
 
         pServer.get('/routes.json', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (await Auth.authenticateToken(_req!, res!)) res?.end(JSON.stringify(this.routes))
+            if (await Auth.authenticateToken(_req!, res!, EErrorResponse.getJson)) res?.end(JSON.stringify(this.routes))
         })
 
         pServer.get('/currentUser', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
@@ -75,7 +71,7 @@ export default class Routes {
             })
             _req?.on('end', async (): Promise<(http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) | undefined> => {
                 try {
-                    if (await Auth.authenticateToken(_req, res!)) {
+                    if (await Auth.authenticateToken(_req, res!, EErrorResponse.postHtml)) {
                         res!.writeHead(200, { 'Content-Type': 'application/json' })
                         return res!.end(JSON.stringify(await Database.request(JSON.parse(body))))
                     }
@@ -87,7 +83,7 @@ export default class Routes {
             })
         })
 
-        pServer.post('/login', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+        pServer.post('/signin', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
             let body = ''
             _req?.on('data', (pChunk): void => {
                 body += pChunk
@@ -103,7 +99,7 @@ export default class Routes {
             })
         })
 
-        pServer.post('/register', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+        pServer.post('/signup', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
             let body = ''
             _req?.on('data', (pChunk): void => {
                 body += pChunk

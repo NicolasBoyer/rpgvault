@@ -127,14 +127,14 @@ export default class Auth {
         }
     }
 
-    static async authenticateToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, errorResponse = EErrorResponse.default): Promise<TIncomingMessage | boolean> {
+    static async authenticateToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, errorResponse = EErrorResponse.getHtml): Promise<TIncomingMessage | boolean> {
         const token = await this.getToken(req, res, errorResponse)
         if (!token) {
             return false
         }
         const jwtToken = token.split('=')[1]
         if (this.isTokenBlacklisted(jwtToken)) {
-            await this.errorResponse(res, 403, 'Le token a été invalidé', true, errorResponse)
+            await this.errorResponse(res, 403, 'Le token a été invalidé', errorResponse)
             return false
         }
 
@@ -143,7 +143,7 @@ export default class Auth {
             req.user = user
             isTokenValid = err || !this.authorizeRole(req.user as TUser, 'author') ? false : req
         })
-        if (!isTokenValid) await this.errorResponse(res, 403, 'Le token est invalide', true, errorResponse)
+        if (!isTokenValid) await this.errorResponse(res, 403, 'Le token est invalide', errorResponse)
         if (req.user) {
             await Database.initUserDbAndCollections((req.user as TUser)._id)
         }
@@ -159,16 +159,16 @@ export default class Auth {
         this.tokenBlacklist.add(token)
     }
 
-    static async getToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, errorResponse = EErrorResponse.default): Promise<string | false> {
+    static async getToken(req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage>, errorResponse = EErrorResponse.getHtml): Promise<string | false> {
         const cookies = req.headers.cookie
         if (!cookies) {
-            await this.errorResponse(res, 401, 'Aucun cookie fourni', false, errorResponse)
+            await this.errorResponse(res, 401, 'Aucun cookie fourni', errorResponse)
             return false
         }
 
         const token = cookies.split(';').find((c): boolean => c.trim().startsWith('rvTk='))
         if (!token) {
-            await this.errorResponse(res, 401, 'Aucun token dans les cookies', false, errorResponse)
+            await this.errorResponse(res, 401, 'Aucun token dans les cookies', errorResponse)
             return false
         }
         return token
@@ -200,11 +200,9 @@ export default class Auth {
         return this.tokenBlacklist.has(token)
     }
 
-    private static async errorResponse(res: http.ServerResponse<http.IncomingMessage>, code: number, message: string, isMessageInHtml: boolean = true, type: EErrorResponse): Promise<void> {
-        // TODO améliorer en remontant partout la même login
-        // TODO penser à mettre les css en plusieurs fichiers déclarer en import de chaque ts
-        // TODO suppression de lit ? de vite ?
-        // TODO revoir les authenticate et server + 404 pour etre sur que tout est bien
+    private static async errorResponse(res: http.ServerResponse<http.IncomingMessage>, code: number, message: string, type: EErrorResponse): Promise<void> {
+        // TODO suppression de lit ? Passage en shadow ?
+        // TODO gérer les images en base 64
         // TODO revoir la 404
         switch (type) {
             // Sur click html pour injection
@@ -227,10 +225,9 @@ export default class Auth {
                 res.end(JSON.stringify({ error: true, message }))
                 break
             // GET en html sur F5 par exemple
-            case EErrorResponse.default:
+            case EErrorResponse.getHtml:
                 res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' })
-                // TODO errormessage aussi sur le postHtml
-                res.end(await Utils.page({ file: 'login.html', className: 'login', title: 'Connexion', errorMessage: isMessageInHtml ? message : '' }))
+                res.end(await Utils.page({ file: 'login.html', className: 'login', title: 'Connexion' }))
                 break
         }
     }

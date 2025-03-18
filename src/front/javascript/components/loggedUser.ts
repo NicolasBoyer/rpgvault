@@ -31,12 +31,12 @@ export default class LoggedUser extends HTMLElement {
             )
         } else {
             render(
-                html` <a role="button" class="signup" href="/register">
+                html` <rv-link role="button" class="signup" href="/register">
                         <svg class="signup"><use href="#signup"></use></svg><span>S'enregistrer</span>
-                    </a>
-                    <a role="button" href="/login">
+                    </rv-link>
+                    <rv-link role="button" href="/login">
                         <svg class="login"><use href="#login"></use></svg><span>Se connecter</span>
-                    </a>`,
+                    </rv-link>`,
                 this
             )
         }

@@ -2,24 +2,24 @@ rv-logged-user {
 	display: flex;
 }
 
-a[role=button] {
+rv-logged-user rv-link[role=button] {
     padding: 0.5em 2em;
 	margin-left: 1em;
 	gap: 0.3em;
 }
 
-a.signup {
+rv-logged-user rv-link.signup {
 	color: var(--pico-primary);
 	border: 1px solid var(--pico-primary);
 	background-color: var(--pico-color);
 }
 
-a.signup:hover {
+rv-logged-user rv-link.signup:hover {
 	color: var(--pico-color);
 	background-color: var(--pico-primary);
 }
 
-svg {
+rv-logged-user svg {
 	width: 1em;
 	height: 1em;
 }

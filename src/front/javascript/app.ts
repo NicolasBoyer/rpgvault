@@ -17,6 +17,7 @@ import Header from './components/header.js'
 import Home from './components/home.js'
 import Menu from './components/menu.js'
 import Error404 from './components/404.js'
+import Toast from './components/toast.js'
 
 class App {
     constructor() {
@@ -50,7 +51,7 @@ new App()
 customElements.define('rv-loader', Loader)
 customElements.define('rv-header', Header)
 customElements.define('rv-home', Home)
-// customElements.define('rv-toast', Toast)
+customElements.define('rv-toast', Toast)
 customElements.define('rv-confirm', Confirm)
 customElements.define('rv-sheets', Sheets)
 customElements.define('rv-sheet', Sheet)

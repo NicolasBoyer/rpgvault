@@ -18,7 +18,7 @@ export default class Login extends HTMLElement {
         const form = this.querySelector('form')
         form?.addEventListener('submit', async (pEvent): Promise<void> => {
             pEvent.preventDefault()
-            const result = (await Utils.request('/login', 'POST', { body: JSON.stringify(Object.fromEntries(new FormData(form).entries())) })) as TValidateReturn
+            const result = (await Utils.request('/signin', 'POST', { body: JSON.stringify(Object.fromEntries(new FormData(form).entries())) })) as TValidateReturn
             if (result.success) location.reload()
             else Utils.toast('error', result.message as string)
         })

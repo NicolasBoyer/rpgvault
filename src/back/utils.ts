@@ -14,12 +14,11 @@ export class Utils {
         return fromSrc(`front${pFile}`)
     }
 
-    static async page(options: { file: string; className: string; title?: string; templateHtml?: string; errorMessage?: string; header?: string; footer?: string; theme?: string }): Promise<string> {
+    static async page(options: { file: string; className: string; title?: string; templateHtml?: string; header?: string; footer?: string; theme?: string }): Promise<string> {
         const fragment = options.file && (await fs.readFile(fromFragments(options.file), 'utf8'))
         let template = await fs.readFile(fromTemplate(options.templateHtml || 'page.html'), 'utf8')
         template = replaceTagAndGetHtml(template, '§§title§§', `<div class='subtitle' data-replaced-title>${options.title}</div>`)
         if (options.className) template = replaceTagAndGetHtml(template, '§§className§§', options.className)
-        template = replaceTagAndGetHtml(template, '§§errorMessage§§', `<div class='error'>${options.errorMessage || ''}</div>`)
         template = replaceTagAndGetHtml(template, '§§header§§', options.header === '' ? '' : await fs.readFile(fromFragments(options.header || 'header.html'), 'utf8'))
         template = replaceTagAndGetHtml(template, '§§footer§§', options.footer === '' ? '' : await fs.readFile(fromFragments(options.footer || 'footer.html'), 'utf8'))
         template = replaceTagAndGetHtml(template, '§§theme§§', options.theme || 'dark')

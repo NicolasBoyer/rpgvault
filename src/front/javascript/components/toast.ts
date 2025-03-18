@@ -1,4 +1,4 @@
-import '../../styles/loast.css'
+import '../../styles/toast.css'
 import { html, render } from 'lit'
 
 export default class Toast extends HTMLElement {
