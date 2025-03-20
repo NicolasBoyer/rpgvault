@@ -5,6 +5,16 @@
 }
 
 body.notFound {
+	margin: 0;
+}
+
+body.notFound main {
+	width: 100vw;
+	padding: 0 !important;
+	max-width: unset;
+}
+
+rv-error-404 {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -18,15 +28,34 @@ body.notFound {
 	max-width: 100vw
 }
 
-rv-error-404 a {
+rv-error-404 p {
+	color: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	line-height: normal;
+}
+
+rv-error-404 button {
 	text-decoration: none;
+	outline: 0;
+	padding: 0;
+	border: none;
+	line-height: 0;
+	font-size: unset;
+	background: none;
+}
+
+rv-error-404 button:focus {
+	outline: none;
+	box-shadow: none;
 }
 
 rv-error-404 svg {
 	vertical-align: middle;
+	stroke: inherit;
+	fill: inherit;
 }
 
-rv-error-404 main {
+rv-error-404 section {
 	width: 80%;
 	height: 60%;
 	-webkit-transition: all .3s ease-in-out;
@@ -34,6 +63,7 @@ rv-error-404 main {
 	-ms-transition: all .3s ease-in-out;
 	-o-transition: all .3s ease-in-out;
 	transition: all .3s ease-in-out;
+	margin: 0;
 }
 
 rv-error-404 header {
@@ -59,7 +89,7 @@ rv-error-404 .menu {
 	align-items: center;
 }
 
-rv-error-404 .menu a {
+rv-error-404 .menu button {
 	content: '';
 	display: inline-block;
 	width: 20px;
@@ -68,15 +98,15 @@ rv-error-404 .menu a {
 	margin: 0 .2rem;
 }
 
-rv-error-404 .menu a:nth-child(3) {
+rv-error-404 .menu button:nth-child(3) {
 	background-color: #fa615c;
 }
 
-rv-error-404 .menu a:nth-child(2) {
+rv-error-404 .menu button:nth-child(2) {
 	background-color: #ffbd48;
 }
 
-rv-error-404 .menu a:nth-child(1) {
+rv-error-404 .menu button:nth-child(1) {
 	background-color: #3fc950;
 }
 
@@ -142,7 +172,7 @@ rv-error-404  #userInput::after{
 	}
 }
 /*max style*/
-.notFound.max main {
+.notFound.max section {
 	width: 100%;
 	height: 100%;
 }
@@ -167,7 +197,7 @@ rv-error-404 .min_app {
 	align-items: center;
 }
 
-.notFound.min rv-error-404 main {
+.notFound.min rv-error-404 section {
 	transform: translate(-640px, 260px) scale(0);
 }
 
@@ -176,7 +206,7 @@ rv-error-404 .min_app {
 }
 
 @media (max-width: 991px) {
-	rv-error-404 main{
+	rv-error-404 section{
 		width: 95%;
 		height: 70%;
 	}
@@ -190,7 +220,7 @@ rv-error-404 .min_app {
 		top: -35px;
 		height: 50px;
 	}
-	rv-error-404 .min main {
+	rv-error-404 .min section {
 		transform: translate(-200px, 660px) scale(0);
 	}
 }
