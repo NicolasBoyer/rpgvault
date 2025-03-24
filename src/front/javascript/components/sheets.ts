@@ -33,6 +33,7 @@ export default class Sheets extends HTMLElement {
     }
 
     private async saveSheet(sheet: TSheet): Promise<void> {
+        // TODO que se passe-t-il si unlogged
         if (!this.sheets.some((pSheet: TSheet): boolean => (pSheet.name.toLowerCase() === sheet.name.toLowerCase() || pSheet.slug === Utils.slugify(sheet.name)) && pSheet._id !== sheet.id)) {
             this.sheets = (await Utils.request('/db', 'POST', { body: `{ "setSheet": ${JSON.stringify(sheet)} }` })) as TSheet[]
             Caches.set(true, 'sheets', this.sheets)
