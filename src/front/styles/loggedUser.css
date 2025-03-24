@@ -58,22 +58,31 @@ details.dropdown summary+ul {
 	left: unset !important;
 }
 
-details.dropdown button {
+rv-logged-user button {
 	--pico-color: var(--pico-color);
 	width: 100%;
 	text-align: left;
+	--pico-background-color: transparent;
 }
 
-details.dropdown button.logout {
+rv-logged-user button.logout {
 	--pico-color: var(--error-color);
 }
 
-details.dropdown button:hover {
+rv-logged-user button:hover {
+	--pico-background-color: var(--pico-primary-hover-background);
+	--pico-color: var(--pico-color);
 	--pico-primary-hover: var(--pico-color);
 	text-decoration: none;
 }
 
-details.dropdown button.logout:hover {
+rv-logged-user button.logout:hover {
 	background: var(--error-color);
 	border-color: var(--error-color);
+}
+
+rv-sheet rv-logged-user button {
+	--pico-background-color: var(--pico-contrast-background);
+	--pico-border-color: var(--pico-contrast-border);
+	--pico-color: var(--pico-contrast-inverse);
 }

@@ -18,10 +18,10 @@ export default class LoggedUser extends HTMLElement {
             const list = html`
                 <ul>
                     <li>
-                        <button @click="${(): void => User.getAccount()}" role="link" href="#">${User.currentUser?.firstName} ${User.currentUser?.lastName}</button>
+                        <button @click="${(): void => User.getAccount()}">${User.currentUser?.firstName} ${User.currentUser?.lastName}</button>
                     </li>
                     <li>
-                        <button class="logout" @click="${(): Promise<void> => User.logout()}" role="link">Se déconnecter</button>
+                        <button class="logout" @click="${(): Promise<void> => User.logout()}">Se déconnecter</button>
                     </li>
                 </ul>
             `

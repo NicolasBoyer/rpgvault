@@ -34,7 +34,8 @@ rv-sheet rv-menu {
 	flex-direction: column-reverse;
 }
 
-rv-sheet rv-menu ul {
+rv-sheet rv-menu ul,
+rv-sheet rv-logged-user ul{
 	padding: 0;
     display: block;
 }
