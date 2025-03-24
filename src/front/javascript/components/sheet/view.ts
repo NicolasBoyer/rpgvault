@@ -49,7 +49,7 @@ export default class View {
                                   </svg>
                                   <span>Accueil</span>
                               </button>
-                              ${States.sheetMainMenuOpened ? html`<rv-menu /><rv-logged-user />` : ''}
+                              ${States.sheetMainMenuOpened ? html`<rv-menu /><rv-logged-user list />` : ''}
                               <button class="edit contrast" @click="${(): void => States.displayEditMode(true)}">
                                   <svg class="edit">
                                       <use href="#edit"></use></svg

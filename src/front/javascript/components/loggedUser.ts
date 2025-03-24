@@ -3,6 +3,10 @@ import { html, render } from 'lit'
 import { User } from '../classes/user.js'
 
 export default class LoggedUser extends HTMLElement {
+    get list(): boolean {
+        return this.hasAttribute('list')
+    }
+
     async connectedCallback(): Promise<void> {
         await User.getCurrentUser()
         this.render()
@@ -10,25 +14,32 @@ export default class LoggedUser extends HTMLElement {
     }
 
     private render(): void {
+        const list = html`
+            <ul>
+                <li>
+                    <button @click="${(): void => User.getAccount()}" role="link" href="#">${User.currentUser?.firstName} ${User.currentUser?.lastName}</button>
+                </li>
+                <li>
+                    <button class="logout" @click="${(): Promise<void> => User.logout()}" role="link">Se déconnecter</button>
+                </li>
+            </ul>
+        `
         if (User.currentUser) {
-            render(
-                html` <details class="dropdown">
-                    <summary>
-                        <svg>
-                            <use href="#user"></use>
-                        </svg>
-                    </summary>
-                    <ul>
-                        <li>
-                            <button @click="${(): void => User.getAccount()}" role="link" href="#">${User.currentUser?.firstName} ${User.currentUser?.lastName}</button>
-                        </li>
-                        <li>
-                            <button class="logout" @click="${(): Promise<void> => User.logout()}" role="link">Se déconnecter</button>
-                        </li>
-                    </ul>
-                </details>`,
-                this
-            )
+            if (this.list) {
+                render(list, this)
+            } else {
+                render(
+                    html` <details class="dropdown">
+                        <summary>
+                            <svg>
+                                <use href="#user"></use>
+                            </svg>
+                        </summary>
+                        ${list}
+                    </details>`,
+                    this
+                )
+            }
         } else {
             render(
                 html` <rv-link role="button" class="signup" href="/register">
