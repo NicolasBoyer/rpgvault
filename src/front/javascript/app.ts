@@ -18,7 +18,6 @@ import Home from './components/home.js'
 import Menu from './components/menu.js'
 import Error404 from './components/404.js'
 import Toast from './components/toast.js'
-import { Caches } from './classes/caches.js'
 
 class App {
     constructor() {
@@ -26,7 +25,6 @@ class App {
         // this.wakeLock()
         // Websocket.init()
         if (location.href.charAt(location.href.length - 1) === '/') history.replaceState({}, '', location.href.replace(/\/$/, ''))
-        // setInterval(this.checkSession, 10000)
     }
 
     // private async wakeLock(): Promise<void> {
@@ -47,17 +45,6 @@ class App {
     //     })
     //     await requestWakeLock()
     // }
-
-    private async checkSession(): Promise<void> {
-        try {
-            const response = await fetch('/checkSession', { credentials: 'include' })
-            if (!response.ok) throw new Error('Session invalide')
-        } catch (err) {
-            console.warn(`⚠️ Session perdue, redirection... : ${err}`)
-            await Caches.clear()
-            window.location.href = '/login'
-        }
-    }
 }
 
 new App()

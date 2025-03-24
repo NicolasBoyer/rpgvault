@@ -47,14 +47,6 @@ export default class Routes {
             })
         })
 
-        pServer.get('/checkSession', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if ((await Auth.authenticateToken(_req!, res!, EErrorResponse.getJson)) && !_req?.user) {
-                return
-            }
-            // res!.writeHead(200, { 'Content-Type': 'application/json' })
-            res!.end(JSON.stringify({ message: 'Ok', success: true }))
-        })
-
         // PRIVATE
         this.request({ pServer, path: '/sheets', file: 'sheets.html', className: 'sheets', label: 'Forge de personnage' })
 

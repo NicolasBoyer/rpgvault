@@ -1,6 +1,6 @@
 import { deleteDB, IDBPDatabase, IDBPObjectStore, openDB } from 'idb'
 
-const indexedDBCaches: string[] = []
+let indexedDBCaches: string[] = []
 
 export class Caches {
     static async set(forceIndexedDb: boolean, ...args: (string | Record<string, unknown> | Record<string, unknown>[])[]): Promise<void> {
@@ -34,6 +34,7 @@ export class Caches {
     }
 
     static async clear(): Promise<void> {
+        indexedDBCaches = []
         for (const db of await indexedDB.databases()) {
             indexedDB.deleteDatabase(db.name!)
         }

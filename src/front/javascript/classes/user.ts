@@ -10,6 +10,7 @@ export class User {
         const user = (await Utils.request('/currentUser')) as TUser & { error: string }
         this.currentUser = user.error ? null : user
         if (this.currentUser) document.body.dispatchEvent(new CustomEvent('currentUserAvailable'))
+        else await Caches.clear()
     }
 
     static async logout(): Promise<void> {

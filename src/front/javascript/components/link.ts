@@ -1,5 +1,6 @@
 import { html, render } from 'lit'
 import { Utils } from '../classes/utils.js'
+import { User } from '../classes/user.js'
 
 export default class Link extends HTMLElement {
     get href(): string | null {
@@ -26,13 +27,17 @@ export default class Link extends HTMLElement {
     }
 }
 
-const REPLACEZONE = (pFragment: Record<string, string>): void => {
+const REPLACEZONE = async (pFragment: Record<string, string>): Promise<void> => {
     // TODO info supplémentaire indiquant de pas utiliser replacedzone ?
     // TODO sans doute revoir pour passer plusieurs zones à replace
     // if (!pFragment.text) {
     //     document.replaceChild(new DOMParser().parseFromString(pFragment.document, 'text/html').documentElement, document.documentElement)
     //     return
     // }
+    await User.getCurrentUser()
+    if (!User.currentUser) {
+        location.reload()
+    }
     const replacedZone = <HTMLElement>document.querySelector('[data-replaced-zone]')
     // if (!replacedZone) {
     //     document.replaceChild(new DOMParser().parseFromString(pFragment.document, 'text/html').documentElement, document.documentElement)
