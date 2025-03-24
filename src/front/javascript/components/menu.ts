@@ -16,15 +16,15 @@ export default class Menu extends HTMLElement {
     }
 
     async connectedCallback(): Promise<void> {
-        // document.body.addEventListener('currentUserAvailable', async (): Promise<void> => {
-        this.links = ((await Caches.get('routes')) || (await Utils.request('/routes.json'))) as TRoute[] & { error: string }
-        if (!this.links || (this.links as unknown as { error: string }).error) return
-        await Caches.set(false, 'routes', this.links)
-        this.removeAttribute('style')
-        this.displayMenu()
-        window.addEventListener('resize', (): void => this.displayMenu())
-        window.addEventListener('popstate', (): void => this.render())
-        // })
+        document.body.addEventListener('currentUserAvailable', async (): Promise<void> => {
+            this.links = ((await Caches.get('routes')) || (await Utils.request('/routes.json'))) as TRoute[] & { error: string }
+            if (!this.links || (this.links as unknown as { error: string }).error) return
+            await Caches.set(false, 'routes', this.links)
+            this.removeAttribute('style')
+            this.displayMenu()
+            window.addEventListener('resize', (): void => this.displayMenu())
+            window.addEventListener('popstate', (): void => this.render())
+        })
     }
 
     private displayMenu(): void {

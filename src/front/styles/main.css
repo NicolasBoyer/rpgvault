@@ -12,6 +12,7 @@ header  {
 	top: 0;
 	z-index: 2;
 	background: var(--pico-background-color);
+	padding: 1em;
 }
 
 main {

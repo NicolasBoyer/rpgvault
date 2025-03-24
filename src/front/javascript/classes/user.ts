@@ -6,11 +6,20 @@ import { html } from 'lit'
 export class User {
     static currentUser: TUser | null = null
 
-    static async getCurrentUser(): Promise<void> {
-        const user = (await Utils.request('/currentUser')) as TUser & { error: string }
+    static async getCurrentUser(forcedRequest = false): Promise<void> {
+        // TODO voir si améliorable quand pas connecté : deux test sont fait. Au clic pui à l'affichage
+        const user = ((!forcedRequest && this.currentUser) || (await Utils.request('/currentUser'))) as TUser & { error: string }
         this.currentUser = user.error ? null : user
         if (this.currentUser) document.body.dispatchEvent(new CustomEvent('currentUserAvailable'))
-        else await Caches.clear()
+    }
+
+    static async checkCurrentUserLogged(): Promise<void> {
+        const user = this.currentUser
+        await this.getCurrentUser(true)
+        if (!this.currentUser && user) {
+            await Caches.clear()
+            location.reload()
+        }
     }
 
     static async logout(): Promise<void> {
