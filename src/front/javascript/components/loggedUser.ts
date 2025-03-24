@@ -14,17 +14,17 @@ export default class LoggedUser extends HTMLElement {
     }
 
     private render(): void {
-        const list = html`
-            <ul>
-                <li>
-                    <button @click="${(): void => User.getAccount()}" role="link" href="#">${User.currentUser?.firstName} ${User.currentUser?.lastName}</button>
-                </li>
-                <li>
-                    <button class="logout" @click="${(): Promise<void> => User.logout()}" role="link">Se déconnecter</button>
-                </li>
-            </ul>
-        `
         if (User.currentUser) {
+            const list = html`
+                <ul>
+                    <li>
+                        <button @click="${(): void => User.getAccount()}" role="link" href="#">${User.currentUser?.firstName} ${User.currentUser?.lastName}</button>
+                    </li>
+                    <li>
+                        <button class="logout" @click="${(): Promise<void> => User.logout()}" role="link">Se déconnecter</button>
+                    </li>
+                </ul>
+            `
             if (this.list) {
                 render(list, this)
             } else {
