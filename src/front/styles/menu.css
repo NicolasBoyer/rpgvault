@@ -1,0 +1,42 @@
+#header > rv-menu {
+	flex: 1;
+}
+
+rv-menu ul {
+	display: flex;
+	margin: 0;
+}
+
+rv-menu li {
+	list-style: none;
+}
+
+#header > rv-menu li rv-link {
+	background: none;
+	border: none;
+	color: var(--pico-secondary);
+	font-weight: normal;
+	border-radius: 0;
+	padding: 0.5em var(--pico-form-element-spacing-horizontal) 1em;
+}
+
+#header > rv-menu li[data-selected='true'] rv-link {
+	color: var(--pico-primary);
+	font-weight: bold;
+	border-bottom: solid 3px var(--pico-primary);
+}
+
+rv-sheet rv-menu {
+    position: absolute;
+    top: 3.1em;
+    left: 0.5em;
+}
+
+rv-sheet rv-menu ul {
+	padding: 0;
+    display: block;
+}
+
+rv-sheet rv-menu li rv-link {
+	justify-content: left !important;
+}

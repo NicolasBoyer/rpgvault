@@ -1,3 +1,8 @@
+.login h1,
+.register h1 {
+	flex: 1;
+}
+
 rv-logged-user {
 	display: flex;
 }

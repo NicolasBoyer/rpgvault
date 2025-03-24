@@ -7,6 +7,11 @@ body {
 
 header  {
 	display: flex;
+	gap: 2em;
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background: var(--pico-background-color);
 }
 
 main {
@@ -17,7 +22,6 @@ main {
 h1 {
 	font-family: "Marcellus SC", serif;
 	margin: 0;
-	flex: 1;
 }
 
 h1 > rv-link {

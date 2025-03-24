@@ -203,7 +203,6 @@ export default class Auth {
     private static async errorResponse(res: http.ServerResponse<http.IncomingMessage>, code: number, message: string, type: EErrorResponse): Promise<void> {
         // TODO suppression de lit ? Passage en shadow ?
         // TODO gérer les images en base 64
-        // TODO revoir la 404
         switch (type) {
             // Sur click html pour injection
             case EErrorResponse.postHtml:

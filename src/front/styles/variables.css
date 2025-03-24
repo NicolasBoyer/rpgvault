@@ -8,10 +8,12 @@
 	--pico-primary: #636AE8;
 	--pico-secondary: #9095a0;
 	--pico-primary-background: #636AE8;
+	--pico-primary-background-select: #a9ade8;
 	--pico-primary-border: #1d2128;
 	--pico-font-size: 14px;
 	--pico-max-width: 1440px;
 	--error-color: #c62828;
+	--loader-background: rgb(34 35 43 / 58%);
 	/*--color: #ffffff;*/
 	/*--h1-color: #32241b;*/
 	/*--h2-color: #413226;*/
@@ -56,6 +58,7 @@
 	--read-only-input-background-selected: #ab8c8c5e;
 	--pico-form-element-background-color: #ffffff;
 	--notepad-tab-background: #c2c2c9;
+	--loader-background: rgba(169,173,232,0.4);
     /*--pico-background-color: #ffffff;
 	--pico-secondary-background: #a7bee3;
 	--pico-card-background-color: #a8b8da;

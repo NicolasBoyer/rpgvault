@@ -38,6 +38,13 @@ export default class Home extends HTMLElement {
             illustration: 'assets/pact.jpg',
             abstract: 'Avant le voyage, les compagnons scellent un pacte sacré scelle les règles et promesses pour une quête harmonieuse.',
         },
+        {
+            title: 'Le Conseil des Compagnons',
+            tagline: 'Unissez vos forces, tracez votre destinée',
+            uri: '/council',
+            illustration: 'assets/council.jpg',
+            abstract: 'Rassemblez vos compagnons, suivez l’évolution de vos campagnes et gérez vos aventures en un seul endroit.',
+        },
     ]
 
     constructor() {

@@ -525,23 +525,9 @@ rv-sheet .notepadMode article#notepad button.removeTab span {
       display: none;
 }
 
-/*** MENU ***/
-rv-sheet rv-menu {
-    position: absolute;
-    top: 3.1em;
-    left: 0.5em;
-}
-
-rv-sheet rv-menu ul {
-	padding: 0;
-}
-
-rv-sheet rv-menu li {
-	list-style: none;
-}
-
-rv-sheet rv-menu li rv-link {
-	display: inline-block;
+rv-sheet textarea:focus,
+rv-sheet input:focus {
+	--pico-box-shadow: transparent !important;
 }
 
 @media only screen

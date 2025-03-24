@@ -1,3 +1,4 @@
+import '../../styles/menu.css'
 import { html, render, TemplateResult } from 'lit'
 import { TRoute } from '../types.js'
 import { Caches } from '../classes/caches.js'

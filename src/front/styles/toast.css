@@ -12,6 +12,7 @@
 	margin-left: -17%;
 	box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 10%);
 	transition: top .225s ease-in-out;
+	z-index: 5;
 }
 
 .toast.visible {

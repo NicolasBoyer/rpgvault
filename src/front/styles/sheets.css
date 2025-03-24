@@ -109,11 +109,7 @@ rv-sheets article > .title h3 {
 
 rv-sheets article fieldset {
 	width: auto !important;
-}
-
-rv-sheets article input {
-	font-size: 1.5em;
-	width: 11.7em !important;
+	margin-bottom: 0 !important;
 }
 
 rv-sheets article .illustration {
@@ -124,6 +120,7 @@ rv-sheets article .illustration {
 
 rv-sheets article .illustration img {
 	border-radius: 0.5em;
+	width: 174px;
 }
 
 rv-sheets article .illustration button {
@@ -133,7 +130,8 @@ rv-sheets article .illustration button {
 
 rv-sheets article .abstract {
 	margin-top: 1em;
-     color: var(--pico-secondary);
+	color: var(--pico-secondary);
+	max-width: 29em;
 }
 
 rv-sheets .edit,
@@ -146,4 +144,9 @@ rv-sheets .edit span,
 rv-sheets .undo span,
 rv-sheets .valid span {
 	display: none;
+}
+
+rv-sheets fieldset:has(>input[name='description']) {
+	margin-top: var(--pico-spacing);
+	font-size: 0.7em;
 }

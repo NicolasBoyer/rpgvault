@@ -2,7 +2,7 @@ import '../../styles/sheets.css'
 import { Utils } from '../classes/utils.js'
 import { html, render, TemplateResult } from 'lit'
 import { Caches } from '../classes/caches.js'
-import { TSheet } from '../types.js'
+import { HTMLElementEvent, TSheet } from '../types.js'
 
 // TODO système de folder ? A voir si besoin pas pour le moment
 // TODO permettre plusieurs utilisateurs
@@ -45,10 +45,16 @@ export default class Sheets extends HTMLElement {
         // }
     }
 
-    private async editSheets(event: PointerEvent, id: string): Promise<void> {
-        const target = <HTMLInputElement>event.target
+    private async editSheet(target: HTMLInputElement, fieldName: keyof Pick<TSheet, 'name' | 'description' | 'illustration'>, sheet: TSheet): Promise<void> {
         const input: HTMLInputElement = target.tagName === 'INPUT' ? target : (target.closest('div')?.querySelector('input') as HTMLInputElement)
-        await this.saveSheet({ name: input.value, id })
+        const tempSheet: TSheet = { name: '' }
+        Utils.loader(true)
+        tempSheet[fieldName] = target.files?.length ? await Utils.uploadFileAndGetUrl((target.files as FileList)[0]) : input.value
+        Utils.loader(false)
+        if (fieldName !== 'name') {
+            tempSheet['name'] = sheet.name
+        }
+        await this.saveSheet({ ...tempSheet, id: sheet._id })
     }
 
     private addSheet(): void {
@@ -115,7 +121,91 @@ export default class Sheets extends HTMLElement {
         this.render()
     }
 
-    private render(): void {
+    private renderEditString(sheet: TSheet, fieldName: keyof Pick<TSheet, 'name' | 'description'>, defaultValue: string): TemplateResult {
+        return html`
+            <fieldset role="group">
+                <input
+                    name="${fieldName}"
+                    required
+                    type="text"
+                    value="${defaultValue}"
+                    @click="${(event: PointerEvent): void => event.stopPropagation()}"
+                    @keyup="${(event: Event): void => {
+                        if ((<KeyboardEvent>event).key === 'Enter') this.editSheet(event.target as HTMLInputElement, fieldName, sheet)
+                        if ((<KeyboardEvent>event).key === 'Escape') this.resetMode()
+                    }}"
+                />
+                <button
+                    class="valid"
+                    @click="${async (event: PointerEvent): Promise<void> => {
+                        event.stopPropagation()
+                        await this.editSheet(event.target as HTMLInputElement, fieldName, sheet)
+                    }}"
+                >
+                    <svg class="valid">
+                        <use href="#valid"></use>
+                    </svg>
+                    <span>Valider</span>
+                </button>
+                <button
+                    type="button"
+                    class="undo"
+                    @click="${(event: PointerEvent): void => {
+                        event.stopPropagation()
+                        this.resetMode()
+                    }}"
+                >
+                    <svg class="undo">
+                        <use href="#undo"></use>
+                    </svg>
+                    <span>Annuler</span>
+                </button>
+            </fieldset>
+        `
+    }
+
+    private editIllustration(sheet: TSheet): void {
+        let event: HTMLElementEvent<HTMLInputElement>
+        Utils.confirm(
+            html`
+                <label for="file">
+                    <span>Choisissez un fichier</span>
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
+                        @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
+                            event = pEvent
+                        }}"
+                    />
+                </label>
+            `,
+            async (): Promise<void> => this.editSheet(event.target as HTMLInputElement, 'illustration', sheet)
+        )
+    }
+
+    private renterEditButton(id: string, sheet?: TSheet): TemplateResult {
+        return html`
+            <button
+                class="edit outline"
+                @click="${(event: PointerEvent): void => {
+                    event.stopPropagation()
+                    if (id.includes('illustration') && sheet) this.editIllustration(sheet)
+                    else {
+                        this.editMode = id
+                        this.render()
+                    }
+                }}"
+            >
+                <svg class="edit">
+                    <use href="#pencil"></use>
+                </svg>
+                <span>Modifier</span>
+            </button>
+        `
+    }
+
+    private async render(): Promise<void> {
         render(
             html`
                 <div class="title">
@@ -131,103 +221,28 @@ export default class Sheets extends HTMLElement {
                     <ul>
                         ${!this.sheets.length
                             ? html`<li>Aucun personnage ...</li>`
-                            : this.sheets.map((pSheet): TemplateResult => {
-                                  const id = pSheet._id as string
-                                  const name = pSheet.name
-                                  return html`
+                            : await Promise.all(
+                                  this.sheets.map(async (pSheet): Promise<TemplateResult> => {
+                                      const id = pSheet._id as string
+                                      const name = pSheet.name as string
+                                      const description = (pSheet.description as string) || 'Entrez une description'
+                                      const illustration = await Utils.urlToBase64(pSheet.illustration || 'assets/characterSheet.jpg')
+                                      return html`
                                       <li>
                                           <rv-link role='link' href='/sheets/${pSheet.slug}'">
                                               <article>
                                                   ${
-                                                      this.editMode === id
-                                                          ? html`
-                                                                <fieldset role="group">
-                                                                    <input
-                                                                        name="editSheet"
-                                                                        required
-                                                                        type="text"
-                                                                        value="${name}"
-                                                                        @click="${(event: PointerEvent): void => event.stopPropagation()}"
-                                                                        @keyup="${(event: Event): void => {
-                                                                            if ((<KeyboardEvent>event).key === 'Enter') this.editSheets(<PointerEvent>event, id)
-                                                                            if ((<KeyboardEvent>event).key === 'Escape') this.resetMode()
-                                                                        }}"
-                                                                    />
-                                                                    <button
-                                                                        class="valid"
-                                                                        @click="${async (event: PointerEvent): Promise<void> => {
-                                                                            event.stopPropagation()
-                                                                            await this.editSheets(event, id)
-                                                                        }}"
-                                                                    >
-                                                                        <svg class="valid">
-                                                                            <use href="#valid"></use>
-                                                                        </svg>
-                                                                        <span>Valider</span>
-                                                                    </button>
-                                                                    <button
-                                                                        type="button"
-                                                                        class="undo"
-                                                                        @click="${(event: PointerEvent): void => {
-                                                                            event.stopPropagation()
-                                                                            this.resetMode()
-                                                                        }}"
-                                                                    >
-                                                                        <svg class="undo">
-                                                                            <use href="#undo"></use>
-                                                                        </svg>
-                                                                        <span>Annuler</span>
-                                                                    </button>
-                                                                </fieldset>
-                                                            `
+                                                      this.editMode === `${id}_name`
+                                                          ? this.renderEditString(pSheet, 'name', name)
                                                           : html`
                                                                 <div class="title">
                                                                     <h3>${name}</h3>
-                                                                    <button
-                                                                        class="edit outline"
-                                                                        @click="${(event: PointerEvent): void => {
-                                                                            event.stopPropagation()
-                                                                            this.editMode = id
-                                                                            this.render()
-                                                                        }}"
-                                                                    >
-                                                                        <svg class="edit">
-                                                                            <use href="#pencil"></use>
-                                                                        </svg>
-                                                                        <span>Modifier</span>
-                                                                    </button>
+                                                                    ${this.renterEditButton(`${id}_name`)}
                                                                 </div>
                                                             `
                                                   }
-                                                  <div class='abstract'>Test de texte <button
-                                                                        class='edit outline'
-                                                                        @click='${(event: PointerEvent): void => {
-                                                                            event.stopPropagation()
-                                                                            this.editMode = id
-                                                                            this.render()
-                                                                        }}'
-                                                                    >
-                                                                        <svg class='edit'>
-                                                                            <use href='#pencil'></use>
-                                                                        </svg>
-                                                                        <span>Modifier</span>
-                                                                    </button></div>
-                                                  <div class='illustration'>
-                                                      <img src='assets/characterSheet.jpg' alt='' />
-                                                      <button
-                                                                        class='edit outline'
-                                                                        @click='${(event: PointerEvent): void => {
-                                                                            event.stopPropagation()
-                                                                            this.editMode = id
-                                                                            this.render()
-                                                                        }}'
-                                                                    >
-                                                                        <svg class='edit'>
-                                                                            <use href='#pencil'></use>
-                                                                        </svg>
-                                                                        <span>Modifier</span>
-                                                                    </button>
-                                                  </div>
+                                                  ${this.editMode === `${id}_description` ? this.renderEditString(pSheet, 'description', description) : html` <div class="abstract">${description} ${this.renterEditButton(`${id}_description`)}</div> `}
+                                                  <div class="illustration"><img src="${illustration}" alt="" /> ${this.renterEditButton(`${id}_illustration`, pSheet)}</div>
                                               </article>
                                               <div class='buttons'>
                                                   <button
@@ -254,7 +269,8 @@ export default class Sheets extends HTMLElement {
                                           </rv-link>
                                       </li>
                                   `
-                              })}
+                                  })
+                              )}
                     </ul>
                 </div>
             `,

@@ -5,6 +5,8 @@ export type TSheet = {
     _id?: string
     id?: string
     name: string
+    description?: string
+    illustration?: string
     slug?: string
     notepad?: TTab[]
     inputs?: TInput[]
