@@ -81,8 +81,23 @@ rv-logged-user button.logout:hover {
 	border-color: var(--error-color);
 }
 
+rv-sheet rv-logged-user {
+	display: block;
+}
+
+rv-sheet rv-logged-user ul{
+	padding: 0;
+    display: block;
+}
+
 rv-sheet rv-logged-user button {
 	--pico-background-color: var(--pico-contrast-background);
 	--pico-border-color: var(--pico-contrast-border);
 	--pico-color: var(--pico-contrast-inverse);
+}
+
+rv-sheet rv-logged-user button:hover {
+	--pico-background-color: var(--pico-contrast-hover-background);
+    --pico-border-color: var(--pico-contrast-hover-border);
+    --pico-color: var(--pico-contrast-inverse);
 }
