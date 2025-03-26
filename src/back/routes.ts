@@ -71,7 +71,7 @@ export default class Routes {
             })
             _req?.on('end', async (): Promise<(http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) | undefined> => {
                 try {
-                    if (await Auth.authenticateToken(_req, res!, EErrorResponse.postHtml)) {
+                    if (await Auth.authenticateToken(_req, res!, EErrorResponse.getJson)) {
                         res!.writeHead(200, { 'Content-Type': 'application/json' })
                         return res!.end(JSON.stringify(await Database.request(JSON.parse(body))))
                     }

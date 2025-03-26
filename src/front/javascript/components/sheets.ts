@@ -3,6 +3,7 @@ import { Utils } from '../classes/utils.js'
 import { html, render, TemplateResult } from 'lit'
 import { Caches } from '../classes/caches.js'
 import { HTMLElementEvent, TSheet } from '../types.js'
+import { User } from '../classes/user.js'
 
 // TODO système de folder ? A voir si besoin pas pour le moment
 // TODO permettre plusieurs utilisateurs
@@ -17,11 +18,10 @@ import { HTMLElementEvent, TSheet } from '../types.js'
 // TODO système de calque ou d'index
 // TODO Avatar
 export default class Sheets extends HTMLElement {
-    private sheets: TSheet[] = []
+    private sheets: TSheet[] & { error: string } = []
     private editMode: string | null = null
 
     async connectedCallback(): Promise<void> {
-        Utils.getFragmentHtml(location.pathname)
         Utils.loader(true)
         this.sheets = <TSheet[]>((await Caches.get('sheets')) || (await Utils.request('/db', 'POST', { body: '{ "getSheets": "" }' })))
         Caches.set(true, 'sheets', this.sheets)
@@ -34,8 +34,12 @@ export default class Sheets extends HTMLElement {
 
     private async saveSheet(sheet: TSheet): Promise<void> {
         // TODO que se passe-t-il si unlogged
+        // await User.checkCurrentUserLogged() seulement si retour db 401
         if (!this.sheets.some((pSheet: TSheet): boolean => (pSheet.name.toLowerCase() === sheet.name.toLowerCase() || pSheet.slug === Utils.slugify(sheet.name)) && pSheet._id !== sheet.id)) {
-            this.sheets = (await Utils.request('/db', 'POST', { body: `{ "setSheet": ${JSON.stringify(sheet)} }` })) as TSheet[]
+            this.sheets = (await Utils.request('/db', 'POST', { body: `{ "setSheet": ${JSON.stringify(sheet)} }` })) as TSheet[] & { error: string }
+            if (this.sheets.error) {
+                await User.checkCurrentUserLogged()
+            }
             Caches.set(true, 'sheets', this.sheets)
         } else Utils.toast('error', 'Une feuille de personnage portant le même nom ou la même url existe')
         this.resetMode()
@@ -68,7 +72,7 @@ export default class Sheets extends HTMLElement {
                         type="text"
                         id="name"
                         name="name"
-                        @change="${async (pEvent: PointerEvent): Promise<void> => {
+                        @change="${(pEvent: PointerEvent): void => {
                             name = (pEvent.target as HTMLInputElement).value
                         }}"
                     />

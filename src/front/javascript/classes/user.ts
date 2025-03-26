@@ -7,7 +7,7 @@ export class User {
     static currentUser: TUser | null = null
 
     static async getCurrentUser(forcedRequest = false): Promise<void> {
-        // TODO voir si améliorable quand pas connecté : deux test sont fait. Au clic pui à l'affichage
+        // TODO voir si améliorable quand pas connecté : deux test sont fait. Au clic puis à l'affichage
         const user = ((!forcedRequest && this.currentUser) || (await Utils.request('/currentUser'))) as TUser & { error: string }
         this.currentUser = user.error ? null : user
         if (this.currentUser) document.body.dispatchEvent(new CustomEvent('currentUserAvailable'))
