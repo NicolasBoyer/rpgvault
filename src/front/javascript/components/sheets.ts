@@ -18,7 +18,7 @@ import { User } from '../classes/user.js'
 // TODO système de calque ou d'index
 // TODO Avatar
 export default class Sheets extends HTMLElement {
-    private sheets: TSheet[] & { error: string } = []
+    private sheets: TSheet[] = []
     private editMode: string | null = null
 
     async connectedCallback(): Promise<void> {
@@ -33,11 +33,9 @@ export default class Sheets extends HTMLElement {
     }
 
     private async saveSheet(sheet: TSheet): Promise<void> {
-        // TODO que se passe-t-il si unlogged
-        // await User.checkCurrentUserLogged() seulement si retour db 401
         if (!this.sheets.some((pSheet: TSheet): boolean => (pSheet.name.toLowerCase() === sheet.name.toLowerCase() || pSheet.slug === Utils.slugify(sheet.name)) && pSheet._id !== sheet.id)) {
-            this.sheets = (await Utils.request('/db', 'POST', { body: `{ "setSheet": ${JSON.stringify(sheet)} }` })) as TSheet[] & { error: string }
-            if (this.sheets.error) {
+            this.sheets = (await Utils.request('/db', 'POST', { body: `{ "setSheet": ${JSON.stringify(sheet)} }` })) as TSheet[]
+            if ((this.sheets as unknown as { error: string }).error) {
                 await User.checkCurrentUserLogged()
             }
             Caches.set(true, 'sheets', this.sheets)
