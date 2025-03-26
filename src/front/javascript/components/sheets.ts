@@ -6,7 +6,6 @@ import { HTMLElementEvent, TSheet } from '../types.js'
 import { User } from '../classes/user.js'
 
 // TODO système de folder ? A voir si besoin pas pour le moment
-// TODO permettre plusieurs utilisateurs
 // TODO image comme un lien en choix si pas de place
 // TODO parametre pour gérer zoom ou pas zoom
 // TODO dupliquer avec aucun ékément avec aucun texte ?
