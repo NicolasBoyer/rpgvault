@@ -1,4 +1,4 @@
-import { html, render, TemplateResult } from 'lit'
+import { html, nothing, render, TemplateResult } from 'lit'
 
 export default class Label extends HTMLElement {
     static get observedAttributes(): [string] {
@@ -60,7 +60,16 @@ export default class Label extends HTMLElement {
                                   ${this.options?.map((pOption: Record<string, unknown>): TemplateResult => html` <option ?selected="${this.value === pOption.value}" value="${pOption.value}">${pOption.name}</option> `)}
                               </select>
                           `
-                        : html` <input type="${this.type}" id="${this.id}" name="${this.id}" value="${this.value}" title="${this.name}" /> `}
+                        : html`
+                              <input
+                                  type="${this.type}"
+                                  id="${this.id}"
+                                  name="${this.id}"
+                                  accept="${this.type === 'file' ? 'image/png, image/jpeg, image/svg+xml' : nothing}"
+                                  value="${this.type === 'file' ? nothing : this.value}"
+                                  title="${this.name}"
+                              />
+                          `}
                 </label>
             `,
             <HTMLElement | DocumentFragment>this

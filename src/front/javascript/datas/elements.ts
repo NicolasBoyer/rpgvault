@@ -71,6 +71,12 @@ export const elements = (pInfosElement: TElement, pFonts: { name: string; value:
         ],
     },
     {
+        id: 'image',
+        type: 'file',
+        name: 'Image',
+        value: <string | Blob | File>pInfosElement.file,
+    },
+    {
         id: 'width',
         type: 'number',
         name: 'Largeur',

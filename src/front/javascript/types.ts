@@ -59,6 +59,19 @@ export type TImage = {
     selected?: boolean
 }
 
+export type TCheckbox = {
+    id: string
+    x: number
+    y: number
+    width: number
+    height: number
+    file?: Blob | File
+    color: string
+    fontSize: number
+    elementType: string
+    selected?: boolean
+}
+
 export type TFont = {
     fontFamily: string
     name: string
@@ -66,13 +79,13 @@ export type TFont = {
     fontUrl_url?: string | ArrayBuffer | null
 }
 
-export type TElement = TInput & TImage
+export type TElement = TInput & TImage & TCheckbox
 
 export type TElements = {
     id: string
     type: string
     name: string
-    value: number | string
+    value: number | string | Blob | File
     options?: {
         name: string
         value: string

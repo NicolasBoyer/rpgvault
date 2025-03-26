@@ -7,6 +7,7 @@ export enum EInterface {
 export enum EElementType {
     image = 'image',
     input = 'input',
+    checkbox = 'checkbox',
 }
 
 export enum EHistoryPosition {
