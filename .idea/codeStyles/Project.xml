@@ -6,7 +6,7 @@
         <option name="USE_TAB_CHARACTER" value="true" />
       </value>
     </option>
-    <option name="LINE_SEPARATOR" />
+    <option name="LINE_SEPARATOR" value="&#10;" />
     <option name="RIGHT_MARGIN" value="240" />
     <option name="DO_NOT_FORMAT">
       <list>
