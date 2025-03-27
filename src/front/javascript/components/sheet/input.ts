@@ -20,6 +20,10 @@ export default class Input {
                 id: inputId,
                 type: 'text',
                 elementType: EElementType.input,
+                textAlign: 'left',
+                color: '#000000',
+                fontSize: 10,
+                fontFamily: 'inherit',
             }
             await Datas.addInputValues(
                 <TInput>input,

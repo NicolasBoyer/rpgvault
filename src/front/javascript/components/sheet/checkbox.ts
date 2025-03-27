@@ -18,8 +18,10 @@ export default class Checkbox {
             const checkboxId = Utils.generateId().toString()
             const checkbox = {
                 id: checkboxId,
-                type: 'checkbox',
                 elementType: EElementType.checkbox,
+                file: 'blop',
+                color: '#00000',
+                size: 10,
             }
             await Datas.addInputValues(
                 <TCheckbox>checkbox,

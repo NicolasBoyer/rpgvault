@@ -67,7 +67,7 @@ export type TCheckbox = {
     height: number
     file?: Blob | File
     color: string
-    fontSize: number
+    size: number
     elementType: string
     selected?: boolean
 }
