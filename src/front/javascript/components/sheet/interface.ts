@@ -198,7 +198,7 @@ export default class Interface {
                                 type="${pEntry.type}"
                                 name="${pEntry.name}"
                                 value="${pEntry.value}"
-                                @input="${async (pEvent: HTMLElementEvent<HTMLInputElement>): void => {
+                                @input="${async (pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => {
                                     History.execute(
                                         pEntry.id,
                                         `${pEntry.name} - ${pEvent.target.value}`,
