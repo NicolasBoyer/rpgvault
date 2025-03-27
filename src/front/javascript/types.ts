@@ -70,8 +70,8 @@ export type TCheckbox = {
     file?: Blob | File
     image_url?: string | ArrayBuffer | null
     color: string
-    size: number
     elementType: string
+    checked: boolean
     selected?: boolean
 }
 

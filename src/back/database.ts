@@ -146,6 +146,21 @@ export default class Database {
                 return await resolvers.getSheets()
             },
 
+            async setCheckbox(args: Record<string, string>): Promise<TSheet | TSheet[]> {
+                const isCheckboxExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).checkboxes?.some((pCheckbox): boolean => pCheckbox.id === args.checkboxId)
+                const update = isCheckboxExists ? { $set: { 'checkboxes.$': args.checkbox } } : { $push: { checkboxes: args.checkbox } }
+                const filter = isCheckboxExists ? { _id: new ObjectId(args.id), 'checkboxes.id': args.checkboxId } : { _id: new ObjectId(args.id) }
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
+                await Database.sheets.updateOne(filter, update)
+                return await resolvers.getSheets()
+            },
+
+            async deleteCheckbox(args: Record<string, string>): Promise<TSheet | TSheet[]> {
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { checkboxes: { id: args.checkboxId } } })
+                return await resolvers.getSheets()
+            },
+
             async getUser(id: string): Promise<TUser> {
                 return (await Database.users?.findOne({ _id: new ObjectId(id) })) as unknown as TUser
             },

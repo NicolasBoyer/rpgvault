@@ -23,7 +23,6 @@ export class ElementManager {
                 .forEach((pInfosElement: TElement): void => {
                     if (pInfosElement) {
                         const htmlElement: RPGVAULTElement = <RPGVAULTElement>document.querySelector(`label[for='${pInfosElement.id}'], div[id='${pInfosElement.id}']`)
-                        console.log(htmlElement)
                         ElementMover.init(
                             htmlElement,
                             {
@@ -34,7 +33,7 @@ export class ElementManager {
                                 if (pInfosElement.elementType === EElementType.input) {
                                     History.execute(
                                         'moveInput',
-                                        "Déplacement d'un input",
+                                        'Déplacement d\'un input',
                                         Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
                                         [<TInput>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)],
                                         Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
@@ -44,7 +43,7 @@ export class ElementManager {
                                 if (pInfosElement.elementType === EElementType.image) {
                                     History.execute(
                                         'moveImage',
-                                        "Déplacement d'une image",
+                                        'Déplacement d\'une image',
                                         Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void,
                                         [<TImage>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)],
                                         Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void,
@@ -54,7 +53,7 @@ export class ElementManager {
                                 if (pInfosElement.elementType === EElementType.checkbox) {
                                     History.execute(
                                         'moveCheckbox',
-                                        "Déplacement d'une checkbox",
+                                        'Déplacement d\'une checkbox',
                                         Datas.addCheckboxValues.bind(Datas) as unknown as (...args: unknown[]) => void,
                                         [<TCheckbox>pInfosElement, 'x', Math.round(pMousePosition.x / Sheet.ratio), 'y', Math.round(pMousePosition.y / Sheet.ratio)],
                                         Datas.addCheckboxValues.bind(Datas) as unknown as (...args: unknown[]) => void,
@@ -73,7 +72,7 @@ export class ElementManager {
                                 if (pInfosElement.elementType === EElementType.input) {
                                     History.execute(
                                         'resizeInput',
-                                        "Redimensionnement d'un input",
+                                        'Redimensionnement d\'un input',
                                         Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
                                         [
                                             <TInput>pInfosElement,
@@ -93,7 +92,7 @@ export class ElementManager {
                                 if (pInfosElement.elementType === EElementType.image) {
                                     History.execute(
                                         'resizeImage',
-                                        "Redimensionnement d'une image",
+                                        'Redimensionnement d\'une image',
                                         Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void,
                                         [
                                             <TImage>pInfosElement,
@@ -113,7 +112,7 @@ export class ElementManager {
                                 if (pInfosElement.elementType === EElementType.checkbox) {
                                     History.execute(
                                         'resizeCheckbox',
-                                        "Redimensionnement d'une checkbox",
+                                        'Redimensionnement d\'une checkbox',
                                         Datas.addCheckboxValues.bind(Datas) as unknown as (...args: unknown[]) => void,
                                         [
                                             <TCheckbox>pInfosElement,
@@ -149,7 +148,7 @@ export class ElementManager {
             case EElementType.input:
                 History.execute(
                     'deleteInput',
-                    "Suppression d'un input",
+                    'Suppression d\'un input',
                     this.delete.bind(this) as unknown as (...args: unknown[]) => void,
                     [<TInput>infosElement],
                     ((): void => {
@@ -162,7 +161,7 @@ export class ElementManager {
             case EElementType.image:
                 History.execute(
                     'deleteImage',
-                    "Suppression d'une image",
+                    'Suppression d\'une image',
                     this.delete.bind(this) as unknown as (...args: unknown[]) => void,
                     [<TImage>infosElement],
                     ((): void => {
@@ -175,7 +174,7 @@ export class ElementManager {
             case EElementType.checkbox:
                 History.execute(
                     'deleteCheckbox',
-                    "Suppression d'une checkbox",
+                    'Suppression d\'une checkbox',
                     this.delete.bind(this) as unknown as (...args: unknown[]) => void,
                     [<TCheckbox>infosElement],
                     ((): void => {
@@ -194,19 +193,19 @@ export class ElementManager {
         const clone: TElement = { ...this.selectedInfosElement, id: Utils.generateId().toString(), elementType: this.selectedInfosElement.elementType }
         switch (this.selectedInfosElement.elementType) {
             case EElementType.input:
-                History.execute('cloneInput', "Duplication d'un input", Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TInput>clone], this.delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                History.execute('cloneInput', 'Duplication d\'un input', Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TInput>clone], this.delete.bind(this) as unknown as (...args: unknown[]) => void, [
                     <TInput>clone,
                 ])
                 break
             case EElementType.image:
-                History.execute('cloneImage', "Duplication d'une image", Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TImage>clone], this.delete.bind(this) as unknown as (...args: unknown[]) => void, [
+                History.execute('cloneImage', 'Duplication d\'une image', Datas.addImageValues.bind(Datas) as unknown as (...args: unknown[]) => void, [<TImage>clone], this.delete.bind(this) as unknown as (...args: unknown[]) => void, [
                     <TImage>clone,
                 ])
                 break
             case EElementType.checkbox:
                 History.execute(
                     'cloneCheckbox',
-                    "Duplication d'une checkbox",
+                    'Duplication d\'une checkbox',
                     Datas.addCheckboxValues.bind(Datas) as unknown as (...args: unknown[]) => void,
                     [<TCheckbox>clone],
                     this.delete.bind(this) as unknown as (...args: unknown[]) => void,

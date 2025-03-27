@@ -2,7 +2,7 @@ import { Utils } from '../../classes/utils.js'
 import States from './states.js'
 import View from './view.js'
 import { Caches } from '../../classes/caches.js'
-import { TCheckbox, TImage, TInput, TSheet, TSheetProperties } from '../../types.js'
+import { TCheckbox, TElement, TImage, TInput, TSheet, TSheetProperties } from '../../types.js'
 import { History } from '../../classes/history.js'
 
 /**
@@ -35,7 +35,12 @@ export default class Datas {
 
     static async addAndSaveInput(pInput: TInput, ...args: (keyof TInput | number | string)[]): Promise<void> {
         this.addInputValues(pInput, ...args)
-        await this.save(pInput)
+        await this.save(pInput as TElement)
+    }
+
+    static async addAndSaveCheckbox(pCheckbox: TCheckbox, ...args: (keyof TCheckbox | boolean)[]): Promise<void> {
+        await this.addCheckboxValues(pCheckbox, ...args)
+        await this.save(pCheckbox as TElement)
     }
 
     static async saveNotepad(index: number, tab?: { title?: string; content?: string }): Promise<void> {
@@ -104,10 +109,10 @@ export default class Datas {
         View.render()
     }
 
-    static async save(pInput: TInput | null = null): Promise<void> {
+    static async save(pElement: TElement | null = null): Promise<void> {
         this.isSaving = true
         const body = []
-        const inputs = pInput ? [pInput] : this.changedInputs
+        const inputs = pElement?.elementType === 'input' ? [pElement] : this.changedInputs
         inputs?.forEach((pInput: TInput): void => {
             body.push({
                 setInput: {
@@ -117,7 +122,25 @@ export default class Datas {
                 },
             })
         })
-        if (!pInput) {
+        const checkboxes = pElement?.elementType === 'checkbox' ? [pElement] : this.changedCheckboxes
+        for (const checkbox of checkboxes) {
+            if (checkbox.file) {
+                checkbox.image = await Utils.uploadFileAndGetUrl(checkbox.file)
+                delete checkbox.file
+            }
+            if (checkbox.image_url) {
+                checkbox.image = checkbox.image_url
+                delete checkbox.image_url
+            }
+            body.push({
+                setCheckbox: {
+                    id: this.id,
+                    checkboxId: checkbox.id,
+                    checkbox: checkbox,
+                },
+            })
+        }
+        if (!pElement) {
             this.deletedInputs?.forEach((pInputId: string): void => {
                 body.push({
                     deleteInput: {
@@ -153,25 +176,6 @@ export default class Datas {
                     },
                 })
             })
-            if (this.changedCheckboxes) {
-                for (const checkbox of this.changedCheckboxes) {
-                    if (checkbox.file) {
-                        checkbox.image = await Utils.uploadFileAndGetUrl(checkbox.file)
-                        delete checkbox.file
-                    }
-                    if (checkbox.image_url) {
-                        checkbox.image = checkbox.image_url
-                        delete checkbox.image_url
-                    }
-                    body.push({
-                        setCheckbox: {
-                            id: this.id,
-                            checkboxId: checkbox.id,
-                            checkbox: checkbox,
-                        },
-                    })
-                }
-            }
             this.deletedCheckboxes?.forEach((pCheckboxId: string): void => {
                 body.push({
                     deleteCheckbox: {

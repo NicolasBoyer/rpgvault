@@ -136,9 +136,14 @@ ${pInput.value}
                                 id="${pCheckbox.id}"
                                 style="transform: translate(${<number>pCheckbox.x * Sheet.ratio}px, ${<number>pCheckbox.y * Sheet.ratio}px);width: ${<number>pCheckbox.width * Sheet.ratio}px;height: ${<number>pCheckbox.height *
                                 Sheet.ratio}px;"
-                                class="image ${ElementManager.selectedInfosElement?.id === pCheckbox.id ? 'selected' : ''}"
-                                @click="${(pEvent: PointerEvent): void => {
+                                class="checkbox ${ElementManager.selectedInfosElement?.id === pCheckbox.id ? 'selected' : ''} ${pCheckbox.checked ? 'isVisible' : ''}"
+                                @click="${async (pEvent: PointerEvent): Promise<void> => {
                                     if (States.editMode) ElementManager.select(pEvent, <TElement>pCheckbox)
+                                    else {
+                                        pCheckbox.checked = !pCheckbox.checked
+                                        await Datas.addAndSaveCheckbox(pCheckbox, 'checked', pCheckbox.checked)
+                                        View.render()
+                                    }
                                 }}"
                             >
                                 <div style="background-image: url(${pCheckbox.image});"></div>

@@ -17,13 +17,15 @@ rv-sheet {
 	justify-content: center;
 }
 
-rv-sheet .image {
+rv-sheet .image,
+rv-sheet .checkbox {
 	inset: 0;
 	position: absolute;
 	z-index: 1;
 }
 
-rv-sheet .image > div {
+rv-sheet .image > div,
+rv-sheet .checkbox > div {
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
@@ -288,13 +290,16 @@ rv-sheet article rv-label {
     border-radius: 0.3em;
 }
 
-rv-sheet > div.editMode > div.image {
+rv-sheet > div.editMode > div.image,
+rv-sheet > div.editMode > div.checkbox {
 	border-radius: 0.3em;
 	transition: none;
 	cursor: default;
+	opacity: 1;
 }
 
-rv-sheet > div > div.image {
+rv-sheet > div > div.image,
+rv-sheet > div > div.checkbox {
 	transition: all var(--pico-transition);
 	cursor: pointer;
 }
@@ -307,6 +312,14 @@ rv-sheet > div > div.image.isZoomed {
 	height: 100% !important;
 	background-color: #00000073;
 	transition: all var(--pico-transition);
+}
+
+rv-sheet > div > div.checkbox {
+	opacity: 0;
+}
+
+rv-sheet > div > div.checkbox.isVisible {
+	opacity: 1;
 }
 
 a.cloneInput,

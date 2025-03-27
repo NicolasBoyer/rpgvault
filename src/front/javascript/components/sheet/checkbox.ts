@@ -19,7 +19,7 @@ export default class Checkbox {
                 id: Utils.generateId().toString(),
                 elementType: EElementType.checkbox,
                 color: '#00000',
-                size: 10,
+                checked: true,
             }
             let file: File
             Utils.confirm(
