@@ -28,6 +28,7 @@ export default class Image {
                             type="file"
                             id="file"
                             name="file"
+                            accept="image/png, image/jpeg, image/svg+xml"
                             @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
                                 file = (pEvent.target.files as FileList)[0]
                             }}"

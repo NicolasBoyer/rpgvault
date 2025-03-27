@@ -72,6 +72,7 @@ export default class Datas {
         let index
         if (States.editMode) {
             index = this.changedImages.findIndex((image): boolean => image.id === pImage.id)
+            if (index) delete pImage.image_url
             this.changedImages[index !== -1 ? index : this.changedImages.length || 0] = pImage
         }
         if (!this.sheet.images) this.sheet.images = []
@@ -167,8 +168,9 @@ export default class Datas {
                 const image = this.sheet.images[i]
                 if (Utils.isValidHttpUrl(<string>image.image)) {
                     image.image_url = image.image
-                    image.image = (cache?.images && cache?.images[i]?.image) || image.image
-                    if ((cache?.images && cache?.images[i]?.image !== image.image && cache?.images && cache?.images[i]?.image_url !== image.image) || !cache) image.image = await Utils.urlToBase64(<string>image.image)
+                    const cacheImage = cache?.images && cache?.images[i]?.image
+                    image.image = cacheImage && cacheImage === image.image ? cacheImage : image.image
+                    if ((cacheImage !== image.image && cache?.images && cache?.images[i]?.image_url !== image.image) || !cache) image.image = await Utils.urlToBase64(<string>image.image)
                 }
             }
         }
