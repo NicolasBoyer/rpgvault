@@ -27,8 +27,10 @@ export default class States {
         this.notepadMode = this.notepadMode && !pValue
         Datas.changedInputs = []
         Datas.changedImages = []
+        Datas.changedCheckboxes = []
         Datas.deletedInputs = []
         Datas.deletedImages = []
+        Datas.deletedCheckboxes = []
         Datas.sheetProperties = []
         ElementManager.selectedInfosElement = null as unknown as TElement
         this.isHistoryBlockHidden = true

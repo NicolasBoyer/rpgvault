@@ -16,6 +16,7 @@ import { User } from '../classes/user.js'
 // TODO Voir si normal que tout soit en statique
 // TODO système de calque ou d'index
 // TODO Avatar
+// TODO voir si intéressant de créer un ensemble permettant d'aller plus vite dans la création de nouveaux éléments mais pas sur que ce soit faisable
 export default class Sheets extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null

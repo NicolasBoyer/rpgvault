@@ -15,9 +15,8 @@ export default class Input {
         States.displayEditBlock(false)
         Drawer.init(<HTMLElement>Sheet.element.querySelector('.wrapper'), { x: Sheet.containerLeft, y: Sheet.containerTop }, async (pMousePosition, pEvent): Promise<void> => {
             States.displayEditBlock(true)
-            const inputId = Utils.generateId().toString()
             const input = {
-                id: inputId,
+                id: Utils.generateId().toString(),
                 type: 'text',
                 elementType: EElementType.input,
                 textAlign: 'left',

@@ -11,6 +11,7 @@ export type TSheet = {
     notepad?: TTab[]
     inputs?: TInput[]
     images?: TImage[]
+    checkboxes?: TCheckbox[]
     fonts?: TFont[]
     backgroundColor?: string
     backgroundImage?: string
@@ -65,7 +66,9 @@ export type TCheckbox = {
     y: number
     width: number
     height: number
+    image: string | ArrayBuffer | null
     file?: Blob | File
+    image_url?: string | ArrayBuffer | null
     color: string
     size: number
     elementType: string

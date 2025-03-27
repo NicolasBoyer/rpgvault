@@ -10,8 +10,9 @@ import { elements } from '../../datas/elements.js'
 import { HTMLElementEvent, RPGVAULTElement, TElement, TFont, THistory, TPosition } from '../../types.js'
 import View from './view.js'
 import { ShortcutManager } from '../../classes/shortcutManager.js'
-import { EInterface } from '../../enum.js'
+import { EElementType, EInterface } from '../../enum.js'
 import { History } from '../../classes/history.js'
+import Checkbox from './checkbox.js'
 
 /**
  * Contient toutes les fonctions relatives à l'interface et son rendu
@@ -110,6 +111,7 @@ export default class Interface {
                     Ajouter un champ
                 </button>
                 <button class="contrast" @click="${(): void => Image.add()}">Ajouter une image</button>
+                <button class="contrast" @click="${(): void => Checkbox.add()}">Ajouter une checkbox</button>
                 <button
                     class="contrast"
                     @click="${(pEvent: PointerEvent): void => {
@@ -201,9 +203,17 @@ export default class Interface {
                                     History.execute(
                                         pEntry.id,
                                         `${pEntry.name} - ${pEvent.target.value}`,
-                                        (pEntry.type === 'file' ? Datas.addImageValues.bind(Datas) : Datas.addInputValues.bind(Datas)) as unknown as (...args: unknown[]) => void,
+                                        (pInfosElement.elementType === EElementType.image
+                                            ? Datas.addImageValues.bind(Datas)
+                                            : pInfosElement.elementType === EElementType.checkbox
+                                              ? Datas.addCheckboxValues.bind(Datas)
+                                              : Datas.addInputValues.bind(Datas)) as unknown as (...args: unknown[]) => void,
                                         [<TElement>pInfosElement, pEntry.type === 'file' ? 'file' : pEntry.id, pEntry.type === 'file' ? (pEvent.target.files as FileList)[0] : pEvent.target.value],
-                                        (pEntry.type === 'file' ? Datas.addImageValues.bind(Datas) : Datas.addInputValues.bind(Datas)) as unknown as (...args: unknown[]) => void,
+                                        (pInfosElement.elementType === EElementType.image
+                                            ? Datas.addImageValues.bind(Datas)
+                                            : pInfosElement.elementType === EElementType.checkbox
+                                              ? Datas.addCheckboxValues.bind(Datas)
+                                              : Datas.addInputValues.bind(Datas)) as unknown as (...args: unknown[]) => void,
                                         [<TElement>pInfosElement, pEntry.type === 'file' ? 'file' : pEntry.id, pInfosElement[pEntry.type === 'file' ? 'file' : (pEntry.id as keyof TElement)]]
                                     )
                                     View.render()

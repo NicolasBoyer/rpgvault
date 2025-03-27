@@ -130,6 +130,23 @@ ${pInput.value}
                             ${ElementManager.selectedInfosElement?.id === pImage.id ? Interface.selectBlock(<TElement>pImage) : ''}
                         `
                     )}
+                    ${Datas.sheet.checkboxes?.map(
+                        (pCheckbox): TemplateResult => html`
+                            <div
+                                id="${pCheckbox.id}"
+                                style="transform: translate(${<number>pCheckbox.x * Sheet.ratio}px, ${<number>pCheckbox.y * Sheet.ratio}px);width: ${<number>pCheckbox.width * Sheet.ratio}px;height: ${<number>pCheckbox.height *
+                                Sheet.ratio}px;"
+                                class="image ${ElementManager.selectedInfosElement?.id === pCheckbox.id ? 'selected' : ''}"
+                                @click="${(pEvent: PointerEvent): void => {
+                                    if (States.editMode) ElementManager.select(pEvent, <TElement>pCheckbox)
+                                }}"
+                            >
+                                <div style="background-image: url(${pCheckbox.image});"></div>
+                                ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedInfosElement?.id !== pCheckbox.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
+                            </div>
+                            ${ElementManager.selectedInfosElement?.id === pCheckbox.id ? Interface.selectBlock(<TElement>pCheckbox) : ''}
+                        `
+                    )}
                 </div>
             `,
             Sheet.element

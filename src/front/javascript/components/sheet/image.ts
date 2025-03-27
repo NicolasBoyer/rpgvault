@@ -23,7 +23,7 @@ export default class Image {
             Utils.confirm(
                 html`
                     <label for="file">
-                        <span>Choisissez un fichier</span>
+                        <span>Choisissez une image</span>
                         <input
                             type="file"
                             id="file"

@@ -2,7 +2,7 @@ import { Utils } from '../../classes/utils.js'
 import States from './states.js'
 import View from './view.js'
 import { Caches } from '../../classes/caches.js'
-import { TImage, TInput, TSheet, TSheetProperties } from '../../types.js'
+import { TCheckbox, TImage, TInput, TSheet, TSheetProperties } from '../../types.js'
 import { History } from '../../classes/history.js'
 
 /**
@@ -13,8 +13,10 @@ export default class Datas {
     static sheet: TSheet
     static changedInputs: TInput[]
     static changedImages: TImage[]
+    static changedCheckboxes: TCheckbox[]
     static deletedInputs: string[]
     static deletedImages: string[]
+    static deletedCheckboxes: string[]
     static sheetProperties: TSheetProperties[]
     static isSaving = false
     private static id: string
@@ -83,6 +85,25 @@ export default class Datas {
         View.render()
     }
 
+    static async addCheckboxValues(pCheckbox: TCheckbox, ...args: (File | number | string | boolean)[]): Promise<void> {
+        for (let i = 0; i < args.length; i++) {
+            const value: string | number | boolean | File = args[i + 1]
+            if (i % 2 === 0) (pCheckbox as Record<string, typeof value>)[args[i] as keyof TCheckbox] = value
+        }
+        let index
+        if (States.editMode) {
+            index = this.changedCheckboxes.findIndex((checkbox: TCheckbox): boolean => checkbox.id === pCheckbox.id)
+            if (index) delete pCheckbox.image_url
+            this.changedCheckboxes[index !== -1 ? index : this.changedCheckboxes.length || 0] = pCheckbox
+        }
+        if (!this.sheet.checkboxes) this.sheet.checkboxes = []
+        index = this.sheet.checkboxes.findIndex((checkbox: TCheckbox): boolean => checkbox.id === pCheckbox.id)
+        if (pCheckbox.file) pCheckbox.image = await Utils.getBase64FromFileReader(pCheckbox.file)
+        this.sheet.checkboxes[index !== -1 ? index : this.sheet.checkboxes.length || 0] = pCheckbox
+        States.isSaved = false
+        View.render()
+    }
+
     static async save(pInput: TInput | null = null): Promise<void> {
         this.isSaving = true
         const body = []
@@ -132,6 +153,33 @@ export default class Datas {
                     },
                 })
             })
+            if (this.changedCheckboxes) {
+                for (const checkbox of this.changedCheckboxes) {
+                    if (checkbox.file) {
+                        checkbox.image = await Utils.uploadFileAndGetUrl(checkbox.file)
+                        delete checkbox.file
+                    }
+                    if (checkbox.image_url) {
+                        checkbox.image = checkbox.image_url
+                        delete checkbox.image_url
+                    }
+                    body.push({
+                        setCheckbox: {
+                            id: this.id,
+                            checkboxId: checkbox.id,
+                            checkbox: checkbox,
+                        },
+                    })
+                }
+            }
+            this.deletedCheckboxes?.forEach((pCheckboxId: string): void => {
+                body.push({
+                    deleteCheckbox: {
+                        id: this.id,
+                        checkboxId: pCheckboxId,
+                    },
+                })
+            })
             for (const property of this.sheetProperties) {
                 const value = Object.values(property)[0]
                 if (Object.keys(property)[0] === 'setBackgroundImage') (<Record<string, string | Blob>>value).image = await Utils.uploadFileAndGetUrl((<Record<string, string | Blob>>value).image as Blob)
@@ -147,8 +195,10 @@ export default class Datas {
             await this.cacheResources()
             this.changedInputs = []
             this.changedImages = []
+            this.changedCheckboxes = []
             this.deletedInputs = []
             this.deletedImages = []
+            this.deletedCheckboxes = []
             this.sheetProperties = []
             this.isSaving = false
             States.isSaved = true
