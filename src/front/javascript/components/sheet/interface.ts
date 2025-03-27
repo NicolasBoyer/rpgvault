@@ -7,11 +7,12 @@ import { ElementMover } from '../../classes/elementMover.js'
 import Input from './input.js'
 import Image from './image.js'
 import { elements } from '../../datas/elements.js'
-import { HTMLElementEvent, RPGVAULTElement, TElement, TFont, THistory, TInput, TPosition } from '../../types.js'
+import { HTMLElementEvent, RPGVAULTElement, TElement, TFont, THistory, TPosition } from '../../types.js'
 import View from './view.js'
 import { ShortcutManager } from '../../classes/shortcutManager.js'
 import { EInterface } from '../../enum.js'
 import { History } from '../../classes/history.js'
+import { Utils } from '../../classes/utils.js'
 
 /**
  * Contient toutes les fonctions relatives à l'interface et son rendu
@@ -197,14 +198,14 @@ export default class Interface {
                                 type="${pEntry.type}"
                                 name="${pEntry.name}"
                                 value="${pEntry.value}"
-                                @input="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
+                                @input="${async (pEvent: HTMLElementEvent<HTMLInputElement>): void => {
                                     History.execute(
                                         pEntry.id,
                                         `${pEntry.name} - ${pEvent.target.value}`,
-                                        Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
-                                        [<TInput>pInfosElement, pEntry.id, pEvent.target.value],
-                                        Datas.addInputValues.bind(Datas) as unknown as (...args: unknown[]) => void,
-                                        [<TInput>pInfosElement, pEntry.id, pInfosElement[pEntry.id as keyof TElement]]
+                                        (pEntry.type === 'file' ? Datas.addImageValues.bind(Datas) : Datas.addInputValues.bind(Datas)) as unknown as (...args: unknown[]) => void,
+                                        [<TElement>pInfosElement, pEntry.type === 'file' ? 'file' : pEntry.id, pEntry.type === 'file' ? await Utils.getBase64FromFileReader(pEvent.target.value as unknown as File) : pEvent.target.value],
+                                        (pEntry.type === 'file' ? Datas.addImageValues.bind(Datas) : Datas.addInputValues.bind(Datas)) as unknown as (...args: unknown[]) => void,
+                                        [<TElement>pInfosElement, pEntry.type === 'file' ? 'file' : pEntry.id, pInfosElement[pEntry.type === 'file' ? 'file' : (pEntry.id as keyof TElement)]]
                                     )
                                     View.render()
                                 }}"
