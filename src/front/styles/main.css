@@ -72,3 +72,9 @@ footer div:first-child {
 	font-family: "Marcellus SC", serif;
 	font-size: 32px;
 }
+
+@media (min-width: 576px) {
+    .container {
+		max-width: max-content;
+    }
+}

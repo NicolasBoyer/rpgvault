@@ -10,7 +10,6 @@ import { User } from '../classes/user.js'
 // TODO parametre pour gérer zoom ou pas zoom
 // TODO dupliquer avec aucun ékément avec aucun texte ?
 // TODO anuler doit revenir en arrière sur les choix en réalité ajouter un historique
-// TODO ajouter possibilité de changer l'image
 // TODO Ajouter une grille ?
 // TODO ajouter masque mode cadre ?
 // TODO Voir si normal que tout soit en statique

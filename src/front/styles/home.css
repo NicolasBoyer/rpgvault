@@ -6,9 +6,9 @@
 
 rv-home ul {
 	display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
 	gap: 1em 2em;
-    margin: 0 8em;
+    margin: 0;
     padding: 0;
 }
 
@@ -74,4 +74,22 @@ rv-home .arrow {
 	position: absolute;
 	right: 2em;
 	bottom: 2em;
+}
+
+@media (min-width: 700px) {
+    rv-home ul {
+        margin: 0 8em;
+    }
+}
+
+@media (min-width: 1024px) {
+    rv-home ul {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1536px) {
+    rv-home ul {
+		grid-template-columns: 1fr 1fr 1fr;
+	}
 }

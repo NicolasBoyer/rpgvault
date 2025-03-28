@@ -20,7 +20,7 @@ rv-sheets > .title {
 }
 
 rv-sheets > div:last-child {
-	margin: 0 5em;
+	margin: 0;
 }
 
 rv-sheets > .title button {
@@ -48,7 +48,7 @@ rv-sheets > .title button > span {
 
 rv-sheets ul {
 	display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
 	gap: 1.5em;
     margin: 3em 0 0 0;
     padding: 0;
@@ -149,4 +149,44 @@ rv-sheets .valid span {
 rv-sheets fieldset:has(>input[name='description']) {
 	margin-top: var(--pico-spacing);
 	font-size: 0.7em;
+}
+
+@media (min-width: 576px) {
+	.sheets main {
+    	max-width: 700px;
+    }
+}
+
+@media (min-width: 1024px) {
+	rv-sheets > div:last-child {
+		margin: 0 5em;
+	}
+
+    rv-sheets ul {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .sheets main {
+		max-width: unset;
+	}
+
+	rv-sheets article .illustration {
+		top: 3.5em;
+		right: 1em;
+	}
+
+	rv-sheets article img {
+		width: 150px !important;
+	}
+}
+
+@media (min-width: 1200px) {
+	rv-sheets article .illustration {
+		top: 1.3em;
+		right: 1.3em;
+	}
+
+	rv-sheets article img {
+		width: 174px !important;
+	}
 }
