@@ -151,6 +151,17 @@ rv-sheets fieldset:has(>input[name='description']) {
 	font-size: 0.7em;
 }
 
+@media (max-width: 576px) {
+    rv-sheets article .illustration {
+		top: 3.5em;
+		right: 1em;
+	}
+
+	rv-sheets article img {
+		width: 150px !important;
+	}
+}
+
 @media (min-width: 576px) {
 	.sheets main {
     	max-width: 700px;
