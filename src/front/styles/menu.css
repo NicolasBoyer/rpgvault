@@ -43,3 +43,59 @@ rv-sheet rv-menu ul {
 rv-sheet rv-menu li rv-link {
 	justify-content: left !important;
 }
+
+rv-menu[data-burger] {
+	order: 1;
+	flex: 0 !important;
+}
+
+rv-menu[data-burger] > div {
+	background: var(--pico-background-color);
+	position: fixed;
+	z-index: 2;
+	inset: 0;
+}
+
+rv-menu[data-burger] > div > ul {
+	display: list-item;
+}
+
+rv-menu > div[data-hidden='true'] {
+	display: none;
+}
+
+rv-menu[data-burger] button.back,
+rv-menu[data-burger] button.burger {
+	background: transparent;
+	border: none;
+	color: var(--pico-color);
+	width: auto;
+}
+
+/*rv-menu[data-burger] button.burger {*/
+/*	position: absolute;*/
+/*	top: 0;*/
+/*	z-index: 2;*/
+/*	left:0*/
+/*}*/
+
+rv-menu[data-burger] button.back > span,
+rv-menu[data-burger] button.burger > span {
+	display: none;
+}
+
+rv-menu[data-burger] button.back > svg,
+rv-menu[data-burger] button.burger > svg {
+	width: 2rem;
+	height: 2rem;
+}
+
+@media (min-width: 1100px) {
+	header h1 {
+		order: 2;
+	}
+
+	rv-logged-user {
+		order: 3;
+	}
+}
