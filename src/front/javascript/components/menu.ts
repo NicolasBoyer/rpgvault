@@ -30,8 +30,13 @@ export default class Menu extends HTMLElement {
     private displayMenu(): void {
         this.isBurger = window.innerWidth <= 1100
         this.isHidden = window.innerWidth <= 1100
-        if (this.isBurger) this.setAttribute('data-burger', '')
-        else this.removeAttribute('data-burger')
+        if (this.isBurger) {
+            this.setAttribute('data-burger', '')
+            document.body.classList.add('is_burger')
+        } else {
+            this.removeAttribute('data-burger')
+            document.body.classList.remove('is_burger')
+        }
         this.render()
     }
 
