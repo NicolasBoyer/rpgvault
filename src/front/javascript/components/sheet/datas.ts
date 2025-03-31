@@ -123,22 +123,24 @@ export default class Datas {
             })
         })
         const checkboxes = pElement?.elementType === 'checkbox' ? [pElement] : this.changedCheckboxes
-        for (const checkbox of checkboxes) {
-            if (checkbox.file) {
-                checkbox.image = await Utils.uploadFileAndGetUrl(checkbox.file)
-                delete checkbox.file
+        if (checkboxes?.length) {
+            for (const checkbox of checkboxes) {
+                if (checkbox.file) {
+                    checkbox.image = await Utils.uploadFileAndGetUrl(checkbox.file)
+                    delete checkbox.file
+                }
+                if (checkbox.image_url) {
+                    checkbox.image = checkbox.image_url
+                    delete checkbox.image_url
+                }
+                body.push({
+                    setCheckbox: {
+                        id: this.id,
+                        checkboxId: checkbox.id,
+                        checkbox: checkbox,
+                    },
+                })
             }
-            if (checkbox.image_url) {
-                checkbox.image = checkbox.image_url
-                delete checkbox.image_url
-            }
-            body.push({
-                setCheckbox: {
-                    id: this.id,
-                    checkboxId: checkbox.id,
-                    checkbox: checkbox,
-                },
-            })
         }
         if (!pElement) {
             this.deletedInputs?.forEach((pInputId: string): void => {
