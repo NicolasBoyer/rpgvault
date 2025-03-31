@@ -87,8 +87,7 @@ export default class View {
                                               ?readonly="${States.editMode || pInput.readonly}"
                                               @click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, <TElement>pInput)}"
                                           >
-${pInput.value}
-                                          </textarea
+${pInput.value}</textarea
                                           >
                                       `
                                     : html`
