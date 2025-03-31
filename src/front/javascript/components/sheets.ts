@@ -20,6 +20,7 @@ import { User } from '../classes/user.js'
 // TODO pouvoir sélectionner plusieurs éléments
 // TODO ajouter un élément liste
 // Todo ajouter du survol avec points de règles ...
+// TODO permettre qu'un texte ne soit pas un input mais un texte read only
 export default class Sheets extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null
