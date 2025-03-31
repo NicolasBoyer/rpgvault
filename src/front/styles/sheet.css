@@ -111,19 +111,26 @@ rv-sheet > div > label > input[type=number] {
 
 rv-sheet > div > label > input[readonly],
 rv-sheet > div > label > textarea[readonly] {
+	overflow: hidden;
+	pointer-events: none;
+}
+
+rv-sheet > div.editMode > label > input[readonly],
+rv-sheet > div.editMode > label > textarea[readonly] {
   border: 1px solid var(--read-only-input-color);
   cursor: default;
   background: var(--read-only-input-background);
+  pointer-events: unset;
 }
 
-rv-sheet > div > label.selected input[readonly],
-rv-sheet > div > label.selected > textarea[readonly],
+rv-sheet > div.editMode > label.selected input[readonly],
+rv-sheet > div.editMode > label.selected > textarea[readonly],
 rv-sheet> div > div.selected {
 	box-shadow: 0 0 0 1px var(--error-color);
 }
 
-rv-sheet > div > label.selected input[readonly],
-rv-sheet > div > label.selected > textarea[readonly] {
+rv-sheet > div.editMode > label.selected input[readonly],
+rv-sheet > div.editMode > label.selected > textarea[readonly] {
 	background: var(--read-only-input-background-selected);
 }
 

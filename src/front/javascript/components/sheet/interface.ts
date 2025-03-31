@@ -200,7 +200,6 @@ export default class Interface {
                                 name="${pEntry.name}"
                                 value="${pEntry.value}"
                                 @input="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
-                                    console.log(pEvent.target.value)
                                     History.execute(
                                         pEntry.id,
                                         `${pEntry.name} - ${pEvent.target.value}`,
@@ -209,7 +208,11 @@ export default class Interface {
                                             : pInfosElement.elementType === EElementType.checkbox
                                               ? Datas.addCheckboxValues.bind(Datas)
                                               : Datas.addInputValues.bind(Datas)) as unknown as (...args: unknown[]) => void,
-                                        [<TElement>pInfosElement, pEntry.type === 'file' ? 'file' : pEntry.id, pEntry.type === 'file' ? (pEvent.target.files as FileList)[0] : pEvent.target.value],
+                                        [
+                                            <TElement>pInfosElement,
+                                            pEntry.type === 'file' ? 'file' : pEntry.id,
+                                            pEntry.type === 'file' ? (pEvent.target.files as FileList)[0] : pEntry.type === 'checkbox' ? pEvent.target.checked : pEvent.target.value,
+                                        ],
                                         (pInfosElement.elementType === EElementType.image
                                             ? Datas.addImageValues.bind(Datas)
                                             : pInfosElement.elementType === EElementType.checkbox

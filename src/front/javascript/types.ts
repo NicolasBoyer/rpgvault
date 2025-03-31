@@ -44,7 +44,7 @@ export type TInput = {
     fontSize: number
     fontFamily: string
     elementType: string
-    writable: boolean
+    readonly: boolean
     selected?: boolean
 }
 

@@ -84,7 +84,7 @@ export default class View {
                                               style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height *
                                               Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
                                               @change="${(pEvent: HTMLElementEvent<HTMLTextAreaElement>): Promise<void> => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
-                                              ?readonly="${States.editMode}"
+                                              ?readonly="${States.editMode || pInput.readonly}"
                                               @click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, <TElement>pInput)}"
                                           >
 ${pInput.value}
@@ -100,7 +100,7 @@ ${pInput.value}
                                               style="font-size: ${pInput.fontSize * Sheet.ratio}px;width: ${pInput.width * Sheet.ratio}px;height: ${pInput.height *
                                               Sheet.ratio}px;color: ${pInput.color};text-align: ${pInput.textAlign};font-family: ${pInput.fontFamily};"
                                               @change="${(pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => Datas.addAndSaveInput(pInput, 'value', pEvent.target.value)}"
-                                              ?readonly="${States.editMode}"
+                                              ?readonly="${States.editMode || pInput.readonly}"
                                               @click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, <TElement>pInput)}"
                                           />
                                       `}

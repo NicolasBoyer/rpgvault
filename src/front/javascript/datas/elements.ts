@@ -101,9 +101,9 @@ export const elements = (pInfosElement: TElement, pFonts: { name: string; value:
         value: <number>pInfosElement.y,
     },
     {
-        id: 'writable',
+        id: 'readonly',
         type: 'checkbox',
         name: 'Lecture seule',
-        value: <boolean>pInfosElement.writable,
+        value: <boolean>pInfosElement.readonly,
     },
 ]
