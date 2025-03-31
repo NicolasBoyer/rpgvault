@@ -66,7 +66,8 @@ export default class Label extends HTMLElement {
                                   id="${this.id}"
                                   name="${this.id}"
                                   accept="${this.type === 'file' ? 'image/png, image/jpeg, image/svg+xml' : nothing}"
-                                  value="${this.type === 'file' ? nothing : this.value}"
+                                  value="${this.type === 'file' || this.type === 'checkbox' ? nothing : this.value}"
+                                  ?checked="${this.type === 'checkbox' ? this.value === 'true' : nothing}"
                                   title="${this.name}"
                               />
                           `}

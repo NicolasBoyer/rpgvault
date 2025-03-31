@@ -23,6 +23,7 @@ export default class Input {
                 color: '#000000',
                 fontSize: 10,
                 fontFamily: 'inherit',
+                writable: true,
             }
             await Datas.addInputValues(
                 <TInput>input,

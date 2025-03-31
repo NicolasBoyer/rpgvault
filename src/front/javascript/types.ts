@@ -44,6 +44,7 @@ export type TInput = {
     fontSize: number
     fontFamily: string
     elementType: string
+    writable: boolean
     selected?: boolean
 }
 
@@ -88,7 +89,7 @@ export type TElements = {
     id: string
     type: string
     name: string
-    value: number | string | Blob | File
+    value: number | boolean | string | Blob | File
     options?: {
         name: string
         value: string

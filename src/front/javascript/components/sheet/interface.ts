@@ -191,7 +191,7 @@ export default class Interface {
                             value: pFont.fontFamily,
                         }))
                 )
-                    .filter((pEntry): unknown => pInfosElement[pEntry.id as keyof TElement])
+                    .filter((pEntry): unknown => Object.prototype.hasOwnProperty.call(pInfosElement, pEntry.id as keyof TElement))
                     .map(
                         (pEntry): TemplateResult => html`
                             <rv-label
@@ -200,6 +200,7 @@ export default class Interface {
                                 name="${pEntry.name}"
                                 value="${pEntry.value}"
                                 @input="${(pEvent: HTMLElementEvent<HTMLInputElement>): void => {
+                                    console.log(pEvent.target.value)
                                     History.execute(
                                         pEntry.id,
                                         `${pEntry.name} - ${pEvent.target.value}`,
