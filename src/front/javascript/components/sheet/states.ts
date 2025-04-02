@@ -4,7 +4,6 @@ import { ElementResizer } from '../../classes/elementResizer.js'
 import { ElementMover } from '../../classes/elementMover.js'
 import { EInterface } from '../../enum.js'
 import { ElementManager } from '../../classes/elementManager.js'
-import { TElement } from '../../types.js'
 import { History } from '../../classes/history.js'
 
 /**
@@ -32,7 +31,7 @@ export default class States {
         Datas.deletedImages = []
         Datas.deletedCheckboxes = []
         Datas.sheetProperties = []
-        ElementManager.selectedInfosElement = null as unknown as TElement
+        ElementManager.selectedInfosElements = []
         this.isHistoryBlockHidden = true
         this.initHistory()
         View.render()

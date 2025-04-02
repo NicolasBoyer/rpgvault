@@ -73,9 +73,10 @@ export default class View {
                               ${States.notepadMode ? Notepad.render() : ''}
                           `}
                     ${!States.isHistoryBlockHidden ? Interface.historyBlock() : ''}
-                    ${Datas.sheet.inputs?.map(
-                        (pInput): TemplateResult => html`
-                            <label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${ElementManager.selectedInfosElement?.id === pInput.id ? 'selected' : ''}">
+                    ${Datas.sheet.inputs?.map((pInput): TemplateResult => {
+                        const isSelected = ElementManager.selectedInfosElements.some((pSelectedInfosElement): boolean => pSelectedInfosElement.id === pInput.id)
+                        return html`
+                            <label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${isSelected ? 'selected' : ''}">
                                 ${pInput.type === 'textarea'
                                     ? html`
                                           <textarea
@@ -103,17 +104,18 @@ ${pInput.value}</textarea
                                               @click="${(pEvent: PointerEvent): void => ElementManager.select(pEvent, <TElement>pInput)}"
                                           />
                                       `}
-                                ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedInfosElement?.id !== pInput.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
+                                ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${!isSelected}" class="resizeHandler ${pBoxPosition.class}" />`)}
                             </label>
-                            ${ElementManager.selectedInfosElement?.id === pInput.id ? Interface.selectBlock(<TElement>pInput) : ''}
+                            ${isSelected ? Interface.selectBlock(<TElement>pInput) : ''}
                         `
-                    )}
-                    ${Datas.sheet.images?.map(
-                        (pImage): TemplateResult => html`
+                    })}
+                    ${Datas.sheet.images?.map((pImage): TemplateResult => {
+                        const isSelected = ElementManager.selectedInfosElements.some((pSelectedInfosElement): boolean => pSelectedInfosElement.id === pImage.id)
+                        return html`
                             <div
                                 id="${pImage.id}"
                                 style="transform: translate(${<number>pImage.x * Sheet.ratio}px, ${<number>pImage.y * Sheet.ratio}px);width: ${<number>pImage.width * Sheet.ratio}px;height: ${<number>pImage.height * Sheet.ratio}px;"
-                                class="image ${ElementManager.selectedInfosElement?.id === pImage.id ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}"
+                                class="image ${isSelected ? 'selected' : ''} ${States.isZoomed === pImage.id ? 'isZoomed' : ''}"
                                 @click="${(pEvent: PointerEvent): void => {
                                     if (States.editMode) ElementManager.select(pEvent, <TElement>pImage)
                                     else {
@@ -124,18 +126,19 @@ ${pInput.value}</textarea
                                 }}"
                             >
                                 <div style="background-image: url(${pImage.image});"></div>
-                                ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedInfosElement?.id !== pImage.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
+                                ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${!isSelected}" class="resizeHandler ${pBoxPosition.class}" />`)}
                             </div>
-                            ${ElementManager.selectedInfosElement?.id === pImage.id ? Interface.selectBlock(<TElement>pImage) : ''}
+                            ${isSelected ? Interface.selectBlock(<TElement>pImage) : ''}
                         `
-                    )}
-                    ${Datas.sheet.checkboxes?.map(
-                        (pCheckbox): TemplateResult => html`
+                    })}
+                    ${Datas.sheet.checkboxes?.map((pCheckbox): TemplateResult => {
+                        const isSelected = ElementManager.selectedInfosElements.some((pSelectedInfosElement): boolean => pSelectedInfosElement.id === pCheckbox.id)
+                        return html`
                             <div
                                 id="${pCheckbox.id}"
                                 style="transform: translate(${<number>pCheckbox.x * Sheet.ratio}px, ${<number>pCheckbox.y * Sheet.ratio}px);width: ${<number>pCheckbox.width * Sheet.ratio}px;height: ${<number>pCheckbox.height *
                                 Sheet.ratio}px;"
-                                class="checkbox ${ElementManager.selectedInfosElement?.id === pCheckbox.id ? 'selected' : ''} ${pCheckbox.checked ? 'isVisible' : ''}"
+                                class="checkbox ${isSelected ? 'selected' : ''} ${pCheckbox.checked ? 'isVisible' : ''}"
                                 @click="${async (pEvent: PointerEvent): Promise<void> => {
                                     if (States.editMode) ElementManager.select(pEvent, <TElement>pCheckbox)
                                     else {
@@ -146,11 +149,11 @@ ${pInput.value}</textarea
                                 }}"
                             >
                                 <div style="background-image: url(${pCheckbox.image});"></div>
-                                ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${ElementManager.selectedInfosElement?.id !== pCheckbox.id}" class="resizeHandler ${pBoxPosition.class}" />`)}
+                                ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${!isSelected}" class="resizeHandler ${pBoxPosition.class}" />`)}
                             </div>
-                            ${ElementManager.selectedInfosElement?.id === pCheckbox.id ? Interface.selectBlock(<TElement>pCheckbox) : ''}
+                            ${isSelected ? Interface.selectBlock(<TElement>pCheckbox) : ''}
                         `
-                    )}
+                    })}
                 </div>
             `,
             Sheet.element

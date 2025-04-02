@@ -12,8 +12,8 @@ export class ShortcutManager {
 
     static reset(): void {
         Object.values(this.shortCuts).forEach((pShortcut): void => {
-            pShortcut.element.addEventListener('keydown', this.keyDown)
-            pShortcut.element.addEventListener('keyup', this.keyUp)
+            pShortcut.element.removeEventListener('keydown', this.keyDown)
+            pShortcut.element.removeEventListener('keyup', this.keyUp)
         })
     }
 

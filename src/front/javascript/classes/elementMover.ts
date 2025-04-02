@@ -87,14 +87,16 @@ export class ElementMover {
     }
 
     private static moveByKey(pOffsetX: number, pOffsetY = 0): void {
-        if (!ElementManager.selectedInfosElement?.id) return
-        const selectedElement = ElementMover.elements[ElementManager.selectedInfosElement.id]
-        const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform)
-        const translateX = translate.m41 + pOffsetX
-        const translateY = translate.m42 + pOffsetY
-        setTimeout((): void => {
-            selectedElement.style.transform = `translate(${translateX}px, ${translateY}px)`
-        })
-        selectedElement.moverCallback({ x: translateX, y: translateY })
+        for (const selectedInfosElement of ElementManager.selectedInfosElements) {
+            if (!selectedInfosElement.id) return
+            const selectedElement = ElementMover.elements[selectedInfosElement.id]
+            const translate = new WebKitCSSMatrix(getComputedStyle(selectedElement).transform)
+            const translateX = translate.m41 + pOffsetX
+            const translateY = translate.m42 + pOffsetY
+            setTimeout((): void => {
+                selectedElement.style.transform = `translate(${translateX}px, ${translateY}px)`
+            })
+            selectedElement.moverCallback({ x: translateX, y: translateY })
+        }
     }
 }

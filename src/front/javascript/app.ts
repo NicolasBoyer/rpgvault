@@ -18,10 +18,12 @@ import Home from './components/home.js'
 import Menu from './components/menu.js'
 import Error404 from './components/404.js'
 import Toast from './components/toast.js'
+import { KeyboardManager } from './classes/keyboardManager.js'
 
 class App {
     constructor() {
         Utils.helpers()
+        new KeyboardManager()
         // this.wakeLock()
         // Websocket.init()
         if (location.href.charAt(location.href.length - 1) === '/') history.replaceState({}, '', location.href.replace(/\/$/, ''))
