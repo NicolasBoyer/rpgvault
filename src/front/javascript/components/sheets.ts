@@ -16,10 +16,10 @@ import { User } from '../classes/user.js'
 // TODO système de calque ou d'index
 // TODO Avatar
 // TODO voir si intéressant de créer un ensemble permettant d'aller plus vite dans la création de nouveaux éléments mais pas sur que ce soit faisable
-// TODO rester appuyer fait bouger l'élément
-// TODO pouvoir sélectionner plusieurs éléments
+// TODO pouvoir sélectionner plusieurs éléments -> reste de pouvoir bouger un ensemble avec la souris
 // TODO ajouter un élément liste
 // Todo ajouter du survol avec points de règles ...
+// TODO selection à la souris
 export default class Sheets extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null
