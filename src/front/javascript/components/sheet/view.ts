@@ -151,7 +151,7 @@ ${pInput.value}</textarea
                                 <div style="background-image: url(${pCheckbox.image});"></div>
                                 ${ElementResizer.boxPositions.map((pBoxPosition): TemplateResult => html`<div .hidden="${!isSelected}" class="resizeHandler ${pBoxPosition.class}" />`)}
                             </div>
-                            ${isSelected ? Interface.selectBlock(<TElement>pCheckbox) : ''}
+                            ${isSelected && ElementManager.selectedInfosElements.length === 1 ? Interface.selectBlock(<TElement>pCheckbox) : ''}
                         `
                     })}
                 </div>
