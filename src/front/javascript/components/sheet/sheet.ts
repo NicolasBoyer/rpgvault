@@ -7,6 +7,8 @@ import { ShortcutManager } from '../../classes/shortcutManager.js'
 import States from './states.js'
 import { HTMLElementEvent, RPGVAULTElement, TFont } from '../../types.js'
 import html2canvas from 'html2canvas'
+import { ElementManager } from '../../classes/elementManager.js'
+import { User } from '../../classes/user.js'
 // import {html2canvas} from 'html2canvas'
 
 /**
@@ -44,8 +46,12 @@ export default class Sheet extends HTMLElement {
         this.ratio = isWidthResized ? dims.width / this.imageWidth : dims.height / this.imageHeight
         this.containerLeft = (dims.width - parseInt(this.containerWidth)) / 2
         this.containerTop = (dims.height - parseInt(this.containerHeight)) / 2
+
+        ElementManager.resetMarqueeSelect()
+
         View.render()
         setTimeout((): void => Utils.loader(false))
+        User.checkCurrentUserLogged()
     }
 
     static changeBackgroundColor(): void {

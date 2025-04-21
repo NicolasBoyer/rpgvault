@@ -4,6 +4,7 @@ import View from './view.js'
 import { Caches } from '../../classes/caches.js'
 import { TCheckbox, TElement, TImage, TInput, TSheet, TSheetProperties } from '../../types.js'
 import { History } from '../../classes/history.js'
+import { User } from '../../classes/user.js'
 
 /**
  * Fonctions permettant de gérer les données.
@@ -194,7 +195,11 @@ export default class Datas {
                 body.push(property)
             }
         }
-        const sheets = <TSheet[] | undefined>((await Utils.request('/db', 'POST', { body: JSON.stringify(body) })) as unknown as [TSheet[]]).pop()
+        const requestSheets = (await Utils.request('/db', 'POST', { body: JSON.stringify(body) })) as unknown as [TSheet[]]
+        if ((requestSheets as unknown as { error: string }).error) {
+            await User.checkCurrentUserLogged()
+        }
+        const sheets = requestSheets.pop()
         if (sheets) {
             this.sheet = <TSheet>sheets.find((pSheet): boolean => pSheet._id === this.id)
             await Caches.set(true, 'sheets', sheets)

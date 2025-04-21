@@ -20,6 +20,8 @@ import { User } from '../classes/user.js'
 // TODO ajouter un élément liste
 // Todo ajouter du survol avec points de règles ...
 // TODO selection à la souris
+// TODO Gestion du select après un ctrl d IMPORTANT + déplacement à la souris + ctrl c v
+// TODO Gestion control z avec sélection multiple
 export default class Sheets extends HTMLElement {
     private sheets: TSheet[] = []
     private editMode: string | null = null
