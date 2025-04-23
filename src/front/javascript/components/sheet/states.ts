@@ -37,7 +37,7 @@ export default class States {
         this.isHistoryBlockHidden = true
         this.initHistory()
         View.render()
-        ShortcutManager.set(document.body, ['Control'], (): void => {
+        ShortcutManager.set(document.body, ['Control', 'm'], (): void => {
             if (KeyboardManager.isCtrlDown) {
                 ElementManager.resetMarqueeSelect()
             }
