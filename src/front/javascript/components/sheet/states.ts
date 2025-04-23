@@ -5,6 +5,8 @@ import { ElementMover } from '../../classes/elementMover.js'
 import { EInterface } from '../../enum.js'
 import { ElementManager } from '../../classes/elementManager.js'
 import { History } from '../../classes/history.js'
+import { ShortcutManager } from '../../classes/shortcutManager.js'
+import { KeyboardManager } from '../../classes/keyboardManager.js'
 
 /**
  * Fonctions relatives au statut du composant
@@ -35,6 +37,11 @@ export default class States {
         this.isHistoryBlockHidden = true
         this.initHistory()
         View.render()
+        ShortcutManager.set(document.body, ['Control'], (): void => {
+            if (KeyboardManager.isCtrlDown) {
+                ElementManager.resetMarqueeSelect()
+            }
+        })
     }
 
     static displayNotepadMode(pValue: boolean): void {
