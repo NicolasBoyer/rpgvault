@@ -37,11 +37,11 @@ export default class States {
         this.isHistoryBlockHidden = true
         this.initHistory()
         View.render()
-        ShortcutManager.set(document.body, ['Control', 'm'], (): void => {
-            if (KeyboardManager.isCtrlDown) {
-                ElementManager.resetMarqueeSelect()
-            }
-        })
+        // ShortcutManager.set(document.body, ['Control'], (): void => {
+        //     if (KeyboardManager.isCtrlDown) {
+        //         ElementManager.resetMarqueeSelect()
+        //     }
+        // })
     }
 
     static displayNotepadMode(pValue: boolean): void {
