@@ -17,34 +17,46 @@ export default class Routes {
 
         this.request({ pServer, path: '/login', file: 'login.html', className: 'login', isPublic: true, title: 'Connexion' })
 
-        pServer.get('/resetPassword?token=:id', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            res?.end(await Utils.page({ file: 'resetPassword.html', className: 'resetPassword', title: 'Réinitialisation du mot de passe' }))
+        pServer.get('/resetPassword?token=:id', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                res.end(await Utils.page({ file: 'resetPassword.html', className: 'resetPassword', title: 'Réinitialisation du mot de passe' }))
+            } catch (e) {
+                this.handleError(res, e)
+            }
         })
 
-        pServer.post('/resetPassword', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            let body = ''
-            _req?.on('data', (pChunk): void => {
-                body += pChunk
-            })
-            _req?.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }> => {
-                const { token, password } = JSON.parse(body)
-                const result = await Auth.resetPassword(token, password)
-                res!.writeHead(result.success ? 201 : 400, { 'Content-Type': 'application/json' })
-                return res!.end(JSON.stringify({ message: result.message, success: result.success }))
-            })
+        pServer.post('/resetPassword', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                let body = ''
+                _req.on('data', (pChunk): void => {
+                    body += pChunk
+                })
+                _req.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }> => {
+                    const { token, password } = JSON.parse(body)
+                    const result = await Auth.resetPassword(token, password)
+                    res.writeHead(result.success ? 201 : 400, { 'Content-Type': 'application/json' })
+                    return res.end(JSON.stringify({ message: result.message, success: result.success }))
+                })
+            } catch (e) {
+                this.handleError(res, e)
+            }
         })
 
-        pServer.post('/requestPasswordReset', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            let body = ''
-            _req?.on('data', (pChunk): void => {
-                body += pChunk
-            })
-            _req?.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }> => {
-                const { email } = JSON.parse(body)
-                const result = await Auth.requestPasswordReset(email)
-                res!.writeHead(result.success ? 201 : 400, { 'Content-Type': 'application/json' })
-                return res!.end(JSON.stringify({ message: result.message, success: result.success }))
-            })
+        pServer.post('/requestPasswordReset', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                let body = ''
+                _req.on('data', (pChunk): void => {
+                    body += pChunk
+                })
+                _req.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }> => {
+                    const { email } = JSON.parse(body)
+                    const result = await Auth.requestPasswordReset(email)
+                    res.writeHead(result.success ? 201 : 400, { 'Content-Type': 'application/json' })
+                    return res.end(JSON.stringify({ message: result.message, success: result.success }))
+                })
+            } catch (e) {
+                this.handleError(res, e)
+            }
         })
 
         // PRIVATE
@@ -52,84 +64,108 @@ export default class Routes {
 
         this.request({ pServer, path: '/sheets/:id', file: 'sheet.html', className: 'sheet', header: '', footer: '', theme: 'light' })
 
-        pServer.get('/routes.json', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (await Auth.authenticateToken(_req!, res!, EErrorResponse.getJson)) res?.end(JSON.stringify(this.routes))
-        })
-
-        pServer.get('/currentUser', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (await Auth.authenticateToken(_req!, res!, EErrorResponse.getJson)) {
-                res!.writeHead(200, { 'Content-Type': 'application/json' })
-                const currentUser = (await Database.request({ getUser: (_req!.user as TUser)._id })) as unknown as TUser
-                res!.end(JSON.stringify({ _id: currentUser._id, firstName: currentUser.firstName, lastName: currentUser.lastName, email: currentUser.email }))
+        pServer.get('/routes.json', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                if (await Auth.authenticateToken(_req, res, EErrorResponse.getJson)) res.end(JSON.stringify(this.routes))
+            } catch (e) {
+                this.handleError(res, e)
             }
         })
 
-        pServer.post('/db', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            let body = ''
-            _req?.on('data', (pChunk): void => {
-                body += pChunk
-            })
-            _req?.on('end', async (): Promise<(http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) | undefined> => {
-                try {
-                    if (await Auth.authenticateToken(_req, res!, EErrorResponse.getJson)) {
-                        res!.writeHead(200, { 'Content-Type': 'application/json' })
-                        return res!.end(JSON.stringify(await Database.request(JSON.parse(body))))
+        pServer.get('/currentUser', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                if (await Auth.authenticateToken(_req, res, EErrorResponse.getJson)) {
+                    res.writeHead(200, { 'Content-Type': 'application/json' })
+                    const currentUser = (await Database.request({ getUser: (_req.user as TUser)._id })) as unknown as TUser
+                    res.end(JSON.stringify({ _id: currentUser._id, firstName: currentUser.firstName, lastName: currentUser.lastName, email: currentUser.email }))
+                }
+            } catch (e) {
+                this.handleError(res, e)
+            }
+        })
+
+        pServer.post('/db', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                let body = ''
+                _req.on('data', (pChunk): void => {
+                    body += pChunk
+                })
+                _req.on('end', async (): Promise<(http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) | undefined> => {
+                    try {
+                        if (await Auth.authenticateToken(_req, res, EErrorResponse.getJson)) {
+                            res.writeHead(200, { 'Content-Type': 'application/json' })
+                            return res.end(JSON.stringify(await Database.request(JSON.parse(body))))
+                        }
+                    } catch (err) {
+                        console.error(err)
+                        res.writeHead(500, { 'Content-Type': 'application/json' })
+                        return res.end(JSON.stringify({ error: true, message: 'Server error' }))
                     }
-                } catch (err) {
-                    console.error(err)
-                    res!.writeHead(500, { 'Content-Type': 'application/json' })
-                    return res!.end(JSON.stringify({ error: true, message: 'Server error' }))
-                }
-            })
+                })
+            } catch (e) {
+                this.handleError(res, e)
+            }
         })
 
-        pServer.post('/signin', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            let body = ''
-            _req?.on('data', (pChunk): void => {
-                body += pChunk
-            })
-            _req?.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }> => {
-                const { email, password } = JSON.parse(body)
-                const result = await Auth.authenticateUser(email, password)
-                // TODO secure ne fonctionne pas si pas en https. A enlever lors de la mise en place en http
-                // res!.setHeader('Set-Cookie', `rvTk=${result.token}; HttpOnly; Path=/; Secure; SameSite=Strict; Max-Age=2147483647`)
-                res!.setHeader('Set-Cookie', `rvTk=${result.token}; HttpOnly; Path=/; SameSite=Strict`)
-                res!.writeHead(result.success ? 200 : 400, { 'Content-Type': 'application/json' })
-                return res!.end(JSON.stringify({ message: result.success ? 'Connexion réussie' : result.message, success: result.success }))
-            })
+        pServer.post('/signin', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                let body = ''
+                _req.on('data', (pChunk): void => {
+                    body += pChunk
+                })
+                _req.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }> => {
+                    const { email, password } = JSON.parse(body)
+                    const result = await Auth.authenticateUser(email, password)
+                    // TODO secure ne fonctionne pas si pas en https. A enlever lors de la mise en place en http
+                    // res!.setHeader('Set-Cookie', `rvTk=${result.token}; HttpOnly; Path=/; Secure; SameSite=Strict; Max-Age=2147483647`)
+                    res.setHeader('Set-Cookie', `rvTk=${result.token}; HttpOnly; Path=/; SameSite=Strict`)
+                    res.writeHead(result.success ? 200 : 400, { 'Content-Type': 'application/json' })
+                    return res.end(JSON.stringify({ message: result.success ? 'Connexion réussie' : result.message, success: result.success }))
+                })
+            } catch (e) {
+                this.handleError(res, e)
+            }
         })
 
-        pServer.post('/signup', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            let body = ''
-            _req?.on('data', (pChunk): void => {
-                body += pChunk
-            })
-            _req?.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }> => {
-                try {
-                    const { firstName, lastName, mail, password, passwordBis } = JSON.parse(body)
-                    const result = await Auth.createUser(mail, firstName, lastName, password, passwordBis)
-                    res!.writeHead(result.success ? 201 : 400, { 'Content-Type': 'application/json' })
-                    return res!.end(JSON.stringify({ message: result.message, success: result.success }))
-                } catch (err) {
-                    console.error(err)
-                    res!.writeHead(400, { 'Content-Type': 'application/json' })
-                    return res!.end(JSON.stringify({ message: 'Invalid request format' }))
-                }
-            })
+        pServer.post('/signup', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                let body = ''
+                _req.on('data', (pChunk): void => {
+                    body += pChunk
+                })
+                _req.on('end', async (): Promise<http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }> => {
+                    try {
+                        const { firstName, lastName, mail, password, passwordBis } = JSON.parse(body)
+                        const result = await Auth.createUser(mail, firstName, lastName, password, passwordBis)
+                        res.writeHead(result.success ? 201 : 400, { 'Content-Type': 'application/json' })
+                        return res.end(JSON.stringify({ message: result.message, success: result.success }))
+                    } catch (err) {
+                        console.error(err)
+                        res.writeHead(400, { 'Content-Type': 'application/json' })
+                        return res.end(JSON.stringify({ message: 'Invalid request format' }))
+                    }
+                })
+            } catch (e) {
+                this.handleError(res, e)
+            }
         })
 
-        pServer.post('/logout', async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            _req?.on('data', (): void => {})
-            _req?.on('end', async (): Promise<void> => {
-                const tokenCookie = await Auth.getToken(_req, res!)
-                if (!tokenCookie) {
-                    return
-                }
-                Auth.addToBlacklist(tokenCookie.split('=')[1])
-                res?.setHeader('Set-Cookie', 'fsTk=; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT')
-                res?.writeHead(200, { 'Content-Type': 'application/json' })
-                res?.end(JSON.stringify({ result: 'Déconnecté avec succès' }))
-            })
+        pServer.post('/logout', async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                _req.on('data', (): void => {})
+                _req.on('end', async (): Promise<void> => {
+                    const tokenCookie = await Auth.getToken(_req, res)
+                    if (!tokenCookie) {
+                        return
+                    }
+                    Auth.addToBlacklist(tokenCookie.split('=')[1])
+                    res.setHeader('Set-Cookie', 'fsTk=; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT')
+                    res.writeHead(200, { 'Content-Type': 'application/json' })
+                    res.end(JSON.stringify({ result: 'Déconnecté avec succès' }))
+                })
+            } catch (e) {
+                this.handleError(res, e)
+            }
         })
     }
 
@@ -162,35 +198,49 @@ export default class Routes {
             })
         }
 
-        options.pServer.get(addSlashOnUrl ? `${options.path}/` : options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (options.isPublic || (await Auth.authenticateToken(_req!, res!)))
-                res?.end(
-                    await Utils.page({
-                        file: options.file,
-                        className: options.className,
-                        title: options.title,
-                        templateHtml: options.templateHtml,
-                        header: options.header,
-                        footer: options.footer,
-                        theme: options.theme,
-                    })
-                )
-        })
-
-        options.pServer.post(options.path, async (_req?: TIncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
-            if (options.isPublic || (await Auth.authenticateToken(_req!, res!, EErrorResponse.postHtml))) {
-                res?.end(
-                    JSON.stringify({
-                        header: options.header === '' ? '' : await Utils.fragment(options.header || 'header.html'),
-                        footer: options.footer === '' ? '' : await Utils.fragment(options.footer || 'footer.html'),
-                        theme: options.theme || 'dark',
-                        text: await Utils.fragment(options.file),
-                        class: options.className,
-                        title: options.title,
-                        // templateHtml: await Utils.page({ templateHtml: options.templateHtml || 'page.html' }),
-                    })
-                )
+        options.pServer.get(addSlashOnUrl ? `${options.path}/` : options.path, async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                if (options.isPublic || (await Auth.authenticateToken(_req, res)))
+                    res.end(
+                        await Utils.page({
+                            file: options.file,
+                            className: options.className,
+                            title: options.title,
+                            templateHtml: options.templateHtml,
+                            header: options.header,
+                            footer: options.footer,
+                            theme: options.theme,
+                        })
+                    )
+            } catch (e) {
+                this.handleError(res, e)
             }
         })
+
+        options.pServer.post(options.path, async (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }): Promise<void> => {
+            try {
+                if (options.isPublic || (await Auth.authenticateToken(_req, res, EErrorResponse.postHtml))) {
+                    res.end(
+                        JSON.stringify({
+                            header: options.header === '' ? '' : await Utils.fragment(options.header || 'header.html'),
+                            footer: options.footer === '' ? '' : await Utils.fragment(options.footer || 'footer.html'),
+                            theme: options.theme || 'dark',
+                            text: await Utils.fragment(options.file),
+                            class: options.className,
+                            title: options.title,
+                            // templateHtml: await Utils.page({ templateHtml: options.templateHtml || 'page.html' }),
+                        })
+                    )
+                }
+            } catch (e) {
+                this.handleError(res, e)
+            }
+        })
+    }
+
+    private handleError(res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }, err: unknown, status = 500, message = 'Server error'): void {
+        console.error(err)
+        res.writeHead(status, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ error: true, message }))
     }
 }

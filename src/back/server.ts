@@ -8,7 +8,7 @@ import { SECRET_KEY } from './config.js'
 
 type TMethod = {
     path: string
-    callback: (_req?: http.IncomingMessage, res?: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) => void
+    callback: (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) => void
 }
 
 const GET: TMethod[] = []
@@ -57,70 +57,76 @@ export const mimetype = Object.freeze({
 export class Server {
     constructor(pPort = 8000) {
         const server = http.createServer(async (req, res): Promise<void> => {
-            const response = async (pMethod: TMethod[]): Promise<boolean> => {
-                for (const pRoute of pMethod) {
-                    const pathArr = pRoute.path.split('/')
-                    const urlArr = req.url?.split('/')
-                    let id = ''
-                    if (pathArr.length === urlArr?.length) {
-                        const indexId = pathArr.findIndex((pPath: string): boolean => pPath.includes(':'))
-                        if (urlArr[indexId]?.includes(pathArr[indexId]?.split(':')[0])) {
-                            id = urlArr[indexId]
-                            // Gestion du token de requestPassword -> token
-                            const search = id?.split('?')[1]
-                            if (search) {
-                                const splitSearch = search.split('=')
-                                id = splitSearch[0] === 'token' ? splitSearch[1] : ''
+            try {
+                const response = async (pMethod: TMethod[]): Promise<boolean> => {
+                    for (const pRoute of pMethod) {
+                        const pathArr = pRoute.path.split('/')
+                        const urlArr = req.url?.split('/')
+                        let id = ''
+                        if (pathArr.length === urlArr?.length) {
+                            const indexId = pathArr.findIndex((pPath: string): boolean => pPath.includes(':'))
+                            if (urlArr[indexId]?.includes(pathArr[indexId]?.split(':')[0])) {
+                                id = urlArr[indexId]
+                                // Gestion du token de requestPassword -> token
+                                const search = id?.split('?')[1]
+                                if (search) {
+                                    const splitSearch = search.split('=')
+                                    id = splitSearch[0] === 'token' ? splitSearch[1] : ''
+                                }
                             }
                         }
-                    }
-                    if (req.url === pRoute.path || id) {
-                        if (id) {
-                            ;(req as TIncomingMessage).params = {}
-                            ;(req as TIncomingMessage).params.id = id
+                        if (req.url === pRoute.path || id) {
+                            if (id) {
+                                ;(req as TIncomingMessage).params = {}
+                                ;(req as TIncomingMessage).params.id = id
+                            }
+                            // switch (pRoute.type) {
+                            //     case mimetype.HTML:
+                            //         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
+                            //         break
+                            //     case mimetype.JSON:
+                            //         res.writeHead(200, { 'Content-Type': 'application/json' })
+                            //         break
+                            // }
+                            pRoute.callback(req as TIncomingMessage, res)
+                            return true
                         }
-                        // switch (pRoute.type) {
-                        //     case mimetype.HTML:
-                        //         res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
-                        //         break
-                        //     case mimetype.JSON:
-                        //         res.writeHead(200, { 'Content-Type': 'application/json' })
-                        //         break
-                        // }
-                        pRoute.callback(req, res)
-                        return true
+                    }
+                    return false
+                }
+                if (req.method === 'GET') {
+                    const url = Utils.fromFront(<string>req.url)
+                    for (const pIncludeFile of includeFiles) {
+                        if (req.url?.match(pIncludeFile.regexp)) {
+                            res.writeHead(200, pIncludeFile.mimetype)
+                            fs.createReadStream(url).pipe(res)
+                            return
+                        }
+                    }
+                    if (!(await response(GET))) {
+                        res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' })
+                        res.end(await Utils.page({ className: 'notFound', file: '404.html', footer: '', header: '', title: 'RPGVault - 404 : Page non trouvée' }))
                     }
                 }
-                return false
-            }
-            if (req.method === 'GET') {
-                const url = Utils.fromFront(<string>req.url)
-                for (const pIncludeFile of includeFiles) {
-                    if (req.url?.match(pIncludeFile.regexp)) {
-                        res.writeHead(200, pIncludeFile.mimetype)
-                        fs.createReadStream(url).pipe(res)
-                        return
+                if (req.method === 'POST') {
+                    if (!(await response(POST))) {
+                        res.writeHead(404, { 'Content-Type': 'application/json' })
+                        res.end(
+                            JSON.stringify({
+                                header: '',
+                                footer: '',
+                                theme: 'dark',
+                                text: await Utils.fragment('404.html'),
+                                class: 'notFound',
+                                title: 'RPGVault - 404 : Page non trouvée',
+                            })
+                        )
                     }
                 }
-                if (!(await response(GET))) {
-                    res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' })
-                    res.end(await Utils.page({ className: 'notFound', file: '404.html', footer: '', header: '', title: 'RPGVault - 404 : Page non trouvée' }))
-                }
-            }
-            if (req.method === 'POST') {
-                if (!(await response(POST))) {
-                    res.writeHead(404, { 'Content-Type': 'application/json' })
-                    res.end(
-                        JSON.stringify({
-                            header: '',
-                            footer: '',
-                            theme: 'dark',
-                            text: await Utils.fragment('404.html'),
-                            class: 'notFound',
-                            title: 'RPGVault - 404 : Page non trouvée',
-                        })
-                    )
-                }
+            } catch (e) {
+                console.error('SERVER ERROR', e)
+                res.writeHead(500, { 'Content-Type': 'application/json' })
+                res.end(JSON.stringify({ error: 'Internal Server Error' }))
             }
         })
         const webSocketServer = new WebSocketServer({ server })
@@ -164,11 +170,11 @@ export class Server {
         server.listen(pPort)
     }
 
-    get(pPath: string, pCallback: () => void): void {
+    get(pPath: string, pCallback: (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) => void): void {
         GET.push({ path: pPath, callback: pCallback })
     }
 
-    post(pPath: string, pCallback: () => void): void {
+    post(pPath: string, pCallback: (_req: TIncomingMessage, res: http.ServerResponse<http.IncomingMessage> & { req: http.IncomingMessage }) => void): void {
         POST.push({ path: pPath, callback: pCallback })
     }
 }

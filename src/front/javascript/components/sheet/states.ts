@@ -5,8 +5,8 @@ import { ElementMover } from '../../classes/elementMover.js'
 import { EInterface } from '../../enum.js'
 import { ElementManager } from '../../classes/elementManager.js'
 import { History } from '../../classes/history.js'
-import { ShortcutManager } from '../../classes/shortcutManager.js'
-import { KeyboardManager } from '../../classes/keyboardManager.js'
+// import { ShortcutManager } from '../../classes/shortcutManager.js'
+// import { KeyboardManager } from '../../classes/keyboardManager.js'
 
 /**
  * Fonctions relatives au statut du composant
