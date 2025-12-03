@@ -20,6 +20,7 @@ export default class Datas {
     static deletedCheckboxes: string[]
     static sheetProperties: TSheetProperties[]
     static isSaving = false
+    static currentLeaf = 0
     private static id: string
 
     static async init(): Promise<void> {
@@ -61,13 +62,13 @@ export default class Datas {
             if (i % 2 === 0) (pInput as Record<string, typeof value>)[args[i] as keyof TInput] = value
         }
         let index
-        if (!this.sheet.inputs) this.sheet.inputs = []
+        if (!this.sheet.leafs[this.currentLeaf].inputs) this.sheet.leafs[this.currentLeaf].inputs = []
         if (States.editMode) {
             index = this.changedInputs.findIndex((input: TInput): boolean => input.id === pInput.id)
             this.changedInputs[index !== -1 ? index : this.changedInputs.length || 0] = pInput
         }
-        index = this.sheet.inputs.findIndex((input: TInput): boolean => input.id === pInput.id)
-        this.sheet.inputs[index !== -1 ? index : this.sheet.inputs.length || 0] = pInput
+        index = this.sheet.leafs[this.currentLeaf].inputs!.findIndex((input: TInput): boolean => input.id === pInput.id)
+        this.sheet.leafs[this.currentLeaf].inputs![index !== -1 ? index : this.sheet.leafs[this.currentLeaf].inputs!.length || 0] = pInput
         States.isSaved = false
         View.render()
     }
@@ -83,10 +84,10 @@ export default class Datas {
             if (index) delete pImage.image_url
             this.changedImages[index !== -1 ? index : this.changedImages.length || 0] = pImage
         }
-        if (!this.sheet.images) this.sheet.images = []
-        index = this.sheet.images.findIndex((image: TImage): boolean => image.id === pImage.id)
+        if (!this.sheet.leafs[this.currentLeaf].images) this.sheet.leafs[this.currentLeaf].images = []
+        index = this.sheet.leafs[this.currentLeaf].images!.findIndex((image: TImage): boolean => image.id === pImage.id)
         if (pImage.file) pImage.image = await Utils.getBase64FromFileReader(pImage.file)
-        this.sheet.images[index !== -1 ? index : this.sheet.images.length || 0] = pImage
+        this.sheet.leafs[this.currentLeaf].images![index !== -1 ? index : this.sheet.leafs[this.currentLeaf].images!.length || 0] = pImage
         States.isSaved = false
         View.render()
     }
@@ -102,10 +103,10 @@ export default class Datas {
             if (index) delete pCheckbox.image_url
             this.changedCheckboxes[index !== -1 ? index : this.changedCheckboxes.length || 0] = pCheckbox
         }
-        if (!this.sheet.checkboxes) this.sheet.checkboxes = []
-        index = this.sheet.checkboxes.findIndex((checkbox: TCheckbox): boolean => checkbox.id === pCheckbox.id)
+        if (!this.sheet.leafs[this.currentLeaf].checkboxes) this.sheet.leafs[this.currentLeaf].checkboxes = []
+        index = this.sheet.leafs[this.currentLeaf].checkboxes!.findIndex((checkbox: TCheckbox): boolean => checkbox.id === pCheckbox.id)
         if (pCheckbox.file) pCheckbox.image = await Utils.getBase64FromFileReader(pCheckbox.file)
-        this.sheet.checkboxes[index !== -1 ? index : this.sheet.checkboxes.length || 0] = pCheckbox
+        this.sheet.leafs[this.currentLeaf].checkboxes![index !== -1 ? index : this.sheet.leafs[this.currentLeaf].checkboxes!.length || 0] = pCheckbox
         States.isSaved = false
         View.render()
     }
@@ -119,6 +120,7 @@ export default class Datas {
                 setInput: {
                     id: this.id,
                     inputId: pInput.id,
+                    leafId: this.currentLeaf,
                     input: pInput,
                 },
             })
@@ -137,6 +139,7 @@ export default class Datas {
                 body.push({
                     setCheckbox: {
                         id: this.id,
+                        leafId: this.currentLeaf,
                         checkboxId: checkbox.id,
                         checkbox: checkbox,
                     },
@@ -148,6 +151,7 @@ export default class Datas {
                 body.push({
                     deleteInput: {
                         id: this.id,
+                        leafId: this.currentLeaf,
                         inputId: pInputId,
                     },
                 })
@@ -165,6 +169,7 @@ export default class Datas {
                     body.push({
                         setImage: {
                             id: this.id,
+                            leafId: this.currentLeaf,
                             imageId: image.id,
                             image: image,
                         },
@@ -175,6 +180,7 @@ export default class Datas {
                 body.push({
                     deleteImage: {
                         id: this.id,
+                        leafId: this.currentLeaf,
                         imageId: pImageId,
                     },
                 })
@@ -183,6 +189,7 @@ export default class Datas {
                 body.push({
                     deleteCheckbox: {
                         id: this.id,
+                        leafId: this.currentLeaf,
                         checkboxId: pCheckboxId,
                     },
                 })
@@ -219,29 +226,31 @@ export default class Datas {
 
     private static async cacheResources(): Promise<void> {
         const cache = <TSheet>await Caches.get(this.id)
-        if (Utils.isValidHttpUrl(<string>this.sheet.backgroundImage)) {
-            this.sheet.backgroundImage_url = this.sheet.backgroundImage
-            this.sheet.backgroundImage = cache?.backgroundImage || this.sheet.backgroundImage
-            if ((cache?.backgroundImage !== this.sheet.backgroundImage && cache?.backgroundImage_url !== this.sheet.backgroundImage) || !cache) this.sheet.backgroundImage = <string>await Utils.urlToBase64(<string>this.sheet.backgroundImage)
+        if (Utils.isValidHttpUrl(<string>this.sheet.leafs[this.currentLeaf].backgroundImage)) {
+            this.sheet.leafs[this.currentLeaf].backgroundImage_url = this.sheet.leafs[this.currentLeaf].backgroundImage
+            this.sheet.leafs[this.currentLeaf].backgroundImage = cache?.leafs[this.currentLeaf].backgroundImage || this.sheet.leafs[this.currentLeaf].backgroundImage
+            if ((cache?.leafs[this.currentLeaf].backgroundImage !== this.sheet.leafs[this.currentLeaf].backgroundImage && cache?.leafs[this.currentLeaf].backgroundImage_url !== this.sheet.leafs[this.currentLeaf].backgroundImage) || !cache)
+                this.sheet.leafs[this.currentLeaf].backgroundImage = <string>await Utils.urlToBase64(<string>this.sheet.leafs[this.currentLeaf].backgroundImage)
         }
-        if (this.sheet.images) {
-            for (let i = 0; i < this.sheet.images.length; i++) {
-                const image = this.sheet.images[i]
+        if (this.sheet.leafs[this.currentLeaf].images) {
+            for (let i = 0; i < this.sheet.leafs[this.currentLeaf].images!.length; i++) {
+                const image = this.sheet.leafs[this.currentLeaf].images![i]
                 if (Utils.isValidHttpUrl(<string>image.image)) {
                     image.image_url = image.image
-                    const cacheImage = cache?.images && cache?.images[i]?.image
+                    const cacheImage = cache?.leafs[this.currentLeaf].images && cache?.leafs[this.currentLeaf].images![i]?.image
                     image.image = cacheImage && cacheImage === image.image ? cacheImage : image.image
-                    if ((cacheImage !== image.image && cache?.images && cache?.images[i]?.image_url !== image.image) || !cache) image.image = await Utils.urlToBase64(<string>image.image)
+                    if ((cacheImage !== image.image && cache?.leafs[this.currentLeaf].images && cache?.leafs[this.currentLeaf].images![i]?.image_url !== image.image) || !cache) image.image = await Utils.urlToBase64(<string>image.image)
                 }
             }
         }
-        if (this.sheet.fonts) {
-            for (let i = 0; i < this.sheet.fonts.length; i++) {
-                const font = this.sheet.fonts[i]
+        if (this.sheet.leafs[this.currentLeaf].fonts) {
+            for (let i = 0; i < this.sheet.leafs[this.currentLeaf].fonts!.length; i++) {
+                const font = this.sheet.leafs[this.currentLeaf].fonts![i]
                 if (Utils.isValidHttpUrl(<string>font.fontUrl)) {
                     font.fontUrl_url = font.fontUrl
-                    font.fontUrl = (cache?.fonts && cache?.fonts[i]?.fontUrl_url) || font.fontUrl
-                    if ((cache?.fonts && cache.fonts[i]?.fontUrl !== font.fontUrl && cache?.fonts[i]?.fontUrl_url !== font.fontUrl) || !cache) font.fontUrl = await Utils.urlToBase64(<string>font.fontUrl)
+                    font.fontUrl = (cache?.leafs[this.currentLeaf].fonts && cache?.leafs[this.currentLeaf].fonts![i]?.fontUrl_url) || font.fontUrl
+                    if ((cache?.leafs[this.currentLeaf].fonts && cache.leafs[this.currentLeaf].fonts![i]?.fontUrl !== font.fontUrl && cache?.leafs[this.currentLeaf].fonts![i]?.fontUrl_url !== font.fontUrl) || !cache)
+                        font.fontUrl = await Utils.urlToBase64(<string>font.fontUrl)
                 }
             }
         }

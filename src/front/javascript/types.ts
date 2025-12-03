@@ -9,6 +9,11 @@ export type TSheet = {
     illustration?: string
     slug?: string
     notepad?: TTab[]
+    leafs: TLeaf[]
+}
+
+export type TLeaf = {
+    id: number
     inputs?: TInput[]
     images?: TImage[]
     checkboxes?: TCheckbox[]
@@ -22,13 +27,14 @@ export type TSheet = {
 export type TTab = { title: string; content: string }
 
 export type TSheetProperties = {
-    setBackgroundColor?: Record<string, string>
-    setBackgroundImage?: Record<string, Blob | string>
+    setBackgroundColor?: Record<string, string | number>
+    setBackgroundImage?: Record<string, Blob | string | number>
+    addLeaf?: Record<string, string | number>
     setFont?: TFont
-    deleteFont?: Record<string, string[]>
+    deleteFont?: Record<string, string[] | number>
     setNotepad?: Record<string, Record<string, string>[] | undefined>
-    setUIBlocksPosition?: Record<string, TPosition>
-    setUIBlocksInterface?: Record<string, string>
+    setUIBlocksPosition?: Record<string, TPosition | number>
+    setUIBlocksInterface?: Record<string, string | number>
 }
 
 export type TInput = {
@@ -77,6 +83,7 @@ export type TCheckbox = {
 }
 
 export type TFont = {
+    leafId: number
     fontFamily: string
     name: string
     fontUrl?: string | ArrayBuffer | null
@@ -97,6 +104,7 @@ export type TElements = {
 }
 
 export type TPosition = {
+    leafId?: number
     x: number
     y: number
     width?: number

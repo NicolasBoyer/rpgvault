@@ -23,6 +23,11 @@ export default class Sheet extends HTMLElement {
     private static imageWidth: number
     private static imageHeight: number
 
+    static setStyle(): void {
+        this.element.style.backgroundColor = <string>Datas.sheet.leafs[Datas.currentLeaf].backgroundColor || '#ffffff'
+        Sheet.setBackgroundImage(Datas.sheet.leafs[Datas.currentLeaf].backgroundImage || '../../assets/default.jpg')
+    }
+
     static setBackgroundImage(pImageSrc: string): void {
         const image = new Image()
         image.onload = (): void => {
@@ -61,7 +66,7 @@ export default class Sheet extends HTMLElement {
                         type="color"
                         id="color"
                         name="color"
-                        value="${Datas.sheet.backgroundColor || '#ffffff'}"
+                        value="${Datas.sheet.leafs[Datas.currentLeaf].backgroundColor || '#ffffff'}"
                         @change="${async (pEvent: HTMLElementEvent<HTMLInputElement>): Promise<void> => {
                             color = pEvent.target.value
                         }}"
@@ -70,11 +75,29 @@ export default class Sheet extends HTMLElement {
             `,
             (): void => {
                 this.element.style.backgroundColor = color
-                Datas.sheet.backgroundColor = color
-                Datas.sheetProperties.push({ setBackgroundColor: { color } })
+                Datas.sheet.leafs[Datas.currentLeaf].backgroundColor = color
+                Datas.sheetProperties.push({ setBackgroundColor: { color, leafId: Datas.currentLeaf } })
                 States.isSaved = false
                 States.displayEditBlock(true)
                 View.render()
+            },
+            (): void => States.displayEditBlock(true)
+        )
+    }
+
+    static addLeaf(): void {
+        States.displayEditBlock(false)
+        Utils.confirm(
+            html`<h3>Voulez-vous créer une nouvelle feuille ?</h3>`,
+            async (): Promise<void> => {
+                Datas.currentLeaf = Datas.currentLeaf + 1
+                Datas.sheet.leafs[Datas.currentLeaf] = { id: Datas.currentLeaf }
+                Datas.sheetProperties.push({ addLeaf: { leafId: Datas.currentLeaf } })
+                this.setStyle()
+                States.isSaved = false
+                States.displayEditBlock(true)
+                View.render()
+                Utils.toast('success', 'Nouvelle feuille créée')
             },
             (): void => States.displayEditBlock(true)
         )
@@ -99,7 +122,7 @@ export default class Sheet extends HTMLElement {
             `,
             async (): Promise<void> => {
                 this.setBackgroundImage(<string>await Utils.getBase64FromFileReader(file))
-                Datas.sheetProperties.push({ setBackgroundImage: { image: file } })
+                Datas.sheetProperties.push({ setBackgroundImage: { image: file, leafId: Datas.currentLeaf } })
                 States.isSaved = false
                 States.displayEditBlock(true)
                 View.render()
@@ -139,10 +162,10 @@ export default class Sheet extends HTMLElement {
                 </label>
             `,
             async (): Promise<void> => {
-                if (!Datas.sheet.fonts) Datas.sheet.fonts = []
+                if (!Datas.sheet.leafs[0].fonts) Datas.sheet.leafs[Datas.currentLeaf].fonts = []
                 fontUrl = await Utils.getBase64FromFileReader(file)
-                const font: TFont = { name: file.name, fontUrl, fontFamily }
-                Datas.sheet.fonts.push(font)
+                const font: TFont = { name: file.name, fontUrl, fontFamily, leafId: Datas.currentLeaf }
+                Datas.sheet.leafs[Datas.currentLeaf].fonts?.push(font)
                 fontUrl = file
                 Datas.sheetProperties.push({ setFont: font })
                 States.isSaved = false
@@ -159,7 +182,7 @@ export default class Sheet extends HTMLElement {
         Utils.confirm(
             html`
                 <ul>
-                    ${Datas.sheet.fonts?.map(
+                    ${Datas.sheet.leafs[Datas.currentLeaf].fonts?.map(
                         (pFont): TemplateResult => html`
                             <li>
                                 <label for="${pFont.fontFamily}">
@@ -182,9 +205,9 @@ export default class Sheet extends HTMLElement {
             `,
             (): void => {
                 fonts.forEach((pFontFamily): void => {
-                    Datas.sheet.fonts = Datas.sheet.fonts?.filter((pFont): boolean => pFont.fontFamily !== pFontFamily)
+                    Datas.sheet.leafs[Datas.currentLeaf].fonts = Datas.sheet.leafs[Datas.currentLeaf].fonts?.filter((pFont): boolean => pFont.fontFamily !== pFontFamily)
                 })
-                Datas.sheetProperties.push({ deleteFont: { fonts: fonts } })
+                Datas.sheetProperties.push({ deleteFont: { fonts: fonts, leafId: Datas.currentLeaf } })
                 States.isSaved = false
                 States.displayEditBlock(true)
                 View.render()
@@ -248,8 +271,7 @@ export default class Sheet extends HTMLElement {
     async connectedCallback(): Promise<void> {
         await Datas.init()
         Sheet.element = this
-        this.style.backgroundColor = <string>Datas.sheet.backgroundColor
-        Sheet.setBackgroundImage(Datas.sheet.backgroundImage || '../../assets/default.jpg')
+        Sheet.setStyle()
         window.addEventListener('resize', (): void => Sheet.resize())
         ShortcutManager.set(document.body, ['Control', 's'], async (): Promise<void> => {
             await Datas.save()

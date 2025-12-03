@@ -142,7 +142,8 @@ rv-sheet> div > div.selected {
 rv-sheet button.edit,
 rv-sheet button.notepad,
 rv-sheet button.burger,
-rv-sheet button.print {
+rv-sheet button.print,
+rv-sheet button.leaf {
 	width: fit-content;
 	margin: 0.5em 0 0.5em 0.5em;
 	padding: 0.3em 0.8em;
@@ -168,6 +169,8 @@ rv-sheet button.edit:hover,
 rv-sheet button.notepad:hover,
 rv-sheet button.burger:hover,
 rv-sheet button.print:hover,
+rv-sheet button.leaf:hover,
+rv-sheet button.leaf.selected,
 rv-sheet button.notepad.selected,
 rv-sheet button.burger.selected {
 	opacity: 1;
@@ -233,6 +236,11 @@ article.selectBlock {
 /*	opacity: 0;*/
 /*	transition: none;*/
 /*}*/
+
+article.editBlock > div.leafBlock {
+	display: flex;
+	gap: 0.5em;
+}
 
 article.editBlock > div.viewBlock {
 	margin-bottom: var(--pico-spacing);

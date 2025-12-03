@@ -83,17 +83,38 @@ export default class Interface {
         `
     }
 
+    static leafBlock(): TemplateResult {
+        return html`
+            <div class="leafBlock">
+                ${Datas.sheet.leafs.map(
+                    (leaf): TemplateResult =>
+                        html`<button
+                            class="leaf contrast${leaf.id === Datas.currentLeaf ? ' selected' : ''}"
+                            @click="${(): void => {
+                                Datas.currentLeaf = leaf.id
+                                Sheet.setStyle()
+                                View.render()
+                            }}"
+                        >
+                            <span>${leaf.id + 1}</span>
+                        </button>`
+                )}
+            </div>
+        `
+    }
+
     static editBlock(): TemplateResult {
         setTimeout((): void => this.initializeMove(<RPGVAULTElement>document.querySelector('.editBlock')))
-        const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.editBlock
+        const hasMoved = States.interface === 'movable' && Datas.sheet.leafs[Datas.currentLeaf].ui && Datas.sheet.leafs[Datas.currentLeaf].ui?.editBlock
         return html`
             <article
                 .hidden="${States.isEditBlockHidden}"
                 class="editBlock${hasMoved ? ' hasMoved' : ''}"
                 id="editBlock"
-                style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.editBlock.x}px, ${Datas.sheet.ui?.editBlock.y}px);` : ''}"
+                style="${hasMoved ? `transform: translate(${Datas.sheet.leafs[Datas.currentLeaf].ui?.editBlock.x}px, ${Datas.sheet.leafs[Datas.currentLeaf].ui?.editBlock.y}px);` : ''}"
             >
-                ${States.interface !== 'hidden' ? this.viewBlock() : ''}
+                ${States.interface !== 'hidden' ? this.viewBlock() : ''} ${this.leafBlock()}
+                <button class="contrast" @click="${(): void => Sheet.addLeaf()}">Ajouter une feuille</button>
                 <button class="contrast" @click="${(): void => Sheet.editBackgroundImage()}">Image de fond</button>
                 <button class="contrast" @click="${(): void => Sheet.changeBackgroundColor()}">Couleur du fond</button>
                 <button class="contrast" @click="${(): void => Sheet.addFont()}">Ajouter une police</button>
@@ -147,13 +168,13 @@ export default class Interface {
 
     static selectBlock(pInfosElement: TElement): TemplateResult {
         setTimeout((): void => this.initializeMove(<RPGVAULTElement>document.querySelector('.selectBlock')))
-        const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.selectBlock
+        const hasMoved = States.interface === 'movable' && Datas.sheet.leafs[Datas.currentLeaf].ui && Datas.sheet.leafs[Datas.currentLeaf].ui?.selectBlock
         return html`
             <article
                 id="selectBlock"
                 class="selectBlock${hasMoved ? ' hasMoved' : ''}"
                 @click="${(pEvent: PointerEvent): void => pEvent.stopPropagation()}"
-                style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.selectBlock.x}px, ${Datas.sheet.ui?.selectBlock.y}px);` : ''}"
+                style="${hasMoved ? `transform: translate(${Datas.sheet.leafs[Datas.currentLeaf].ui?.selectBlock.x}px, ${Datas.sheet.leafs[Datas.currentLeaf].ui?.selectBlock.y}px);` : ''}"
             >
                 <a
                     href="#"
@@ -185,8 +206,8 @@ export default class Interface {
                 </a>
                 ${elements(
                     pInfosElement,
-                    Datas.sheet.fonts &&
-                        Datas.sheet.fonts.map((pFont: TFont): { name: string; value: string } => ({
+                    Datas.sheet.leafs[Datas.currentLeaf].fonts &&
+                        Datas.sheet.leafs[Datas.currentLeaf].fonts?.map((pFont: TFont): { name: string; value: string } => ({
                             name: pFont.fontFamily,
                             value: pFont.fontFamily,
                         }))
@@ -233,13 +254,13 @@ export default class Interface {
     static historyBlock(): TemplateResult {
         setTimeout((): void => this.initializeMove(<RPGVAULTElement>document.querySelector('.historyBlock')))
         this.scrollHistoryBlockToBottom(<Element>document.querySelector('#historyBlock > main'))
-        const hasMoved = States.interface === 'movable' && Datas.sheet.ui && Datas.sheet.ui.historyBlock
+        const hasMoved = States.interface === 'movable' && Datas.sheet.leafs[Datas.currentLeaf].ui && Datas.sheet.leafs[Datas.currentLeaf].ui?.historyBlock
         return html`
             <article
                 .hidden="${States.isHistoryBlockHidden}"
                 class="historyBlock${hasMoved ? ' hasMoved' : ''}"
                 id="historyBlock"
-                style="${hasMoved ? `transform: translate(${Datas.sheet.ui?.historyBlock.x}px, ${Datas.sheet.ui?.historyBlock.y}px);` : ''}"
+                style="${hasMoved ? `transform: translate(${Datas.sheet.leafs[Datas.currentLeaf].ui?.historyBlock.x}px, ${Datas.sheet.leafs[Datas.currentLeaf].ui?.historyBlock.y}px);` : ''}"
             >
                 <header>Historique</header>
                 <main>
@@ -273,8 +294,9 @@ export default class Interface {
                 (pMousePosition): void => {
                     States.isSaved = false
                     View.render()
-                    const setUIBlocksPosition: Record<string, TPosition> = {}
+                    const setUIBlocksPosition: Record<string, TPosition | number> = {}
                     setUIBlocksPosition[pElement.classList[0]] = pMousePosition
+                    setUIBlocksPosition.leafId = Datas.currentLeaf
                     Datas.sheetProperties.push({
                         setUIBlocksPosition: setUIBlocksPosition,
                     })
@@ -287,7 +309,7 @@ export default class Interface {
     private static changeInterface(pInterface: EInterface): void {
         States.interface = pInterface
         Datas.sheetProperties.push({
-            setUIBlocksInterface: { interface: States.interface },
+            setUIBlocksInterface: { interface: States.interface, leafId: Datas.currentLeaf },
         })
         States.isSaved = false
         View.render()

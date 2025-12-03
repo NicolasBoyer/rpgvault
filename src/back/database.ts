@@ -74,90 +74,104 @@ export default class Database {
                 return await resolvers.getSheets()
             },
 
+            async addLeaf(args: Record<string, string>): Promise<TSheet | TSheet[]> {
+                // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { leafs: { id: args.leafId } } })
+                return await resolvers.getSheets()
+            },
+
             async setNotepad(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { notepad: args.notepad } }, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async setBackgroundColor(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundColor: args.color } }, { upsert: true })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $set: { 'leafs.$.backgroundColor': args.color } }, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async setBackgroundImage(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $set: { backgroundImage: args.image } }, { upsert: true })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $set: { 'leafs.$.backgroundImage': args.image } }, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async setFont(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $push: { 'leafs.$.fonts': { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
                 return await resolvers.getSheets()
             },
 
             async setUIBlocksPosition(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isUIBlocksExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).ui
+                const sheet = (await resolvers.getSheets({ id: args.id })) as TSheet
+                const isUIBlocksExists = sheet.leafs[Number(args.leafId)].ui
                 const blockType = Object.keys(args)[0]
-                const update = !isUIBlocksExists ? { $set: { ui: args } } : blockType === 'editBlock' ? { $set: { 'ui.editBlock': args[blockType] } } : { $set: { 'ui.selectBlock': args[blockType] } }
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, update, { upsert: true })
+                const update = !isUIBlocksExists ? { $set: { 'leafs.$.ui': {} } } : blockType === 'editBlock' ? { $set: { 'leafs.$.ui.editBlock': args[blockType] } } : { $set: { 'leafs.$.ui.selectBlock': args[blockType] } }
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, update, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async setUIBlocksInterface(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isUIBlocksExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).ui
-                const update = !isUIBlocksExists ? { $set: { ui: args } } : { $set: { 'ui.interface': args.interface } }
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, update, { upsert: true })
+                const sheet = (await resolvers.getSheets({ id: args.id })) as TSheet
+                const isUIBlocksExists = sheet.leafs[Number(args.leafId)].ui
+                const update = !isUIBlocksExists ? { $set: { 'leafs.$.ui': {} } } : { $set: { 'leafs.$.ui.interface': args.interface } }
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, update, { upsert: true })
                 return await resolvers.getSheets()
             },
 
             async deleteFont(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { fonts: { fontFamily: { $in: args.fonts } } } })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $pull: { 'leafs.$.fonts': { fontFamily: { $in: args.fonts } } } })
                 return await resolvers.getSheets()
             },
 
             async setInput(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isInputExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).inputs?.some((pInput): boolean => pInput.id === args.inputId)
-                const update = isInputExists ? { $set: { 'inputs.$': args.input } } : { $push: { inputs: args.input } }
-                const filter = isInputExists ? { _id: new ObjectId(args.id), 'inputs.id': args.inputId } : { _id: new ObjectId(args.id) }
+                const sheet = (await resolvers.getSheets({ id: args.id })) as TSheet
+                const isInputExists = sheet.leafs[Number(args.leafId)].inputs?.some((pInput): boolean => pInput.id === args.inputId)
+                const update = isInputExists ? { $set: { 'leafs.$[i].inputs.$[j]': args.input } } : { $push: { 'leafs.$.inputs': args.input } }
+                const filter = isInputExists ? { _id: new ObjectId(args.id) } : { _id: new ObjectId(args.id), 'leafs.id': args.leafId }
+                const arrayFilters = isInputExists ? [{ 'i.id': args.leafId }, { 'j.id': args.inputId }] : null
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne(filter, update)
+                await Database.sheets.updateOne(filter, update, { arrayFilters })
                 return await resolvers.getSheets()
             },
 
             async deleteInput(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { inputs: { id: args.inputId } } })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $pull: { 'leafs.$.inputs': { id: args.inputId } } })
                 return await resolvers.getSheets()
             },
 
             async setImage(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isImageExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).images?.some((pImage): boolean => pImage.id === args.imageId)
-                const update = isImageExists ? { $set: { 'images.$': args.image } } : { $push: { images: args.image } }
-                const filter = isImageExists ? { _id: new ObjectId(args.id), 'images.id': args.imageId } : { _id: new ObjectId(args.id) }
+                const sheet = (await resolvers.getSheets({ id: args.id })) as TSheet
+                const isImageExists = sheet.leafs[Number(args.leafId)].images?.some((pImage): boolean => pImage.id === args.imageId)
+                const update = isImageExists ? { $set: { 'leafs.$[i].images.$[j]': args.image } } : { $push: { 'leafs.$.images': args.image } }
+                const filter = isImageExists ? { _id: new ObjectId(args.id) } : { _id: new ObjectId(args.id), 'leafs.id': args.leafId }
+                const arrayFilters = isImageExists ? [{ 'i.id': args.leafId }, { 'j.id': args.imageId }] : null
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne(filter, update)
+                await Database.sheets.updateOne(filter, update, { arrayFilters })
                 return await resolvers.getSheets()
             },
 
             async deleteImage(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { images: { id: args.imageId } } })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $pull: { 'leafs.$.images': { id: args.imageId } } })
                 return await resolvers.getSheets()
             },
 
             async setCheckbox(args: Record<string, string>): Promise<TSheet | TSheet[]> {
-                const isCheckboxExists = ((await resolvers.getSheets({ id: args.id })) as TSheet).checkboxes?.some((pCheckbox): boolean => pCheckbox.id === args.checkboxId)
-                const update = isCheckboxExists ? { $set: { 'checkboxes.$': args.checkbox } } : { $push: { checkboxes: args.checkbox } }
-                const filter = isCheckboxExists ? { _id: new ObjectId(args.id), 'checkboxes.id': args.checkboxId } : { _id: new ObjectId(args.id) }
+                const sheet = (await resolvers.getSheets({ id: args.id })) as TSheet
+                const isCheckboxExists = sheet.leafs[Number(args.leafId)].checkboxes?.some((pCheckbox): boolean => pCheckbox.id === args.checkboxId)
+                const update = isCheckboxExists ? { $set: { 'leafs.$[i].checkboxes.$[j]': args.checkbox } } : { $push: { 'leafs.$.checkboxes': args.checkbox } }
+                const filter = isCheckboxExists ? { _id: new ObjectId(args.id) } : { _id: new ObjectId(args.id), 'leafs.id': args.leafId }
+                const arrayFilters = isCheckboxExists ? [{ 'i.id': args.leafId }, { 'j.id': args.checkboxId }] : null
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne(filter, update)
+                await Database.sheets.updateOne(filter, update, { arrayFilters })
                 return await resolvers.getSheets()
             },
 
             async deleteCheckbox(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { checkboxes: { id: args.checkboxId } } })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $pull: { 'leafs.$.checkboxes': { id: args.checkboxId } } })
                 return await resolvers.getSheets()
             },
 

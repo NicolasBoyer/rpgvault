@@ -20,7 +20,7 @@ export class ElementManager {
     static infosElements: TElement[] = []
 
     static init(): void {
-        this.infosElements = (<TElement[]>Datas.sheet.inputs || []).concat(<TElement[]>Datas.sheet.images)?.concat(<TElement[]>Datas.sheet.checkboxes)
+        this.infosElements = (<TElement[]>Datas.sheet.leafs[Datas.currentLeaf].inputs || []).concat(<TElement[]>Datas.sheet.leafs[Datas.currentLeaf].images)?.concat(<TElement[]>Datas.sheet.leafs[Datas.currentLeaf].checkboxes)
         if (States.editMode) {
             this.infosElements.forEach((pInfosElement: TElement): void => {
                 if (pInfosElement) {
@@ -279,7 +279,6 @@ export class ElementManager {
         if (States.editMode) {
             if (pEvent) pEvent.stopPropagation()
             if (pInfosElement) {
-                console.log(pInfosElement)
                 if (!KeyboardManager.isShiftDown && !this.blockResetSelection) this.selectedInfosElements = []
                 if (this.selectedInfosElements.some((pSelectedInfosElement): boolean => pInfosElement.id === pSelectedInfosElement.id)) {
                     this.selectedInfosElements = this.selectedInfosElements.filter((pSelectedInfosElement): boolean => pInfosElement.id !== pSelectedInfosElement.id)
@@ -323,15 +322,15 @@ export class ElementManager {
         const selectedInfosElementId = pInfosElement.id
         switch (pInfosElement.elementType) {
             case EElementType.input:
-                Datas.sheet.inputs = Datas.sheet.inputs?.filter((input: TInput): boolean => input.id !== selectedInfosElementId)
+                Datas.sheet.leafs[Datas.currentLeaf].inputs = Datas.sheet.leafs[Datas.currentLeaf].inputs?.filter((input: TInput): boolean => input.id !== selectedInfosElementId)
                 Datas.deletedInputs.push(selectedInfosElementId)
                 break
             case EElementType.image:
-                Datas.sheet.images = Datas.sheet.images?.filter((image: TImage): boolean => image.id !== selectedInfosElementId)
+                Datas.sheet.leafs[Datas.currentLeaf].images = Datas.sheet.leafs[Datas.currentLeaf].images?.filter((image: TImage): boolean => image.id !== selectedInfosElementId)
                 Datas.deletedImages.push(selectedInfosElementId)
                 break
             case EElementType.checkbox:
-                Datas.sheet.checkboxes = Datas.sheet.checkboxes?.filter((checkbox: TCheckbox): boolean => checkbox.id !== selectedInfosElementId)
+                Datas.sheet.leafs[Datas.currentLeaf].checkboxes = Datas.sheet.leafs[Datas.currentLeaf].checkboxes?.filter((checkbox: TCheckbox): boolean => checkbox.id !== selectedInfosElementId)
                 Datas.deletedCheckboxes.push(selectedInfosElementId)
                 break
         }

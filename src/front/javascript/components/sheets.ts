@@ -55,7 +55,7 @@ export default class Sheets extends HTMLElement {
 
     private async editSheet(target: HTMLInputElement, fieldName: keyof Pick<TSheet, 'name' | 'description' | 'illustration'>, sheet: TSheet): Promise<void> {
         const input: HTMLInputElement = target.tagName === 'INPUT' ? target : (target.closest('div')?.querySelector('input') as HTMLInputElement)
-        const tempSheet: TSheet = { name: '' }
+        const tempSheet: TSheet = { name: '', leafs: [] }
         Utils.loader(true)
         tempSheet[fieldName] = target.files?.length ? await Utils.uploadFileAndGetUrl((target.files as FileList)[0]) : input.value
         Utils.loader(false)
@@ -82,7 +82,7 @@ export default class Sheets extends HTMLElement {
                 </label>
             `,
             async (): Promise<void> => {
-                await this.saveSheet({ name, notepad: [{ title: '', content: '' }] })
+                await this.saveSheet({ name, notepad: [{ title: '', content: '' }], leafs: [{ id: 0 }] })
             }
         )
     }

@@ -17,7 +17,7 @@ export default class View {
         render(
             html`
                 <style>
-                    ${Datas.sheet.fonts?.map((pFont): TemplateResult => html` @font-face { font-family: ${pFont.fontFamily}; src: url(${pFont.fontUrl}); } `)}
+                    ${Datas.sheet.leafs[Datas.currentLeaf].fonts?.map((pFont): TemplateResult => html` @font-face { font-family: ${pFont.fontFamily}; src: url(${pFont.fontUrl}); } `)}
                 </style>
             `,
             document.head
@@ -64,6 +64,7 @@ export default class View {
                               >
                                   Bloc notes
                               </button>
+                              ${Interface.leafBlock()}
                               <button class="print contrast" @click="${(): Promise<void> => Sheet.printScreen()}">
                                   <svg class="print">
                                       <use href="#print"></use>
@@ -73,7 +74,7 @@ export default class View {
                               ${States.notepadMode ? Notepad.render() : ''}
                           `}
                     ${!States.isHistoryBlockHidden ? Interface.historyBlock() : ''}
-                    ${Datas.sheet.inputs?.map((pInput): TemplateResult => {
+                    ${Datas.sheet.leafs[Datas.currentLeaf].inputs?.map((pInput): TemplateResult => {
                         const isSelected = ElementManager.selectedInfosElements.some((pSelectedInfosElement): boolean => pSelectedInfosElement.id === pInput.id)
                         return html`
                             <label for="${pInput.id}" style="transform: translate(${pInput.x * Sheet.ratio}px, ${pInput.y * Sheet.ratio}px);" class="${isSelected ? 'selected' : ''}">
@@ -109,7 +110,7 @@ ${pInput.value}</textarea
                             ${isSelected ? Interface.selectBlock(<TElement>pInput) : ''}
                         `
                     })}
-                    ${Datas.sheet.images?.map((pImage): TemplateResult => {
+                    ${Datas.sheet.leafs[Datas.currentLeaf].images?.map((pImage): TemplateResult => {
                         const isSelected = ElementManager.selectedInfosElements.some((pSelectedInfosElement): boolean => pSelectedInfosElement.id === pImage.id)
                         return html`
                             <div
@@ -131,7 +132,7 @@ ${pInput.value}</textarea
                             ${isSelected ? Interface.selectBlock(<TElement>pImage) : ''}
                         `
                     })}
-                    ${Datas.sheet.checkboxes?.map((pCheckbox): TemplateResult => {
+                    ${Datas.sheet.leafs[Datas.currentLeaf].checkboxes?.map((pCheckbox): TemplateResult => {
                         const isSelected = ElementManager.selectedInfosElements.some((pSelectedInfosElement): boolean => pSelectedInfosElement.id === pCheckbox.id)
                         return html`
                             <div
