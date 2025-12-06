@@ -243,14 +243,13 @@ export default class Datas {
                 }
             }
         }
-        if (this.sheet.leafs[this.currentLeaf].fonts) {
-            for (let i = 0; i < this.sheet.leafs[this.currentLeaf].fonts!.length; i++) {
-                const font = this.sheet.leafs[this.currentLeaf].fonts![i]
+        if (this.sheet.fonts) {
+            for (let i = 0; i < this.sheet.fonts!.length; i++) {
+                const font = this.sheet.fonts![i]
                 if (Utils.isValidHttpUrl(<string>font.fontUrl)) {
                     font.fontUrl_url = font.fontUrl
-                    font.fontUrl = (cache?.leafs[this.currentLeaf].fonts && cache?.leafs[this.currentLeaf].fonts![i]?.fontUrl_url) || font.fontUrl
-                    if ((cache?.leafs[this.currentLeaf].fonts && cache.leafs[this.currentLeaf].fonts![i]?.fontUrl !== font.fontUrl && cache?.leafs[this.currentLeaf].fonts![i]?.fontUrl_url !== font.fontUrl) || !cache)
-                        font.fontUrl = await Utils.urlToBase64(<string>font.fontUrl)
+                    font.fontUrl = (cache?.fonts && cache?.fonts![i]?.fontUrl_url) || font.fontUrl
+                    if ((cache?.fonts && cache.fonts![i]?.fontUrl !== font.fontUrl && cache?.fonts![i]?.fontUrl_url !== font.fontUrl) || !cache) font.fontUrl = await Utils.urlToBase64(<string>font.fontUrl)
                 }
             }
         }

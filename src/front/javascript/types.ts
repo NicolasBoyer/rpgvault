@@ -9,6 +9,7 @@ export type TSheet = {
     illustration?: string
     slug?: string
     notepad?: TTab[]
+    fonts?: TFont[]
     leafs: TLeaf[]
 }
 
@@ -17,7 +18,6 @@ export type TLeaf = {
     inputs?: TInput[]
     images?: TImage[]
     checkboxes?: TCheckbox[]
-    fonts?: TFont[]
     backgroundColor?: string
     backgroundImage?: string
     backgroundImage_url?: string
@@ -83,7 +83,6 @@ export type TCheckbox = {
 }
 
 export type TFont = {
-    leafId: number
     fontFamily: string
     name: string
     fontUrl?: string | ArrayBuffer | null

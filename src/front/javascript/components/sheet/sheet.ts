@@ -90,7 +90,7 @@ export default class Sheet extends HTMLElement {
         Utils.confirm(
             html`<h3>Voulez-vous créer une nouvelle feuille ?</h3>`,
             async (): Promise<void> => {
-                Datas.currentLeaf = Datas.currentLeaf + 1
+                Datas.currentLeaf = Datas.sheet.leafs.length
                 Datas.sheet.leafs[Datas.currentLeaf] = { id: Datas.currentLeaf }
                 Datas.sheetProperties.push({ addLeaf: { leafId: Datas.currentLeaf } })
                 this.setStyle()
@@ -162,10 +162,10 @@ export default class Sheet extends HTMLElement {
                 </label>
             `,
             async (): Promise<void> => {
-                if (!Datas.sheet.leafs[0].fonts) Datas.sheet.leafs[Datas.currentLeaf].fonts = []
+                if (!Datas.sheet.fonts) Datas.sheet.fonts = []
                 fontUrl = await Utils.getBase64FromFileReader(file)
-                const font: TFont = { name: file.name, fontUrl, fontFamily, leafId: Datas.currentLeaf }
-                Datas.sheet.leafs[Datas.currentLeaf].fonts?.push(font)
+                const font: TFont = { name: file.name, fontUrl, fontFamily }
+                Datas.sheet.fonts?.push(font)
                 fontUrl = file
                 Datas.sheetProperties.push({ setFont: font })
                 States.isSaved = false
@@ -182,7 +182,7 @@ export default class Sheet extends HTMLElement {
         Utils.confirm(
             html`
                 <ul>
-                    ${Datas.sheet.leafs[Datas.currentLeaf].fonts?.map(
+                    ${Datas.sheet.fonts?.map(
                         (pFont): TemplateResult => html`
                             <li>
                                 <label for="${pFont.fontFamily}">
@@ -205,9 +205,9 @@ export default class Sheet extends HTMLElement {
             `,
             (): void => {
                 fonts.forEach((pFontFamily): void => {
-                    Datas.sheet.leafs[Datas.currentLeaf].fonts = Datas.sheet.leafs[Datas.currentLeaf].fonts?.filter((pFont): boolean => pFont.fontFamily !== pFontFamily)
+                    Datas.sheet.fonts = Datas.sheet.fonts?.filter((pFont): boolean => pFont.fontFamily !== pFontFamily)
                 })
-                Datas.sheetProperties.push({ deleteFont: { fonts: fonts, leafId: Datas.currentLeaf } })
+                Datas.sheetProperties.push({ deleteFont: { fonts: fonts } })
                 States.isSaved = false
                 States.displayEditBlock(true)
                 View.render()

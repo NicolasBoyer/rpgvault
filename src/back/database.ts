@@ -97,7 +97,7 @@ export default class Database {
 
             async setFont(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $push: { 'leafs.$.fonts': { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $push: { fonts: { fontFamily: args.fontFamily, fontUrl: args.fontUrl } } })
                 return await resolvers.getSheets()
             },
 
@@ -120,7 +120,7 @@ export default class Database {
 
             async deleteFont(args: Record<string, string>): Promise<TSheet | TSheet[]> {
                 // @ts-expect-error : erreur provoquée via la mise à jour de Mongo DB en 6.4.0. Donc probablement une erreur de type par Mongo DB (TODO : revérifier lors de futures mises à jour)
-                await Database.sheets.updateOne({ _id: new ObjectId(args.id), 'leafs.id': args.leafId }, { $pull: { 'leafs.$.fonts': { fontFamily: { $in: args.fonts } } } })
+                await Database.sheets.updateOne({ _id: new ObjectId(args.id) }, { $pull: { fonts: { fontFamily: { $in: args.fonts } } } })
                 return await resolvers.getSheets()
             },
 

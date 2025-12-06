@@ -206,8 +206,8 @@ export default class Interface {
                 </a>
                 ${elements(
                     pInfosElement,
-                    Datas.sheet.leafs[Datas.currentLeaf].fonts &&
-                        Datas.sheet.leafs[Datas.currentLeaf].fonts?.map((pFont: TFont): { name: string; value: string } => ({
+                    Datas.sheet.fonts &&
+                        Datas.sheet.fonts?.map((pFont: TFont): { name: string; value: string } => ({
                             name: pFont.fontFamily,
                             value: pFont.fontFamily,
                         }))

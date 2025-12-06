@@ -17,7 +17,7 @@ export default class View {
         render(
             html`
                 <style>
-                    ${Datas.sheet.leafs[Datas.currentLeaf].fonts?.map((pFont): TemplateResult => html` @font-face { font-family: ${pFont.fontFamily}; src: url(${pFont.fontUrl}); } `)}
+                    ${Datas.sheet.fonts?.map((pFont): TemplateResult => html` @font-face { font-family: ${pFont.fontFamily}; src: url(${pFont.fontUrl}); } `)}
                 </style>
             `,
             document.head
